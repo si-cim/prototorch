@@ -9,14 +9,13 @@ prototype-based machine learning algorithms.
 
 This is a Python toolbox brewed at the Mittweida University of Applied Sciences
 in Germany for bleeding-edge research in Learning Vector Quantization (LVQ)
-methods. Although, there are other (perhaps more extensive) LVQ toolboxes
-available out there, the focus of ProtoPy is ease-of-use, extensibility and
-speed.
+and potentially other prototype-based methods. Although, there are
+other (perhaps more extensive) LVQ toolboxes available out there, the focus of
+ProtoTorch is ease-of-use, extensibility and speed.
 
 Many popular prototype-based Machine Learning (ML) algorithms like K-Nearest
 Neighbors (KNN), Generalized Learning Vector Quantization (GLVQ) and Generalized
-Matrix Learning Vector Quantization (GMLVQ) including the recent Learning Vector
-Quantization Multi-Layer Network (LVQMLN) are implemented using the "nn" API
+Matrix Learning Vector Quantization (GMLVQ) are implemented using the "nn" API
 provided by PyTorch.
 
 ## Installation
@@ -24,6 +23,14 @@ provided by PyTorch.
 ProtoTorch can be installed using `pip`.
 ```
 pip install prototorch
+```
+
+To install the bleeding-edge features and improvements:
+```
+git clone https://github.com/si-cim/prototorch.git
+git checkout dev
+cd prototorch
+pip install -e .
 ```
 
 ## Usage
