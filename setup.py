@@ -10,7 +10,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(name='prototorch',
-      version='0.0.0',
+      version='0.0.0-dev1',
       description='Highly extensible, GPU-supported '
       'Learning Vector Quantization (LVQ) toolbox '
       'built using PyTorch and its nn API.',
@@ -23,7 +23,7 @@ setup(name='prototorch',
       license='MIT',
       install_requires=[
           'torch>=1.3.1',
-          'torchvision>=0.4.2',
+          'torchvision>=0.5.0',
           'numpy>=1.9.1',
           'matplotlib',
           'sklearn',
@@ -38,14 +38,15 @@ setup(name='prototorch',
           'tests': ['pytest'],
       },
       classifiers=[
-          'Development Status :: 3 - Alpha', 'Intended Audience :: Developers',
-          'Intended Audience :: Education',
+          'Development Status :: 2 - Pre-Alpha', 'Environment :: Console',
+          'Intended Audience :: Developers', 'Intended Audience :: Education',
           'Intended Audience :: Science/Research',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Operating System :: OS Independent',
+          'Topic :: Scientific/Engineering :: Artificial Intelligence',
           'Topic :: Software Development :: Libraries',
           'Topic :: Software Development :: Libraries :: Python Modules'
       ],
