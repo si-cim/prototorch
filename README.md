@@ -7,6 +7,8 @@ prototype-based machine learning algorithms.
 [![PyPI version](https://badge.fury.io/py/prototorch.svg)](https://badge.fury.io/py/prototorch)
 ![Tests](https://github.com/si-cim/prototorch/workflows/Tests/badge.svg)
 [![codecov](https://codecov.io/gh/si-cim/prototorch/branch/master/graph/badge.svg)](https://codecov.io/gh/si-cim/prototorch)
+[![Downloads](https://pepy.tech/badge/prototorch)](https://pepy.tech/project/prototorch)
+[![GitHub license](https://img.shields.io/github/license/si-cim/prototorch)](https://github.com/si-cim/prototorch/blob/master/LICENSE)
 
 ## Description
 
@@ -49,3 +51,16 @@ API, with more algorithms and techniques coming soon. If you would simply like
 to be able to use those algorithms to train large ML models on a GPU, ProtoTorch
 lets you do this without requiring a black-belt in high-performance Tensor
 computation.
+
+## Bibtex
+
+If you would like to cite the package, please use this:
+```bibtex
+@misc{Ravichandran2020,
+  author = {Ravichandran, J},
+  title = {ProtoTorch},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/si-cim/prototorch}}
+}
