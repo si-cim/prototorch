@@ -1,21 +1,19 @@
-# Disable sudo to speed up the build
+dist: trusty
 sudo: false
-
-# Set the build language to Python
 language: python
-
-# Set the python version to 3.8
 python: 3.8
+# cache:
+#   directories:
+#     - $HOME/.prototorch
 
-# Install the codecov pip dependency
 install:
+  - pip install . --progress-bar off
   - pip install codecov
   - pip install pytest
 
-# Run the unit test
 script:
   - coverage run -m pytest
 
-# Push the results back to codecov
+# Push the results to codecov
 after_success:
   - codecov
