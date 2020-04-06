@@ -3,6 +3,8 @@
 ProtoTorch is a PyTorch-based Python toolbox for bleeding-edge research in
 prototype-based machine learning algorithms.
 
+[![GitHub version](https://badge.fury.io/gh/si-cim%2Fprototorch.svg)](https://badge.fury.io/gh/si-cim%2Fprototorch)
+[![PyPI version](https://badge.fury.io/py/prototorch.svg)](https://badge.fury.io/py/prototorch)
 ![Tests](https://github.com/si-cim/prototorch/workflows/Tests/badge.svg)
 [![codecov](https://codecov.io/gh/si-cim/prototorch/branch/master/graph/badge.svg)](https://codecov.io/gh/si-cim/prototorch)
 
