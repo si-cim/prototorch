@@ -31,7 +31,7 @@ setup(name='prototorch',
               'sklearn',
               'matplotlib',
           ],
-          'tests': ['unittest'],
+          'tests': ['pytest'],
       },
       classifiers=[
           'Development Status :: 2 - Pre-Alpha', 'Environment :: Console',
