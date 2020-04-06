@@ -25,17 +25,13 @@ setup(name='prototorch',
           'torch>=1.3.1',
           'torchvision>=0.5.0',
           'numpy>=1.9.1',
-          'matplotlib',
-          'sklearn',
       ],
       extras_require={
-          'other': [
-              'xlrd',
-              'pandas',
-              'seaborn',
-              'imageio',
+          'examples': [
+              'sklearn',
+              'matplotlib',
           ],
-          'tests': ['pytest'],
+          'tests': ['unittest'],
       },
       classifiers=[
           'Development Status :: 2 - Pre-Alpha', 'Environment :: Console',
