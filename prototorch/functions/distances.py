@@ -33,13 +33,6 @@ def lpnorm_distance(x, y, p):
     Expected dimension of x is 2.
     Expected dimension of y is 2.
     """
-    # # DEPRECATED in favor of torch.cdist
-    # expanded_x = x.unsqueeze(dim=1)
-    # batchwise_difference = y - expanded_x
-    # differences_raised = torch.pow(batchwise_difference, p)
-    # distances_raised = torch.sum(differences_raised, axis=2)
-    # distances = torch.pow(distances_raised, 1.0 / p)
-    # return distances
     distances = torch.cdist(x, y, p=p)
     return distances
 
