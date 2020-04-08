@@ -6,7 +6,7 @@ prototype-based machine learning algorithms.
 [![Build Status](https://travis-ci.org/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
 [![GitHub version](https://badge.fury.io/gh/si-cim%2Fprototorch.svg)](https://badge.fury.io/gh/si-cim%2Fprototorch)
 [![PyPI version](https://badge.fury.io/py/prototorch.svg)](https://badge.fury.io/py/prototorch)
-![Tests](https://github.com/si-cim/prototorch/workflows/Tests/badge.svg)
+![tests](https://github.com/si-cim/prototorch/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/si-cim/prototorch/branch/master/graph/badge.svg)](https://codecov.io/gh/si-cim/prototorch)
 [![Downloads](https://pepy.tech/badge/prototorch)](https://pepy.tech/project/prototorch)
 [![GitHub license](https://img.shields.io/github/license/si-cim/prototorch)](https://github.com/si-cim/prototorch/blob/master/LICENSE)
