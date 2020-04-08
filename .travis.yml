@@ -2,9 +2,9 @@ dist: bionic
 sudo: false
 language: python
 python: 3.8
-# cache:
-#   directories:
-#     - $HOME/.prototorch
+cache:
+  directories:
+    - ./tests/artifacts
 
 install:
   - pip install . --progress-bar off
@@ -17,4 +17,3 @@ script:
 # Push the results to codecov
 after_success:
   - codecov
-  # - bash <(curl -s https://codecov.io/bash)
