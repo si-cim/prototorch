@@ -5,30 +5,36 @@ import torch
 ACTIVATIONS = dict()
 
 
-def register_activation(func):
-    ACTIVATIONS[func.__name__] = func
-    return func
+# def register_activation(scriptf):
+#     ACTIVATIONS[scriptf.name] = scriptf
+#     return scriptf
+def register_activation(f):
+    ACTIVATIONS[f.__name__] = f
+    return f
 
 
 @register_activation
-def identity(input, **kwargs):
+# @torch.jit.script
+def identity(input, beta=torch.tensor([0])):
     """:math:`f(x) = x`"""
     return input
 
 
 @register_activation
-def sigmoid_beta(input, beta=10):
+# @torch.jit.script
+def sigmoid_beta(input, beta=torch.tensor([10])):
     """:math:`f(x) = \\frac{1}{1 + e^{-\\beta x}}`
 
     Keyword Arguments:
         beta (float): Parameter :math:`\\beta`
     """
-    out = torch.reciprocal(1.0 + torch.exp(-beta * input))
+    out = torch.reciprocal(1.0 + torch.exp(-int(beta.item()) * input))
     return out
 
 
 @register_activation
-def swish_beta(input, beta=10):
+# @torch.jit.script
+def swish_beta(input, beta=torch.tensor([10])):
     """:math:`f(x) = \\frac{x}{1 + e^{-\\beta x}}`
 
     Keyword Arguments:
