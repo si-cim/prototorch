@@ -123,7 +123,19 @@ class TestLosses(unittest.TestCase):
         pass
 
     def test_glvqloss_init(self):
-        _ = losses.GLVQLoss()
+        _ = losses.GLVQLoss(0, 'swish_beta', beta=20)
+
+    def test_glvqloss_forward(self):
+        criterion = losses.GLVQLoss(margin=0,
+                                    squashing='sigmoid_beta',
+                                    beta=100)
+        d = torch.stack([torch.ones(100), torch.zeros(100)], dim=1)
+        labels = torch.tensor([0, 1])
+        targets = torch.ones(100)
+        outputs = [d, labels]
+        loss = criterion(outputs, targets)
+        loss_value = loss.item()
+        self.assertAlmostEqual(loss_value, 0.0)
 
     def tearDown(self):
         pass
