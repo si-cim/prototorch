@@ -8,9 +8,10 @@ ACTIVATIONS = dict()
 # def register_activation(scriptf):
 #     ACTIVATIONS[scriptf.name] = scriptf
 #     return scriptf
-def register_activation(f):
-    ACTIVATIONS[f.__name__] = f
-    return f
+def register_activation(function):
+    """Add the activation function to the registry."""
+    ACTIVATIONS[function.__name__] = function
+    return function
 
 
 @register_activation
@@ -55,6 +56,7 @@ def swish_beta(x, beta=torch.tensor([10])):
 
 
 def get_activation(funcname):
+    """Deserialize the activation function."""
     if callable(funcname):
         return funcname
     if funcname in ACTIVATIONS:

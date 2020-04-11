@@ -7,9 +7,10 @@ import torch
 INITIALIZERS = dict()
 
 
-def register_initializer(func):
-    INITIALIZERS[func.__name__] = func
-    return func
+def register_initializer(function):
+    """Add the initializer to the registry."""
+    INITIALIZERS[function.__name__] = function
+    return function
 
 
 def labels_from(distribution):
@@ -84,6 +85,7 @@ def stratified_random(x_train, y_train, prototype_distribution):
 
 
 def get_initializer(funcname):
+    """Deserialize the initializer."""
     if callable(funcname):
         return funcname
     if funcname in INITIALIZERS:
