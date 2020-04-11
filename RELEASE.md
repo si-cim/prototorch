@@ -3,8 +3,8 @@
 ## Release 0.1.1-dev0
 
 ### Includes
-  - Bugfixes.
-  - 100% test coverage.
+-  Minor bugfixes.
+-  100% line coverage.
 
 ## Release 0.1.0-dev0
 

@@ -86,8 +86,6 @@ def stratified_random(x_train, y_train, prototype_distribution):
 def get_initializer(funcname):
     if callable(funcname):
         return funcname
-    else:
-        if funcname in INITIALIZERS:
-            return INITIALIZERS.get(funcname)
-        else:
-            raise NameError(f'Initializer {funcname} was not found.')
+    if funcname in INITIALIZERS:
+        return INITIALIZERS.get(funcname)
+    raise NameError(f'Initializer {funcname} was not found.')
