@@ -4,7 +4,8 @@ import torch
 
 
 def squared_euclidean_distance(x, y):
-    """Compute the squared Euclidean distance between :math:`x` and :math:`y`.
+    """
+    Compute the squared Euclidean distance between :math:`x` and :math:`y`.
 
     Expected dimension of x is 2.
     Expected dimension of y is 2.
@@ -17,7 +18,8 @@ def squared_euclidean_distance(x, y):
 
 
 def euclidean_distance(x, y):
-    """Compute the Euclidean distance between :math:`x` and :math:`y`.
+    """
+    Compute the Euclidean distance between :math:`x` and :math:`y`.
 
     Expected dimension of x is 2.
     Expected dimension of y is 2.
@@ -28,7 +30,8 @@ def euclidean_distance(x, y):
 
 
 def lpnorm_distance(x, y, p):
-    """Compute :math:`{\\langle x, y \\rangle}_p`.
+    """
+    Compute :math:`{\\langle x, y \\rangle}_p`.
 
     Expected dimension of x is 2.
     Expected dimension of y is 2.
@@ -38,7 +41,8 @@ def lpnorm_distance(x, y, p):
 
 
 def omega_distance(x, y, omega):
-    """Omega distance.
+    """
+    Omega distance.
 
     Compute :math:`{\\langle \\Omega x, \\Omega y \\rangle}_p`
 
@@ -53,7 +57,8 @@ def omega_distance(x, y, omega):
 
 
 def lomega_distance(x, y, omegas):
-    """Localized Omega distance.
+    """
+    Localized Omega distance.
 
     Compute :math:`{\\langle \\Omega_k x, \\Omega_k y_k \\rangle}_p`
 

@@ -21,6 +21,7 @@ x_train = scaler.transform(x_train)
 # Define the GLVQ model
 class Model(torch.nn.Module):
     def __init__(self, **kwargs):
+        """GLVQ model."""
         super().__init__()
         self.p1 = Prototypes1D(input_dim=2,
                                prototypes_per_class=1,

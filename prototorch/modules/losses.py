@@ -7,7 +7,6 @@ from prototorch.functions.losses import glvq_loss
 
 
 class GLVQLoss(torch.nn.Module):
-    """GLVQ Loss."""
     def __init__(self, margin=0.0, squashing='identity', beta=10, **kwargs):
         super().__init__(**kwargs)
         self.margin = margin
