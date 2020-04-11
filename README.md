@@ -4,11 +4,12 @@ ProtoTorch is a PyTorch-based Python toolbox for bleeding-edge research in
 prototype-based machine learning algorithms.
 
 [![Build Status](https://travis-ci.org/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
-[![GitHub version](https://badge.fury.io/gh/si-cim%2Fprototorch.svg)](https://badge.fury.io/gh/si-cim%2Fprototorch)
-[![PyPI version](https://badge.fury.io/py/prototorch.svg)](https://badge.fury.io/py/prototorch)
 ![tests](https://github.com/si-cim/prototorch/workflows/tests/badge.svg)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/si-cim/prototorch?color=yellow&label=version)](https://github.com/si-cim/prototorch/releases)
+[![PyPI](https://img.shields.io/pypi/v/prototorch)](https://pypi.org/project/prototorch/)
 [![codecov](https://codecov.io/gh/si-cim/prototorch/branch/master/graph/badge.svg)](https://codecov.io/gh/si-cim/prototorch)
-[![Downloads](https://pepy.tech/badge/prototorch)](https://pepy.tech/project/prototorch)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/76273904bf9343f0a8b29cd8aca242e7)](https://www.codacy.com/gh/si-cim/prototorch?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=si-cim/prototorch&amp;utm_campaign=Badge_Grade)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/prototorch?color=blue)
 [![GitHub license](https://img.shields.io/github/license/si-cim/prototorch)](https://github.com/si-cim/prototorch/blob/master/LICENSE)
 
 ## Description
@@ -27,12 +28,12 @@ provided by PyTorch.
 ## Installation
 
 ProtoTorch can be installed using `pip`.
-```
+```bash
 pip install prototorch
 ```
 
 To install the bleeding-edge features and improvements:
-```
+```bash
 git clone https://github.com/si-cim/prototorch.git
 git checkout dev
 cd prototorch
