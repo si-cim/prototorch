@@ -49,15 +49,25 @@ class Prototypes1D(torch.nn.Module):
         y_train = torch.as_tensor(y_train).type(dtype)
         nclasses = torch.unique(y_train).shape[0]
 
-        assert x_train.ndim == 2
+        if x_train.ndim != 2:
+            raise ValueError('`data[0].ndim != 2`.')
 
         # Verify input dimension if `input_dim` is provided
         if 'input_dim' in kwargs:
-            assert kwargs.pop('input_dim') == x_train.shape[1]
+            input_dim = kwargs.pop('input_dim')
+            if input_dim != x_train.shape[1]:
+                raise ValueError(f'Provided `input_dim`={input_dim} does '
+                                 'not match data dimension '
+                                 f'`data[0].shape[1]`={x_train.shape[1]}')
 
         # Verify the number of classes if `nclasses` is provided
         if 'nclasses' in kwargs:
-            assert nclasses == kwargs.pop('nclasses')
+            kwargs_nclasses = kwargs.pop('nclasses')
+            if kwargs_nclasses != nclasses:
+                raise ValueError(f'Provided `nclasses={kwargs_nclasses}` does '
+                                 'not match data labels '
+                                 '`torch.unique(data[1]).shape[0]`'
+                                 f'={nclasses}')
 
         super().__init__(**kwargs)
 

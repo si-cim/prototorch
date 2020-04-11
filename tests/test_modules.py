@@ -94,14 +94,14 @@ class TestPrototypes(unittest.TestCase):
                 dtype=torch.int32)
 
     def test_prototypes1d_inputndim_with_data(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(input_dim=1,
                                         nclasses=1,
                                         prototypes_per_class=1,
                                         data=[[1.], [1]])
 
     def test_prototypes1d_inputdim_with_data(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=2,
                 nclasses=1,
@@ -110,7 +110,7 @@ class TestPrototypes(unittest.TestCase):
                 data=[[[1.]], [1]])
 
     def test_prototypes1d_nclasses_with_data(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
                 nclasses=1,
@@ -194,3 +194,7 @@ class TestLosses(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+if __name__ == '__main__':
+    unittest.main()
