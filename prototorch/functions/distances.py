@@ -69,3 +69,7 @@ def lomega_distance(x, y, omegas):
     distances = torch.sum(differences_squared, dim=2)
     distances = distances.permute(1, 0)
     return distances
+
+
+# Aliases
+sed = squared_euclidean_distance
