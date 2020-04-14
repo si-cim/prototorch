@@ -85,11 +85,42 @@ class TestCompetitions(unittest.TestCase):
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
+    def test_wtac_unequal_dist(self):
+        d = torch.tensor([[2., 3., 4.], [2., 3., 1.]])
+        labels = torch.tensor([0, 1, 1])
+        actual = competitions.wtac(d, labels)
+        desired = torch.tensor([0, 1])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
     def test_wtac_one_hot(self):
         d = torch.tensor([[1.99, 3.01], [3., 2.01]])
         labels = torch.tensor([[0, 1], [1, 0]])
         actual = competitions.wtac(d, labels)
         desired = torch.tensor([[0, 1], [1, 0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_min(self):
+        d = torch.tensor([[1., 0., 2., 3.], [9., 8., 0, 1]])
+        labels = torch.tensor([0, 0, 1, 2])
+        actual = competitions.stratified_min(d, labels)
+        desired = torch.tensor([[0., 2., 3.], [8., 0., 1.]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_min_one_hot(self):
+        d = torch.tensor([[1., 0., 2., 3.], [9., 8., 0, 1]])
+        labels = torch.tensor([0, 0, 1, 2])
+        labels = torch.eye(3)[labels]
+        actual = competitions.stratified_min(d, labels)
+        desired = torch.tensor([[0., 2., 3.], [8., 0., 1.]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -351,7 +382,7 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_random_equal1(self):
         pdist = torch.tensor([1, 1])
         actual, _ = initializers.stratified_random(self.x, self.y, pdist)
-        desired = torch.tensor([[0., -1., -2.], [2., 2., 2.]])
+        desired = torch.tensor([[0., -1., -2.], [0., 0., 0.]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -362,6 +393,16 @@ class TestInitializers(unittest.TestCase):
         actual, _ = initializers.stratified_mean(self.x, self.y, pdist)
         desired = torch.tensor([[5., 5., 5.], [5., 5., 5.], [1., 1., 1.],
                                 [1., 1., 1.]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_random_equal2(self):
+        pdist = torch.tensor([2, 2])
+        actual, _ = initializers.stratified_random(self.x, self.y, pdist)
+        desired = torch.tensor([[0., -1., -2.], [0., -1., -2.], [0., 0., 0.],
+                                [0., 0., 0.]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -380,7 +421,7 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_random_unequal(self):
         pdist = torch.tensor([1, 3])
         actual, _ = initializers.stratified_random(self.x, self.y, pdist)
-        desired = torch.tensor([[0., -1., -2.], [2., 2., 2.], [0., 0., 0.],
+        desired = torch.tensor([[0., -1., -2.], [0., 0., 0.], [0., 0., 0.],
                                 [0., 0., 0.]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
@@ -409,6 +450,18 @@ class TestLosses(unittest.TestCase):
     def test_glvq_loss_one_hot_labels(self):
         d = torch.stack([torch.ones(100), torch.zeros(100)], dim=1)
         labels = torch.tensor([[0, 1], [1, 0]])
+        wl = torch.tensor([1, 0])
+        targets = torch.stack([wl for _ in range(100)], dim=0)
+        batch_loss = losses.glvq_loss(distances=d,
+                                      target_labels=targets,
+                                      prototype_labels=labels)
+        loss_value = torch.sum(batch_loss, dim=0)
+        self.assertEqual(loss_value, -100)
+
+    def test_glvq_loss_one_hot_unequal(self):
+        dlist = [torch.ones(100), torch.zeros(100), torch.zeros(100)]
+        d = torch.stack(dlist, dim=1)
+        labels = torch.tensor([[0, 1], [1, 0], [1, 0]])
         wl = torch.tensor([1, 0])
         targets = torch.stack([wl for _ in range(100)], dim=0)
         batch_loss = losses.glvq_loss(distances=d,

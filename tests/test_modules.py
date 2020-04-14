@@ -51,7 +51,7 @@ class TestPrototypes(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_prototypes1d_proto_init_without_data(self):
-        with self.assertWarns(Warning):
+        with self.assertWarns(UserWarning):
             _ = prototypes.Prototypes1D(
                 input_dim=3,
                 nclasses=2,
@@ -168,6 +168,16 @@ class TestPrototypes(unittest.TestCase):
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
+    def test_prototypes1d_dist_check(self):
+        p1 = prototypes.Prototypes1D(input_dim=0, prototype_distribution=[0])
+        with self.assertWarns(UserWarning):
+            _ = p1._check_prototype_distribution()
+
+    def test_prototypes1d_check_extra_repr_not_empty(self):
+        p1 = prototypes.Prototypes1D(input_dim=0, prototype_distribution=[0])
+        rep = p1.extra_repr()
+        self.assertNotEqual(rep, '')
+
     def tearDown(self):
         del self.x, self.y, self.gen
         _ = torch.seed()
@@ -194,7 +204,3 @@ class TestLosses(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-
-if __name__ == '__main__':
-    unittest.main()
