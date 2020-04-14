@@ -8,8 +8,7 @@ cache:
 
 install:
   - pip install . --progress-bar off
-  - pip install codecov
-  - pip install pytest
+  - pip install -r requirements.txt
 
 script:
   - coverage run -m pytest
