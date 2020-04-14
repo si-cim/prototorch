@@ -2,9 +2,10 @@
 
 __version__ = '0.1.1-dev0'
 
-from prototorch import functions, modules
+from prototorch import datasets, functions, modules
 
 __all__ = [
+    'datasets',
     'functions',
     'modules',
 ]
