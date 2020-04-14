@@ -27,6 +27,7 @@ setup(name='prototorch',
           'numpy>=1.9.1',
       ],
       extras_require={
+          'datasets': ['requests'],
           'examples': [
               'sklearn',
               'matplotlib',
