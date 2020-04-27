@@ -10,7 +10,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(name='prototorch',
-      version='0.1.1-dev0',
+      version='0.1.1-rc0',
       description='Highly extensible, GPU-supported '
       'Learning Vector Quantization (LVQ) toolbox '
       'built using PyTorch and its nn API.',
