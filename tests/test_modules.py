@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 import torch
 
-from prototorch.modules import prototypes, losses
+from prototorch.modules import losses, prototypes
 
 
 class TestPrototypes(unittest.TestCase):
@@ -18,11 +18,15 @@ class TestPrototypes(unittest.TestCase):
 
     def test_prototypes1d_init_without_input_dim(self):
         with self.assertRaises(NameError):
-            _ = prototypes.Prototypes1D(nclasses=1)
+            _ = prototypes.Prototypes1D(nclasses=2)
 
     def test_prototypes1d_init_without_nclasses(self):
         with self.assertRaises(NameError):
             _ = prototypes.Prototypes1D(input_dim=1)
+
+    def test_prototypes1d_init_with_nclasses_1(self):
+        with self.assertWarns(UserWarning):
+            _ = prototypes.Prototypes1D(nclasses=1, input_dim=1)
 
     def test_prototypes1d_init_without_pdist(self):
         p1 = prototypes.Prototypes1D(input_dim=6,
@@ -73,24 +77,72 @@ class TestPrototypes(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_prototypes1d_init_without_inputdim_with_data(self):
-        _ = prototypes.Prototypes1D(nclasses=1,
+        _ = prototypes.Prototypes1D(nclasses=2,
                                     prototypes_per_class=1,
                                     prototype_initializer='stratified_mean',
-                                    data=[[[1.]], [1]])
+                                    data=[[[1.], [0.]], [1, 0]])
 
     def test_prototypes1d_init_with_int_data(self):
-        _ = prototypes.Prototypes1D(nclasses=1,
+        _ = prototypes.Prototypes1D(nclasses=2,
                                     prototypes_per_class=1,
                                     prototype_initializer='stratified_mean',
-                                    data=[[[1]], [1]])
+                                    data=[[[1], [0]], [1, 0]])
+
+    def test_prototypes1d_init_one_hot_without_data(self):
+        _ = prototypes.Prototypes1D(input_dim=1,
+                                    nclasses=2,
+                                    prototypes_per_class=1,
+                                    prototype_initializer='stratified_mean',
+                                    data=None,
+                                    one_hot_labels=True)
+
+    def test_prototypes1d_init_one_hot_labels_false(self):
+        """Test if ValueError is raised when `one_hot_labels` is set to `False`
+        but the provided `data` has one-hot encoded labels.
+        """
+        with self.assertRaises(ValueError):
+            _ = prototypes.Prototypes1D(
+                input_dim=1,
+                nclasses=2,
+                prototypes_per_class=1,
+                prototype_initializer='stratified_mean',
+                data=([[0.], [1.]], [[0, 1], [1, 0]]),
+                one_hot_labels=False)
+
+    def test_prototypes1d_init_1d_y_data_one_hot_labels_true(self):
+        """Test if ValueError is raised when `one_hot_labels` is set to `True`
+        but the provided `data` does not contain one-hot encoded labels.
+        """
+        with self.assertRaises(ValueError):
+            _ = prototypes.Prototypes1D(
+                input_dim=1,
+                nclasses=2,
+                prototypes_per_class=1,
+                prototype_initializer='stratified_mean',
+                data=([[0.], [1.]], [0, 1]),
+                one_hot_labels=True)
+
+    def test_prototypes1d_init_one_hot_labels_true(self):
+        """Test if ValueError is raised when `one_hot_labels` is set to `True`
+        but the provided `data` contains 2D targets but
+        does not contain one-hot encoded labels.
+        """
+        with self.assertRaises(ValueError):
+            _ = prototypes.Prototypes1D(
+                input_dim=1,
+                nclasses=2,
+                prototypes_per_class=1,
+                prototype_initializer='stratified_mean',
+                data=([[0.], [1.]], [[0], [1]]),
+                one_hot_labels=True)
 
     def test_prototypes1d_init_with_int_dtype(self):
         with self.assertRaises(RuntimeError):
             _ = prototypes.Prototypes1D(
-                nclasses=1,
+                nclasses=2,
                 prototypes_per_class=1,
                 prototype_initializer='stratified_mean',
-                data=[[[1]], [1]],
+                data=[[[1], [0]], [1, 0]],
                 dtype=torch.int32)
 
     def test_prototypes1d_inputndim_with_data(self):
@@ -104,12 +156,15 @@ class TestPrototypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=2,
-                nclasses=1,
+                nclasses=2,
                 prototypes_per_class=1,
                 prototype_initializer='stratified_mean',
-                data=[[[1.]], [1]])
+                data=[[[1.], [0.]], [1, 0]])
 
     def test_prototypes1d_nclasses_with_data(self):
+        """Test ValueError raise if provided `nclasses` is not the same
+        as the one computed from the provided `data`.
+        """
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
@@ -168,12 +223,12 @@ class TestPrototypes(unittest.TestCase):
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
-    def test_prototypes1d_dist_check(self):
+    def test_prototypes1d_dist_validate(self):
         p1 = prototypes.Prototypes1D(input_dim=0, prototype_distribution=[0])
         with self.assertWarns(UserWarning):
-            _ = p1._check_prototype_distribution()
+            _ = p1._validate_prototype_distribution()
 
-    def test_prototypes1d_check_extra_repr_not_empty(self):
+    def test_prototypes1d_validate_extra_repr_not_empty(self):
         p1 = prototypes.Prototypes1D(input_dim=0, prototype_distribution=[0])
         rep = p1.extra_repr()
         self.assertNotEqual(rep, '')
