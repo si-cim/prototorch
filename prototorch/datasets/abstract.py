@@ -1,4 +1,4 @@
-"""ProtoTorch abstract datasets
+"""ProtoTorch abstract dataset classes.
 
 Based on `torchvision.VisionDataset` and `torchvision.MNIST`
 
@@ -13,7 +13,7 @@ import torch
 
 
 class Dataset(torch.utils.data.Dataset):
-    """Abstract dataset class to be inherited"""
+    """Abstract dataset class to be inherited."""
     _repr_indent = 2
 
     def __init__(self, root):
@@ -29,7 +29,7 @@ class Dataset(torch.utils.data.Dataset):
 
 
 class ProtoDataset(Dataset):
-    """Abstract dataset class to be inherited"""
+    """Abstract dataset class to be inherited."""
     training_file = 'training.pt'
     test_file = 'test.pt'
 

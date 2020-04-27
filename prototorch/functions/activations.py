@@ -16,7 +16,7 @@ def register_activation(function):
 
 @register_activation
 # @torch.jit.script
-def identity(x, beta=torch.tensor([0])):
+def identity(x, beta=torch.tensor(0)):
     """Identity activation function.
 
     Definition:
@@ -27,7 +27,7 @@ def identity(x, beta=torch.tensor([0])):
 
 @register_activation
 # @torch.jit.script
-def sigmoid_beta(x, beta=torch.tensor([10])):
+def sigmoid_beta(x, beta=torch.tensor(10)):
     r"""Sigmoid activation function with scaling.
 
     Definition:
@@ -42,7 +42,7 @@ def sigmoid_beta(x, beta=torch.tensor([10])):
 
 @register_activation
 # @torch.jit.script
-def swish_beta(x, beta=torch.tensor([10])):
+def swish_beta(x, beta=torch.tensor(10)):
     r"""Swish activation function with scaling.
 
     Definition:
