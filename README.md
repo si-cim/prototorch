@@ -29,7 +29,11 @@ provided by PyTorch.
 
 ProtoTorch can be installed using `pip`.
 ```bash
-pip install prototorch
+pip install -U prototorch
+```
+To also install the extras, use
+```bash
+pip install -U prototorch[datasets,examples,tests]
 ```
 
 To install the bleeding-edge features and improvements:

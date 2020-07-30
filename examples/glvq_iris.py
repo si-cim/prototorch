@@ -12,7 +12,7 @@ from prototorch.modules.prototypes import Prototypes1D
 
 # Prepare and preprocess the data
 scaler = StandardScaler()
-x_train, y_train = load_iris(True)
+x_train, y_train = load_iris(return_X_y=True)
 x_train = x_train[:, [0, 2]]
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
