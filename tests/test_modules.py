@@ -199,7 +199,7 @@ class TestPrototypes(unittest.TestCase):
 
     def test_prototypes1d_func_initializer(self):
         def my_initializer(*args, **kwargs):
-            return torch.full((2, 99), 99), torch.tensor([0, 1])
+            return torch.full((2, 99), 99.0), torch.tensor([0, 1])
 
         p1 = prototypes.Prototypes1D(input_dim=99,
                                      nclasses=2,
