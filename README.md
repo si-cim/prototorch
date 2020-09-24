@@ -1,7 +1,6 @@
-# ProtoTorch
+# ProtoTorch: Prototype Learning in PyTorch
 
-ProtoTorch is a PyTorch-based Python toolbox for bleeding-edge research in
-prototype-based machine learning algorithms.
+![ProtoTorch Logo](https://prototorch.readthedocs.io/en/latest/_static/horizontal-lockup.png)
 
 [![Build Status](https://travis-ci.org/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
 ![tests](https://github.com/si-cim/prototorch/workflows/tests/badge.svg)
@@ -12,18 +11,14 @@ prototype-based machine learning algorithms.
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/prototorch?color=blue)
 [![GitHub license](https://img.shields.io/github/license/si-cim/prototorch)](https://github.com/si-cim/prototorch/blob/master/LICENSE)
 
+*Tensorflow users, see:* [ProtoFlow](https://github.com/si-cim/protoflow)
+
 ## Description
 
 This is a Python toolbox brewed at the Mittweida University of Applied Sciences
-in Germany for bleeding-edge research in Learning Vector Quantization (LVQ)
-and potentially other prototype-based methods. Although, there are
-other (perhaps more extensive) LVQ toolboxes available out there, the focus of
-ProtoTorch is ease-of-use, extensibility and speed.
-
-Many popular prototype-based Machine Learning (ML) algorithms like K-Nearest
-Neighbors (KNN), Generalized Learning Vector Quantization (GLVQ) and Generalized
-Matrix Learning Vector Quantization (GMLVQ) are implemented using the "nn" API
-provided by PyTorch.
+in Germany for bleeding-edge research in Prototype-based Machine Learning
+methods and other interpretable models. The focus of ProtoTorch is ease-of-use,
+extensibility and speed.
 
 ## Installation
 
@@ -44,25 +39,31 @@ cd prototorch
 pip install -e .
 ```
 
+## Documentation
+
+The documentation is available at <https://prototorch.readthedocs.io/en/latest/>
+
 ## Usage
 
+### For researchers
 ProtoTorch is modular. It is very easy to use the modular pieces provided by
 ProtoTorch, like the layers, losses, callbacks and metrics to build your own
 prototype-based(instance-based) models. These pieces blend-in seamlessly with
-numpy and PyTorch to allow you mix and match the modules from ProtoTorch with
-other PyTorch modules.
+Keras allowing you to mix and match the modules from ProtoFlow with other
+modules in `torch.nn`.
 
-ProtoTorch comes prepackaged with many popular LVQ algorithms in a convenient
-API, with more algorithms and techniques coming soon. If you would simply like
-to be able to use those algorithms to train large ML models on a GPU, ProtoTorch
-lets you do this without requiring a black-belt in high-performance Tensor
-computation.
+### For engineers
+ProtoTorch comes prepackaged with many popular Learning Vector Quantization
+(LVQ)-like algorithms in a convenient API. If you would simply like to be able
+to use those algorithms to train large ML models on a GPU, ProtoTorch lets you
+do this without requiring a black-belt in high-performance Tensor computing.
+
 
 ## Bibtex
 
 If you would like to cite the package, please use this:
 ```bibtex
-@misc{Ravichandran2020,
+@misc{Ravichandran2020b,
   author = {Ravichandran, J},
   title = {ProtoTorch},
   year = {2020},
