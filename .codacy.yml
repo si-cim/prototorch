@@ -1,6 +1,8 @@
 # To validate the contents of your configuration file
 # run the following command in the folder where the configuration file is located:
 # codacy-analysis-cli validate-configuration --directory `pwd`
+# To analyse, run:
+# codacy-analysis-cli analyse --tool remark-lint --directory `pwd`
 ---
 engines:
   pylintpython3:
@@ -10,4 +12,4 @@ engines:
     exclude_paths:
       - config/engines.yml
 exclude_paths:
-  - '**/tests/**'
+  - 'tests/**'

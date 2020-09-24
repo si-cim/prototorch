@@ -2,11 +2,8 @@
 
 import warnings
 
-import numpy as np
 import torch
 
-from prototorch.functions.competitions import wtac
-from prototorch.functions.distances import sed
 from prototorch.functions.initializers import get_initializer
 
 
@@ -55,7 +52,7 @@ class Prototypes1D(_Prototypes):
             :math:`(\text{total_prototypes}, \text{prototype_dimension})`.
         prototype_labels: the non-learnable labels of the prototypes.
 
-    Examples::
+    Examples:
 
         >>> p = Prototypes1D(input_dim=20, nclasses=10)
         >>> input = torch.randn(128, 20)
