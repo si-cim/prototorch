@@ -58,7 +58,6 @@ ProtoTorch comes prepackaged with many popular Learning Vector Quantization
 to use those algorithms to train large ML models on a GPU, ProtoTorch lets you
 do this without requiring a black-belt in high-performance Tensor computing.
 
-
 ## Bibtex
 
 If you would like to cite the package, please use this:
