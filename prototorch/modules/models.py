@@ -105,8 +105,8 @@ class GTLVQ(nn.Module):
         if self.tpt == 'local_proj':
             x_conform = x.unsqueeze(1).repeat_interleave(self.num_protos,
                                                          1).unsqueeze(2)
-            dis, proj_x = self.local_tangent_projection(
-                x_conform, self.cls.prototypes, self.subspaces)
+            dis, proj_x = self.local_tangent_projection(x_conform)
+
             proj_x = proj_x.reshape(x.shape[0] * self.num_protos,
                                     self.feature_dim)
             return proj_x, dis
