@@ -77,10 +77,10 @@ def euclidean_distance_matrix(x, y, squared=False, epsilon=1e-10):
     r""" Computes an euclidean distanes matrix given two distinct vectors.
     last dimension must be the vector dimension!
     compute the distance via the identity of the dot product. This avoids the memory overhead due to the subtraction!
-    
+
     x.shape = (number_of_x_vectors, vector_dim)
     y.shape = (number_of_y_vectors, vector_dim)
-    
+
     output: matrix of distances (number_of_x_vectors, number_of_y_vectors)
     """
     for tensor in [x, y]:

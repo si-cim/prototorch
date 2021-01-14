@@ -24,7 +24,7 @@ def orthogonalization(tensors):
     return out
 
 
-def trace_normalization(tensors, epsilon=[1e-10]):
+def trace_normalization(tensors):
     r""" Trace normalization
     """
     epsilon = torch.tensor([1e-10], dtype=torch.float64)

@@ -1,16 +1,13 @@
 """
 ProtoTorch GTLVQ example using MNIST data.
-The GTLVQ is placed as an classification model on 
+The GTLVQ is placed as an classification model on
 top of a CNN, considered as featurer extractor.
-Initialization of subpsace and prototypes in 
+Initialization of subpsace and prototypes in
 Siamnese fashion
 For more info about GTLVQ see:
 DOI:10.1109/IJCNN.2016.7727534
 """
-import sys
 
-from torch.nn import parameter
-from matplotlib.pyplot import fill
 import numpy as np
 import torch
 import torch.nn as nn

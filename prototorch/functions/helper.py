@@ -15,7 +15,7 @@ def calculate_prototype_accuracy(y_pred, y_true, plabels):
 
 
 def predict_label(y_pred, plabels):
-    r""" Predicts labels given a prediction of a prototype based model. 
+    r""" Predicts labels given a prediction of a prototype based model.
     """
     with torch.no_grad():
         return plabels[torch.argmin(y_pred, 1)]
