@@ -145,11 +145,7 @@ class GTLVQ(nn.Module):
         return euclidean_distance_matrix(x, projected_prototypes)
 
     def local_tangent_projection(self,
-                                 signals,
-                                 protos,
-                                 subspaces,
-                                 squared=False,
-                                 epsilon=1e-10):
+                                 signals):
         # Note: subspaces is always assumed as transposed and must be orthogonal!
         # shape(signals): batch x proto_number x channels x dim1 x dim2 x ... x dimN
         # shape(protos): proto_number x dim1 x dim2 x ... x dimN
@@ -157,7 +153,8 @@ class GTLVQ(nn.Module):
         # subspace should be orthogonalized
         # Origin Source Code
         # Origin Author:
-
+        protos = self.cls.prototypes
+        subspaces = self.subspaces
         signal_shape, signal_int_shape = _int_and_mixed_shape(signals)
         _, proto_int_shape = _int_and_mixed_shape(protos)
 
