@@ -28,15 +28,19 @@ pip install -U prototorch
 ```
 To also install the extras, use
 ```bash
-pip install -U prototorch[datasets,examples,tests]
+pip install -U prototorch[all]
 ```
+
+*Note: If you're using [ZSH](https://www.zsh.org/), the square brackets `[ ]`
+have to be escaped like so: `\[\]`, making the install command `pip install -U
+prototorch\[all\]`.*
 
 To install the bleeding-edge features and improvements:
 ```bash
 git clone https://github.com/si-cim/prototorch.git
 git checkout dev
 cd prototorch
-pip install -e .
+pip install -e .[all]
 ```
 
 ## Documentation
