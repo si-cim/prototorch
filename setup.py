@@ -27,6 +27,7 @@ DATASETS = [
 EXAMPLES = [
     "sklearn",
     "matplotlib",
+    "torchinfo",
 ]
 TESTS = ["pytest"]
 ALL = DOCS + DATASETS + EXAMPLES + TESTS
