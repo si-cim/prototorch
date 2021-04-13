@@ -16,7 +16,10 @@ __all_core__ = [
 # #############################################
 # Plugin Loader
 # #############################################
+import pkgutil
 import pkg_resources
+
+__path__ = pkgutil.extend_path(__path__, __name__)
 
 
 def discover_plugins():
