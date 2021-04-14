@@ -3,7 +3,14 @@
 # #############################################
 # Core Setup
 # #############################################
-__version_core__ = "0.2.0-dev0"
+from importlib.metadata import version, PackageNotFoundError
+
+VERSION_FALLBACK = "uninstalled_version"
+try:
+    __version_core__ = version(__name__)
+except PackageNotFoundError:
+    __version_core__ = VERSION_FALLBACK
+    pass
 
 from prototorch import datasets, functions, modules
 

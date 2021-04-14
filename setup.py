@@ -19,24 +19,6 @@ import importlib.util
 
 PKG_DIR = "prototorch"
 
-
-def find_version():
-    """Return value of __version__.
-
-    Reference: https://stackoverflow.com/a/42269185/
-    """
-    file_path = importlib.util.find_spec(PKG_DIR).origin
-    with open(file_path) as file_obj:
-        root_node = ast.parse(file_obj.read())
-    for node in ast.walk(root_node):
-        if isinstance(node, ast.Assign):
-            if len(node.targets) == 1 and node.targets[0].id == "__version_core__":
-                return node.value.s
-    raise RuntimeError("Unable to find version string.")
-
-
-version = find_version()
-
 PROJECT_URL = "https://github.com/si-cim/prototorch"
 DOWNLOAD_URL = "https://github.com/si-cim/prototorch.git"
 
@@ -68,7 +50,7 @@ ALL = DOCS + DATASETS + EXAMPLES + TESTS
 
 setup(
     name=safe_name(PKG_DIR),
-    version=version,
+    use_scm_version=True,
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",
@@ -80,6 +62,7 @@ setup(
     download_url=DOWNLOAD_URL,
     license="MIT",
     install_requires=INSTALL_REQUIRES,
+    setup_requires=["setuptools_scm"],
     extras_require={
         "docs": DOCS,
         "datasets": DATASETS,
