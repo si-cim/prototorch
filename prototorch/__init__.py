@@ -1,6 +1,6 @@
 """ProtoTorch package."""
 
-__version__ = '0.1.1-rc0'
+__version__ = '0.2.0'
 
 from prototorch import datasets, functions, modules
 
