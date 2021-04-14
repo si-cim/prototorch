@@ -45,22 +45,8 @@ pip install -e .[all]
 
 ## Documentation
 
-The documentation is available at <https://prototorch.readthedocs.io/en/latest/>
-
-## Usage
-
-### For researchers
-ProtoTorch is modular. It is very easy to use the modular pieces provided by
-ProtoTorch, like the layers, losses, callbacks and metrics to build your own
-prototype-based(instance-based) models. These pieces blend-in seamlessly with
-Keras allowing you to mix and match the modules from ProtoFlow with other
-modules in `torch.nn`.
-
-### For engineers
-ProtoTorch comes prepackaged with many popular Learning Vector Quantization
-(LVQ)-like algorithms in a convenient API. If you would simply like to be able
-to use those algorithms to train large ML models on a GPU, ProtoTorch lets you
-do this without requiring a black-belt in high-performance Tensor computing.
+The documentation is available at <https://www.prototorch.ml/en/latest/>. Should
+that link not work try <https://prototorch.readthedocs.io/en/latest/>.
 
 ## Bibtex
 
