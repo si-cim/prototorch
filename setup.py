@@ -12,13 +12,6 @@ ProtoTorch Core Package
 from setuptools import setup
 from setuptools import find_packages
 
-from pkg_resources import safe_name
-
-import ast
-import importlib.util
-
-PKG_DIR = "prototorch"
-
 PROJECT_URL = "https://github.com/si-cim/prototorch"
 DOWNLOAD_URL = "https://github.com/si-cim/prototorch.git"
 
@@ -49,8 +42,8 @@ TESTS = ["pytest"]
 ALL = DOCS + DATASETS + EXAMPLES + TESTS
 
 setup(
-    name=safe_name(PKG_DIR),
-    use_scm_version=True,
+    name="prototorch",
+    version="0.2.0",
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",
@@ -62,7 +55,6 @@ setup(
     download_url=DOWNLOAD_URL,
     license="MIT",
     install_requires=INSTALL_REQUIRES,
-    setup_requires=["setuptools_scm"],
     extras_require={
         "docs": DOCS,
         "datasets": DATASETS,

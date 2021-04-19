@@ -3,14 +3,7 @@
 # #############################################
 # Core Setup
 # #############################################
-from importlib.metadata import version, PackageNotFoundError
-
-VERSION_FALLBACK = "uninstalled_version"
-try:
-    __version_core__ = version(__name__)
-except PackageNotFoundError:
-    __version_core__ = VERSION_FALLBACK
-    pass
+__version__ = "0.2.0"
 
 from prototorch import datasets, functions, modules
 
@@ -40,14 +33,14 @@ discovered_plugins = discover_plugins()
 locals().update(discovered_plugins)
 
 # Generate combines __version__ and __all__
-__version_plugins__ = "\n".join(
+version_plugins = "\n".join(
     [
         "- " + name + ": v" + plugin.__version__
         for name, plugin in discovered_plugins.items()
     ]
 )
-if __version_plugins__ != "":
-    __version_plugins__ = "\nPlugins: \n" + __version_plugins__
+if version_plugins != "":
+    version_plugins = "\nPlugins: \n" + version_plugins
 
-__version__ = "core: v" + __version_core__ + __version_plugins__
+version = "core: v" + __version__ + version_plugins
 __all__ = __all_core__ + list(discovered_plugins.keys())
