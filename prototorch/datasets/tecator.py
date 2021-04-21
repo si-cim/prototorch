@@ -46,42 +46,45 @@ from prototorch.datasets.abstract import ProtoDataset
 
 
 class Tecator(ProtoDataset):
-    """Tecator dataset for classification."""
-    resources = [
-        ('1MMuUK8V41IgNpnPDbg3E-QAL6wlErTk0',
-         'ba5607c580d0f91bb27dc29d13c2f8df'),
+    """
+    `Tecator Dataset <http://lib.stat.cmu.edu/datasets/tecator>`__
+    for classification.
+    """
+
+    _resources = [
+        ("1MMuUK8V41IgNpnPDbg3E-QAL6wlErTk0", "ba5607c580d0f91bb27dc29d13c2f8df"),
     ]  # (google_storage_id, md5hash)
-    classes = ['0 - low_fat', '1 - high_fat']
+    classes = ["0 - low_fat", "1 - high_fat"]
 
     def __getitem__(self, index):
         img, target = self.data[index], int(self.targets[index])
         return img, target
 
-    def download(self):
+    def _download(self):
         """Download the data if it doesn't exist in already."""
         if self._check_exists():
             return
 
         if self.verbose:
-            print('Making directories...')
+            print("Making directories...")
         os.makedirs(self.raw_folder, exist_ok=True)
         os.makedirs(self.processed_folder, exist_ok=True)
 
         if self.verbose:
-            print('Downloading...')
-        for fileid, md5 in self.resources:
-            filename = 'tecator.npz'
-            download_file_from_google_drive(fileid,
-                                            root=self.raw_folder,
-                                            filename=filename,
-                                            md5=md5)
+            print("Downloading...")
+        for fileid, md5 in self._resources:
+            filename = "tecator.npz"
+            download_file_from_google_drive(
+                fileid, root=self.raw_folder, filename=filename, md5=md5
+            )
 
         if self.verbose:
-            print('Processing...')
-        with np.load(os.path.join(self.raw_folder, 'tecator.npz'),
-                     allow_pickle=False) as f:
-            x_train, y_train = f['x_train'], f['y_train']
-            x_test, y_test = f['x_test'], f['y_test']
+            print("Processing...")
+        with np.load(
+            os.path.join(self.raw_folder, "tecator.npz"), allow_pickle=False
+        ) as f:
+            x_train, y_train = f["x_train"], f["y_train"]
+            x_test, y_test = f["x_test"], f["y_test"]
         training_set = [
             torch.tensor(x_train, dtype=torch.float32),
             torch.tensor(y_train),
@@ -91,12 +94,10 @@ class Tecator(ProtoDataset):
             torch.tensor(y_test),
         ]
 
-        with open(os.path.join(self.processed_folder, self.training_file),
-                  'wb') as f:
+        with open(os.path.join(self.processed_folder, self.training_file), "wb") as f:
             torch.save(training_set, f)
-        with open(os.path.join(self.processed_folder, self.test_file),
-                  'wb') as f:
+        with open(os.path.join(self.processed_folder, self.test_file), "wb") as f:
             torch.save(test_set, f)
 
         if self.verbose:
-            print('Done!')
+            print("Done!")

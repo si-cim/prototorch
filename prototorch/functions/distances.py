@@ -1,15 +1,24 @@
 """ProtoTorch distance functions."""
 
 import torch
-from prototorch.functions.helper import equal_int_shape, _int_and_mixed_shape, _check_shapes
+from prototorch.functions.helper import (
+    equal_int_shape,
+    _int_and_mixed_shape,
+    _check_shapes,
+)
 import numpy as np
 
 
 def squared_euclidean_distance(x, y):
-    """Compute the squared Euclidean distance between :math:`x` and :math:`y`.
+    r"""Compute the squared Euclidean distance between :math:`\bm x` and :math:`\bm y`.
 
-    Expected dimension of x is 2.
-    Expected dimension of y is 2.
+    Compute :math:`{\langle \bm x - \bm y \rangle}_2`
+
+    :param `torch.tensor` x: Two dimensional vector
+    :param `torch.tensor` y: Two dimensional vector
+
+    **Alias:**
+    ``prototorch.functions.distances.sed``
     """
     expanded_x = x.unsqueeze(dim=1)
     batchwise_difference = y - expanded_x
@@ -19,10 +28,15 @@ def squared_euclidean_distance(x, y):
 
 
 def euclidean_distance(x, y):
-    """Compute the Euclidean distance between :math:`x` and :math:`y`.
+    r"""Compute the Euclidean distance between :math:`x` and :math:`y`.
 
-    Expected dimension of x is 2.
-    Expected dimension of y is 2.
+    Compute :math:`\sqrt{{\langle \bm x - \bm y \rangle}_2}`
+
+    :param `torch.tensor` x: Input Tensor of shape :math:`X \times N`
+    :param `torch.tensor` y: Input Tensor of shape :math:`Y \times N`
+
+    :returns: Distance Tensor of shape :math:`X \times Y`
+    :rtype: `torch.tensor`
     """
     distances_raised = squared_euclidean_distance(x, y)
     distances = torch.sqrt(distances_raised)
@@ -30,10 +44,17 @@ def euclidean_distance(x, y):
 
 
 def lpnorm_distance(x, y, p):
-    r"""Compute :math:`{\langle x, y \rangle}_p`.
+    r"""
+    Calculates the lp-norm between :math:`\bm x` and :math:`\bm y`.
+    Also known as Minkowski distance.
 
-    Expected dimension of x is 2.
-    Expected dimension of y is 2.
+    Compute :math:`{\| \bm x - \bm y \|}_p`.
+
+    Calls ``torch.cdist``
+
+    :param `torch.tensor` x: Two dimensional vector
+    :param `torch.tensor` y: Two dimensional vector
+    :param p: p parameter of the lp norm
     """
     distances = torch.cdist(x, y, p=p)
     return distances
@@ -42,11 +63,11 @@ def lpnorm_distance(x, y, p):
 def omega_distance(x, y, omega):
     r"""Omega distance.
 
-    Compute :math:`{\langle \Omega x, \Omega y \rangle}_p`
+    Compute :math:`{\| \Omega \bm x - \Omega \bm y \|}_p`
 
-    Expected dimension of x is 2.
-    Expected dimension of y is 2.
-    Expected dimension of omega is 2.
+    :param `torch.tensor` x: Two dimensional vector
+    :param `torch.tensor` y: Two dimensional vector
+    :param `torch.tensor` omega: Two dimensional matrix
     """
     projected_x = x @ omega
     projected_y = y @ omega
@@ -57,48 +78,55 @@ def omega_distance(x, y, omega):
 def lomega_distance(x, y, omegas):
     r"""Localized Omega distance.
 
-    Compute :math:`{\langle \Omega_k x, \Omega_k y_k \rangle}_p`
+    Compute :math:`{\| \Omega_k \bm x - \Omega_k \bm y_k \|}_p`
 
-    Expected dimension of x is 2.
-    Expected dimension of y is 2.
-    Expected dimension of omegas is 3.
+    :param `torch.tensor` x: Two dimensional vector
+    :param `torch.tensor` y: Two dimensional vector
+    :param `torch.tensor` omegas: Three dimensional matrix
     """
     projected_x = x @ omegas
     projected_y = torch.diagonal(y @ omegas).T
     expanded_y = torch.unsqueeze(projected_y, dim=1)
     batchwise_difference = expanded_y - projected_x
-    differences_squared = batchwise_difference**2
+    differences_squared = batchwise_difference ** 2
     distances = torch.sum(differences_squared, dim=2)
     distances = distances.permute(1, 0)
     return distances
 
 
 def euclidean_distance_matrix(x, y, squared=False, epsilon=1e-10):
-    r""" Computes an euclidean distanes matrix given two distinct vectors.
+    r"""Computes an euclidean distances matrix given two distinct vectors.
     last dimension must be the vector dimension!
     compute the distance via the identity of the dot product. This avoids the memory overhead due to the subtraction!
 
-    x.shape = (number_of_x_vectors, vector_dim)
-    y.shape = (number_of_y_vectors, vector_dim)
+    - ``x.shape = (number_of_x_vectors, vector_dim)``
+    - ``y.shape = (number_of_y_vectors, vector_dim)``
 
     output: matrix of distances (number_of_x_vectors, number_of_y_vectors)
     """
     for tensor in [x, y]:
         if tensor.ndim != 2:
             raise ValueError(
-                'The tensor dimension must be two. You provide: tensor.ndim=' +
-                str(tensor.ndim) + '.')
+                "The tensor dimension must be two. You provide: tensor.ndim="
+                + str(tensor.ndim)
+                + "."
+            )
     if not equal_int_shape([tuple(x.shape)[1]], [tuple(y.shape)[1]]):
         raise ValueError(
-            'The vector shape must be equivalent in both tensors. You provide: tuple(y.shape)[1]='
-            + str(tuple(x.shape)[1]) + ' and  tuple(y.shape)(y)[1]=' +
-            str(tuple(y.shape)[1]) + '.')
+            "The vector shape must be equivalent in both tensors. You provide: tuple(y.shape)[1]="
+            + str(tuple(x.shape)[1])
+            + " and  tuple(y.shape)(y)[1]="
+            + str(tuple(y.shape)[1])
+            + "."
+        )
 
     y = torch.transpose(y)
 
-    diss = torch.sum(x**2, axis=1,
-                     keepdims=True) - 2 * torch.dot(x, y) + torch.sum(
-                         y**2, axis=0, keepdims=True)
+    diss = (
+        torch.sum(x ** 2, axis=1, keepdims=True)
+        - 2 * torch.dot(x, y)
+        + torch.sum(y ** 2, axis=0, keepdims=True)
+    )
 
     if not squared:
         if epsilon == 0:
@@ -110,13 +138,19 @@ def euclidean_distance_matrix(x, y, squared=False, epsilon=1e-10):
 
 
 def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
-    r""" Tangent distances based on the tensorflow implementation of Sascha Saralajews
-    For more info about Tangen distances see DOI:10.1109/IJCNN.2016.7727534.
+    r"""Tangent distances based on the tensorflow implementation of Sascha Saralajews
+
+    For more info about Tangen distances see
+
+    DOI:10.1109/IJCNN.2016.7727534.
+
     The subspaces is always assumed as transposed and must be orthogonal!
     For local non sparse signals subspaces must be provided!
-    shape(signals): batch x proto_number x channels x dim1 x dim2 x ... x dimN
-    shape(protos): proto_number x dim1 x dim2 x ... x dimN
-    shape(subspaces): (optional [proto_number]) x prod(dim1 * dim2 * ... * dimN)  x prod(projected_atom_shape)
+
+    - shape(signals): batch x proto_number x channels x dim1 x dim2 x ... x dimN
+    - shape(protos): proto_number x dim1 x dim2 x ... x dimN
+    - shape(subspaces): (optional [proto_number]) x prod(dim1 * dim2 * ... * dimN)  x prod(projected_atom_shape)
+
     subspace should be orthogonalized
     Pytorch implementation of Sascha Saralajew's tensorflow code.
     Translation by Christoph Raab
@@ -139,18 +173,19 @@ def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
         if subspaces.ndim == 2:
             # clean solution without map if the matrix_scope is global
             projectors = torch.eye(subspace_int_shape[-2]) - torch.dot(
-                subspaces, torch.transpose(subspaces))
+                subspaces, torch.transpose(subspaces)
+            )
 
             projected_signals = torch.dot(signals, projectors)
             projected_protos = torch.dot(protos, projectors)
 
-            diss = euclidean_distance_matrix(projected_signals,
-                                             projected_protos,
-                                             squared=squared,
-                                             epsilon=epsilon)
+            diss = euclidean_distance_matrix(
+                projected_signals, projected_protos, squared=squared, epsilon=epsilon
+            )
 
             diss = torch.reshape(
-                diss, [signal_shape[0], signal_shape[2], proto_shape[0]])
+                diss, [signal_shape[0], signal_shape[2], proto_shape[0]]
+            )
 
             return torch.permute(diss, [0, 2, 1])
 
@@ -158,18 +193,21 @@ def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
 
             # no solution without map possible --> memory efficient but slow!
             projectors = torch.eye(subspace_int_shape[-2]) - torch.bmm(
-                subspaces,
-                subspaces)  #K.batch_dot(subspaces, subspaces, [2, 2])
+                subspaces, subspaces
+            )  # K.batch_dot(subspaces, subspaces, [2, 2])
 
-            projected_protos = (protos @ subspaces
-                                ).T  #K.batch_dot(projectors, protos, [1, 1]))
+            projected_protos = (
+                protos @ subspaces
+            ).T  # K.batch_dot(projectors, protos, [1, 1]))
 
             def projected_norm(projector):
-                return torch.sum(torch.dot(signals, projector)**2, axis=1)
+                return torch.sum(torch.dot(signals, projector) ** 2, axis=1)
 
-            diss = torch.transpose(map(projected_norm, projectors)) \
-                    - 2 * torch.dot(signals, projected_protos) \
-                    + torch.sum(projected_protos**2, axis=0, keepdims=True)
+            diss = (
+                torch.transpose(map(projected_norm, projectors))
+                - 2 * torch.dot(signals, projected_protos)
+                + torch.sum(projected_protos ** 2, axis=0, keepdims=True)
+            )
 
             if not squared:
                 if epsilon == 0:
@@ -178,7 +216,8 @@ def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
                     diss = torch.sqrt(torch.max(diss, epsilon))
 
             diss = torch.reshape(
-                diss, [signal_shape[0], signal_shape[2], proto_shape[0]])
+                diss, [signal_shape[0], signal_shape[2], proto_shape[0]]
+            )
 
             return torch.permute(diss, [0, 2, 1])
 
@@ -189,17 +228,18 @@ def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
 
         # global tangent space
         if subspaces.ndim == 2:
-            #Scope Projectors
+            # Scope Projectors
             projectors = subspaces  #
 
-            #Scope: Tangentspace Projections
+            # Scope: Tangentspace Projections
             diff = torch.reshape(
-                diff, (signal_shape[0] * signal_shape[2], signal_shape[1], -1))
+                diff, (signal_shape[0] * signal_shape[2], signal_shape[1], -1)
+            )
             projected_diff = diff @ projectors
             projected_diff = torch.reshape(
                 projected_diff,
-                (signal_shape[0], signal_shape[2], signal_shape[1]) +
-                signal_shape[3:])
+                (signal_shape[0], signal_shape[2], signal_shape[1]) + signal_shape[3:],
+            )
 
             diss = torch.norm(projected_diff, 2, dim=-1)
             return diss.permute([0, 2, 1])
@@ -211,13 +251,14 @@ def tangent_distance(signals, protos, subspaces, squared=False, epsilon=1e-10):
 
             # Scope: Tangentspace Projections
             diff = torch.reshape(
-                diff, (signal_shape[0] * signal_shape[2], signal_shape[1], -1))
+                diff, (signal_shape[0] * signal_shape[2], signal_shape[1], -1)
+            )
             diff = diff.permute([1, 0, 2])
             projected_diff = torch.bmm(diff, projectors)
             projected_diff = torch.reshape(
                 projected_diff,
-                (signal_shape[1], signal_shape[0], signal_shape[2]) +
-                signal_shape[3:])
+                (signal_shape[1], signal_shape[0], signal_shape[2]) + signal_shape[3:],
+            )
 
             diss = torch.norm(projected_diff, 2, dim=-1)
             return diss.permute([1, 0, 2]).squeeze(-1)

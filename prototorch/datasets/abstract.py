@@ -14,6 +14,7 @@ import torch
 
 class Dataset(torch.utils.data.Dataset):
     """Abstract dataset class to be inherited."""
+
     _repr_indent = 2
 
     def __init__(self, root):
@@ -30,8 +31,9 @@ class Dataset(torch.utils.data.Dataset):
 
 class ProtoDataset(Dataset):
     """Abstract dataset class to be inherited."""
-    training_file = 'training.pt'
-    test_file = 'test.pt'
+
+    training_file = "training.pt"
+    test_file = "test.pt"
 
     def __init__(self, root, train=True, download=True, verbose=True):
         super().__init__(root)
@@ -39,43 +41,44 @@ class ProtoDataset(Dataset):
         self.verbose = verbose
 
         if download:
-            self.download()
+            self._download()
 
         if not self._check_exists():
-            raise RuntimeError('Dataset not found. '
-                               'You can use download=True to download it')
+            raise RuntimeError(
+                "Dataset not found. " "You can use download=True to download it"
+            )
 
         data_file = self.training_file if self.train else self.test_file
 
         self.data, self.targets = torch.load(
-            os.path.join(self.processed_folder, data_file))
+            os.path.join(self.processed_folder, data_file)
+        )
 
     @property
     def raw_folder(self):
-        return os.path.join(self.root, self.__class__.__name__, 'raw')
+        return os.path.join(self.root, self.__class__.__name__, "raw")
 
     @property
     def processed_folder(self):
-        return os.path.join(self.root, self.__class__.__name__, 'processed')
+        return os.path.join(self.root, self.__class__.__name__, "processed")
 
     @property
     def class_to_idx(self):
         return {_class: i for i, _class in enumerate(self.classes)}
 
     def _check_exists(self):
-        return (os.path.exists(
-            os.path.join(self.processed_folder, self.training_file))
-                and os.path.exists(
-                    os.path.join(self.processed_folder, self.test_file)))
+        return os.path.exists(
+            os.path.join(self.processed_folder, self.training_file)
+        ) and os.path.exists(os.path.join(self.processed_folder, self.test_file))
 
     def __repr__(self):
-        head = 'Dataset ' + self.__class__.__name__
-        body = ['Number of datapoints: {}'.format(self.__len__())]
+        head = "Dataset " + self.__class__.__name__
+        body = ["Number of datapoints: {}".format(self.__len__())]
         if self.root is not None:
-            body.append('Root location: {}'.format(self.root))
+            body.append("Root location: {}".format(self.root))
         body += self.extra_repr().splitlines()
-        lines = [head] + [' ' * self._repr_indent + line for line in body]
-        return '\n'.join(lines)
+        lines = [head] + [" " * self._repr_indent + line for line in body]
+        return "\n".join(lines)
 
     def extra_repr(self):
         return f"Split: {'Train' if self.train is True else 'Test'}"
@@ -83,5 +86,5 @@ class ProtoDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def download(self):
+    def _download(self):
         raise NotImplementedError
