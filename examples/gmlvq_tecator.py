@@ -20,11 +20,13 @@ class Model(torch.nn.Module):
         """GMLVQ model as a siamese network."""
         super().__init__()
         x, y = train_data.data, train_data.targets
-        self.p1 = Prototypes1D(input_dim=100,
-                               prototypes_per_class=2,
-                               nclasses=2,
-                               prototype_initializer="stratified_random",
-                               data=[x, y])
+        self.p1 = Prototypes1D(
+            input_dim=100,
+            prototypes_per_class=2,
+            nclasses=2,
+            prototype_initializer="stratified_random",
+            data=[x, y],
+        )
         self.omega = torch.nn.Linear(in_features=100,
                                      out_features=100,
                                      bias=False)

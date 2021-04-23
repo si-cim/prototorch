@@ -61,4 +61,4 @@ def get_activation(funcname):
         return funcname
     if funcname in ACTIVATIONS:
         return ACTIVATIONS.get(funcname)
-    raise NameError(f'Activation {funcname} was not found.')
+    raise NameError(f"Activation {funcname} was not found.")

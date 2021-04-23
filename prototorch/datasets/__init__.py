@@ -3,5 +3,5 @@
 from .tecator import Tecator
 
 __all__ = [
-    'Tecator',
+    "Tecator",
 ]

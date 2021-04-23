@@ -22,10 +22,12 @@ class Model(torch.nn.Module):
     def __init__(self):
         """Local-GMLVQ model."""
         super().__init__()
-        self.p1 = Prototypes1D(input_dim=2,
-                               prototype_distribution=[1, 2, 2],
-                               prototype_initializer="stratified_random",
-                               data=[x_train, y_train])
+        self.p1 = Prototypes1D(
+            input_dim=2,
+            prototype_distribution=[1, 2, 2],
+            prototype_initializer="stratified_random",
+            data=[x_train, y_train],
+        )
         omegas = torch.zeros(5, 2, 2)
         self.omegas = torch.nn.Parameter(omegas)
         eye_(self.omegas)
@@ -76,14 +78,16 @@ for epoch in range(100):
     ax.set_xlabel("Data dimension 1")
     ax.set_ylabel("Data dimension 2")
     cmap = "viridis"
-    ax.scatter(x_train[:, 0], x_train[:, 1], c=y_train, edgecolor='k')
-    ax.scatter(protos[:, 0],
-               protos[:, 1],
-               c=plabels,
-               cmap=cmap,
-               edgecolor='k',
-               marker='D',
-               s=50)
+    ax.scatter(x_train[:, 0], x_train[:, 1], c=y_train, edgecolor="k")
+    ax.scatter(
+        protos[:, 0],
+        protos[:, 1],
+        c=plabels,
+        cmap=cmap,
+        edgecolor="k",
+        marker="D",
+        s=50,
+    )
 
     # Paint decision regions
     x = np.vstack((x_train, protos))

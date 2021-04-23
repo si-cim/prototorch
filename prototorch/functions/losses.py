@@ -11,7 +11,7 @@ def _get_dp_dm(distances, targets, plabels):
         matcher = torch.eq(torch.sum(matcher, dim=-1), nclasses)
     not_matcher = torch.bitwise_not(matcher)
 
-    inf = torch.full_like(distances, fill_value=float('inf'))
+    inf = torch.full_like(distances, fill_value=float("inf"))
     d_matching = torch.where(matcher, distances, inf)
     d_unmatching = torch.where(not_matcher, distances, inf)
     dp = torch.min(d_matching, dim=1, keepdim=True).values

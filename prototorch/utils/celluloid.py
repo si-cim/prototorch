@@ -1,13 +1,13 @@
 """Easy matplotlib animation. From https://github.com/jwkvam/celluloid."""
 
-from typing import Dict, List
 from collections import defaultdict
+from typing import Dict, List
 
-from matplotlib.figure import Figure
-from matplotlib.artist import Artist
 from matplotlib.animation import ArtistAnimation
+from matplotlib.artist import Artist
+from matplotlib.figure import Figure
 
-__version__ = '0.2.0'
+__version__ = "0.2.0"
 
 
 class Camera:
@@ -19,7 +19,7 @@ class Camera:
         self._offsets: Dict[str, Dict[int, int]] = {
             k: defaultdict(int)
             for k in
-            ['collections', 'patches', 'lines', 'texts', 'artists', 'images']
+            ["collections", "patches", "lines", "texts", "artists", "images"]
         }
         self._photos: List[List[Artist]] = []
 

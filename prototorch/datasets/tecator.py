@@ -52,7 +52,8 @@ class Tecator(ProtoDataset):
     """
 
     _resources = [
-        ("1MMuUK8V41IgNpnPDbg3E-QAL6wlErTk0", "ba5607c580d0f91bb27dc29d13c2f8df"),
+        ("1MMuUK8V41IgNpnPDbg3E-QAL6wlErTk0",
+         "ba5607c580d0f91bb27dc29d13c2f8df"),
     ]  # (google_storage_id, md5hash)
     classes = ["0 - low_fat", "1 - high_fat"]
 
@@ -74,15 +75,15 @@ class Tecator(ProtoDataset):
             print("Downloading...")
         for fileid, md5 in self._resources:
             filename = "tecator.npz"
-            download_file_from_google_drive(
-                fileid, root=self.raw_folder, filename=filename, md5=md5
-            )
+            download_file_from_google_drive(fileid,
+                                            root=self.raw_folder,
+                                            filename=filename,
+                                            md5=md5)
 
         if self.verbose:
             print("Processing...")
-        with np.load(
-            os.path.join(self.raw_folder, "tecator.npz"), allow_pickle=False
-        ) as f:
+        with np.load(os.path.join(self.raw_folder, "tecator.npz"),
+                     allow_pickle=False) as f:
             x_train, y_train = f["x_train"], f["y_train"]
             x_test, y_test = f["x_test"], f["y_test"]
         training_set = [
@@ -94,9 +95,11 @@ class Tecator(ProtoDataset):
             torch.tensor(y_test),
         ]
 
-        with open(os.path.join(self.processed_folder, self.training_file), "wb") as f:
+        with open(os.path.join(self.processed_folder, self.training_file),
+                  "wb") as f:
             torch.save(training_set, f)
-        with open(os.path.join(self.processed_folder, self.test_file), "wb") as f:
+        with open(os.path.join(self.processed_folder, self.test_file),
+                  "wb") as f:
             torch.save(test_set, f)
 
         if self.verbose:

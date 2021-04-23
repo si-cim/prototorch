@@ -23,7 +23,7 @@ def predict_label(y_pred, plabels):
 
 def mixed_shape(inputs):
     if not torch.is_tensor(inputs):
-        raise ValueError('Input must be a tensor.')
+        raise ValueError("Input must be a tensor.")
     else:
         int_shape = list(inputs.shape)
         # sometimes int_shape returns mixed integer types
@@ -39,11 +39,11 @@ def mixed_shape(inputs):
 def equal_int_shape(shape_1, shape_2):
     if not isinstance(shape_1,
                       (tuple, list)) or not isinstance(shape_2, (tuple, list)):
-        raise ValueError('Input shapes must list or tuple.')
+        raise ValueError("Input shapes must list or tuple.")
     for shape in [shape_1, shape_2]:
         if not all([isinstance(x, int) or x is None for x in shape]):
             raise ValueError(
-                'Input shapes must be list or tuple of int and None values.')
+                "Input shapes must be list or tuple of int and None values.")
 
     if len(shape_1) != len(shape_2):
         return False

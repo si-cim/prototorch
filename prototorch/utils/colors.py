@@ -1,13 +1,14 @@
 """ProtoFlow color utilities."""
 
-from matplotlib import cm
-from matplotlib.colors import Normalize
-from matplotlib.colors import to_hex
-from matplotlib.colors import to_rgb
 import matplotlib.lines as mlines
+from matplotlib import cm
+from matplotlib.colors import Normalize, to_hex, to_rgb
 
 
-def color_scheme(n, cmap="viridis", form="hex", tikz=False,
+def color_scheme(n,
+                 cmap="viridis",
+                 form="hex",
+                 tikz=False,
                  zero_indexed=False):
     """Return *n* colors from the color scheme.
 
@@ -57,13 +58,16 @@ def get_legend_handles(labels, marker="dots", zero_indexed=False):
                           zero_indexed=zero_indexed)
     for label, color in zip(labels, colors.values()):
         if marker == "dots":
-            handle = mlines.Line2D([], [],
-                                   color="white",
-                                   markerfacecolor=color,
-                                   marker="o",
-                                   markersize=10,
-                                   markeredgecolor="k",
-                                   label=label)
+            handle = mlines.Line2D(
+                [],
+                [],
+                color="white",
+                markerfacecolor=color,
+                marker="o",
+                markersize=10,
+                markeredgecolor="k",
+                label=label,
+            )
         else:
             handle = mlines.Line2D([], [],
                                    color=color,

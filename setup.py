@@ -8,8 +8,7 @@
 
 ProtoTorch Core Package
 """
-from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 PROJECT_URL = "https://github.com/si-cim/prototorch"
 DOWNLOAD_URL = "https://github.com/si-cim/prototorch.git"
