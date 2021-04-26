@@ -39,6 +39,9 @@ class Prototypes1D(_Prototypes):
         one_hot_labels=False,
         **kwargs,
     ):
+        warnings.warn(
+            PendingDeprecationWarning(
+                "Prototypes1D will be replaced in future versions."))
 
         # Convert tensors to python lists before processing
         if prototype_distribution is not None:
