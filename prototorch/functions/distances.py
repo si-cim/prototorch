@@ -272,30 +272,57 @@ class KernelDistance:
     def __init__(self, kernel_fn):
         self.kernel_fn = kernel_fn
 
-    def __call__(self, x_batch, y_batch):
+    def __call__(self, x_batch: torch.Tensor, y_batch: torch.Tensor):
+        return self._single_call(x_batch, y_batch)
+
+    def _single_call(self, x, y):
+        remove_dims = []
+        if len(x.shape) == 1:
+            x = x.unsqueeze(0)
+            remove_dims.append(0)
+        if len(y.shape) == 1:
+            y = y.unsqueeze(0)
+            remove_dims.append(-1)
+
+        output = self.kernel_fn(x, x).diag().unsqueeze(1) - 2 * self.kernel_fn(
+            x, y) + self.kernel_fn(y, y).diag()
+
+        for dim in remove_dims:
+            output.squeeze_(dim)
+
+        return torch.sqrt(output)
+
+
+class BatchKernelDistance:
+    r"""Kernel Distance
+
+    Distance based on a kernel function.
+    """
+    def __init__(self, kernel_fn):
+        self.kernel_fn = kernel_fn
+
+    def __call__(self, x_batch: torch.Tensor, y_batch: torch.Tensor):
         remove_dims = 0
         # Extend Single inputs
         if len(x_batch.shape) == 1:
-            x_batch = [x_batch]
+            x_batch = x_batch.unsqueeze(0)
             remove_dims += 1
         if len(y_batch.shape) == 1:
-            y_batch = [y_batch]
+            y_batch = y_batch.unsqueeze(0)
             remove_dims += 1
 
         # Loop over batches
-        output = []
-        for x in x_batch:
-            output.append([])
-            for y in y_batch:
-                output[-1].append(self.single_call(x, y))
+        output = torch.FloatTensor(len(x_batch), len(y_batch))
+        for i, x in enumerate(x_batch):
+            for j, y in enumerate(y_batch):
+                output[i][j] = self._single_call(x, y)
 
-        output = torch.Tensor(output)
         for _ in range(remove_dims):
             output.squeeze_(0)
 
         return output
 
-    def single_call(self, x, y):
+    def _single_call(self, x, y):
         kappa_xx = self.kernel_fn(x, x)
         kappa_xy = self.kernel_fn(x, y)
         kappa_yy = self.kernel_fn(y, y)

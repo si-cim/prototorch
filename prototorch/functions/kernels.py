@@ -10,7 +10,7 @@ class ExplicitKernel:
         self.projection = projection
 
     def __call__(self, x, y):
-        return self.projection(x) @ self.projection(y)
+        return self.projection(x) @ self.projection(y).T
 
 
 class RadialBasisFunctionKernel:
