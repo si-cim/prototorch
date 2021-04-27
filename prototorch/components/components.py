@@ -1,24 +1,28 @@
 """ProtoTorch components modules."""
 
-from typing import Tuple
 import warnings
-from prototorch.components.initializers import EqualLabelInitializer, ZeroReasoningsInitializer
+
 import torch
 from torch.nn.parameter import Parameter
 
-from prototorch.functions.initializers import get_initializer
+from prototorch.components.initializers import (
+    EqualLabelInitializer,
+    ZeroReasoningsInitializer,
+)
 
 
 class Components(torch.nn.Module):
     """
     Components is a set of learnable Tensors.
     """
-    def __init__(self,
-                 number_of_components=None,
-                 initializer=None,
-                 *,
-                 initialized_components=None,
-                 dtype=torch.float32):
+    def __init__(
+        self,
+        number_of_components=None,
+        initializer=None,
+        *,
+        initialized_components=None,
+        dtype=torch.float32,
+    ):
         super().__init__()
 
         # Ignore all initialization settings if initialized_components is given.

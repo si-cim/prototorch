@@ -1,5 +1,6 @@
-import torch
 from collections.abc import Iterable
+
+import torch
 
 
 # Components
