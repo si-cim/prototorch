@@ -18,4 +18,11 @@ class RadialBasisFunctionKernel:
         self.s2 = sigma * sigma
 
     def __call__(self, x, y):
-        return torch.exp(-torch.sum((x - y)**2) / (2 * self.s2))
+        remove_dim = False
+        if len(x.shape) > 1:
+            x = x.unsqueeze(1)
+            remove_dim = True
+        output = torch.exp(-torch.sum((x - y)**2, dim=-1) / (2 * self.s2))
+        if remove_dim:
+            output = output.squeeze(1)
+        return output
