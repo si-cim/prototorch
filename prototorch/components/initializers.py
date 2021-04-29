@@ -111,7 +111,8 @@ class StratifiedSelectionInitializer(ClassAwareInitializer):
         samples_list = [init.generate(per_class) for init in self.initializers]
         samples = torch.vstack(samples_list)
         if self.noise is not None:
-            samples = self.add_noise(samples)
+            # samples = self.add_noise(samples)
+            samples = samples + self.noise
         return samples
 
 
