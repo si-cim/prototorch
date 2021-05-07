@@ -1,8 +1,6 @@
 """ProtoTorch package."""
 
-# #############################################
 # Core Setup
-# #############################################
 __version__ = "0.3.0-dev0"
 
 __all_core__ = [
@@ -11,9 +9,9 @@ __all_core__ = [
     "modules",
 ]
 
-# #############################################
+from .datasets import *
+
 # Plugin Loader
-# #############################################
 import pkgutil
 
 import pkg_resources
