@@ -25,15 +25,16 @@ class Components(torch.nn.Module):
         if initialized_components is not None:
             self._components = Parameter(initialized_components)
             if number_of_components is not None or initializer is not None:
-                warnings.warn(
-                    "Arguments ignored while initializing Components")
+                wmsg = "Arguments ignored while initializing Components"
+                warnings.warn(wmsg)
         else:
             self._initialize_components(number_of_components, initializer)
 
     def _initialize_components(self, number_of_components, initializer):
         if not isinstance(initializer, ComponentsInitializer):
-            emsg = f"`initializer` has to be some kind of `ComponentsInitializer`. " \
-                f"You provided: {initializer=} instead."
+            emsg = f"`initializer` has to be some subtype of " \
+                f"{ComponentsInitializer}. " \
+                f"You have provided: {initializer=} instead."
             raise TypeError(emsg)
         self._components = Parameter(
             initializer.generate(number_of_components))
