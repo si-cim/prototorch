@@ -31,15 +31,15 @@ To also install the extras, use
 pip install -U prototorch[all]
 ```
 
-*Note: If you're using [ZSH](https://www.zsh.org/), the square brackets `[ ]`
-have to be escaped like so: `\[\]`, making the install command `pip install -U
-prototorch\[all\]`.*
+*Note: If you're using [ZSH](https://www.zsh.org/) (which is also the default
+shell on MacOS now), the square brackets `[ ]` have to be escaped like so:
+`\[\]`, making the install command `pip install -U prototorch\[all\]`.*
 
 To install the bleeding-edge features and improvements:
 ```bash
 git clone https://github.com/si-cim/prototorch.git
-git checkout dev
 cd prototorch
+git checkout dev
 pip install -e .[all]
 ```
 

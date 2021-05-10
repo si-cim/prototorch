@@ -8,8 +8,7 @@
 
 ProtoTorch Core Package
 """
-from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_packages, setup
 
 PROJECT_URL = "https://github.com/si-cim/prototorch"
 DOWNLOAD_URL = "https://github.com/si-cim/prototorch.git"
@@ -42,7 +41,7 @@ ALL = DOCS + DATASETS + EXAMPLES + TESTS
 
 setup(
     name="prototorch",
-    version="0.3.0-dev0",
+    version="0.4.0",
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",

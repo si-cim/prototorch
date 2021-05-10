@@ -11,7 +11,7 @@ from prototorch.functions import (activations, competitions, distances,
 
 class TestActivations(unittest.TestCase):
     def setUp(self):
-        self.flist = ['identity', 'sigmoid_beta', 'swish_beta']
+        self.flist = ["identity", "sigmoid_beta", "swish_beta"]
         self.x = torch.randn(1024, 1)
 
     def test_registry(self):
@@ -39,7 +39,7 @@ class TestActivations(unittest.TestCase):
             self.assertEqual(1, f(1))
 
     def test_unknown_deserialization(self):
-        for funcname in ['blubb', 'foobar']:
+        for funcname in ["blubb", "foobar"]:
             with self.assertRaises(NameError):
                 _ = activations.get_activation(funcname)
 
@@ -52,7 +52,7 @@ class TestActivations(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_sigmoid_beta1(self):
-        actual = activations.sigmoid_beta(self.x, beta=torch.tensor(1))
+        actual = activations.sigmoid_beta(self.x, beta=1.0)
         desired = torch.sigmoid(self.x)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
@@ -60,7 +60,7 @@ class TestActivations(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_swish_beta1(self):
-        actual = activations.swish_beta(self.x, beta=torch.tensor(1))
+        actual = activations.swish_beta(self.x, beta=1.0)
         desired = self.x * torch.sigmoid(self.x)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
@@ -76,7 +76,7 @@ class TestCompetitions(unittest.TestCase):
         pass
 
     def test_wtac(self):
-        d = torch.tensor([[2., 3., 1.99, 3.01], [2., 3., 2.01, 3.]])
+        d = torch.tensor([[2.0, 3.0, 1.99, 3.01], [2.0, 3.0, 2.01, 3.0]])
         labels = torch.tensor([0, 1, 2, 3])
         actual = competitions.wtac(d, labels)
         desired = torch.tensor([2, 0])
@@ -86,7 +86,7 @@ class TestCompetitions(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_wtac_unequal_dist(self):
-        d = torch.tensor([[2., 3., 4.], [2., 3., 1.]])
+        d = torch.tensor([[2.0, 3.0, 4.0], [2.0, 3.0, 1.0]])
         labels = torch.tensor([0, 1, 1])
         actual = competitions.wtac(d, labels)
         desired = torch.tensor([0, 1])
@@ -96,7 +96,7 @@ class TestCompetitions(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_wtac_one_hot(self):
-        d = torch.tensor([[1.99, 3.01], [3., 2.01]])
+        d = torch.tensor([[1.99, 3.01], [3.0, 2.01]])
         labels = torch.tensor([[0, 1], [1, 0]])
         actual = competitions.wtac(d, labels)
         desired = torch.tensor([[0, 1], [1, 0]])
@@ -106,38 +106,38 @@ class TestCompetitions(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_stratified_min(self):
-        d = torch.tensor([[1., 0., 2., 3.], [9., 8., 0, 1]])
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0], [9.0, 8.0, 0, 1]])
         labels = torch.tensor([0, 0, 1, 2])
         actual = competitions.stratified_min(d, labels)
-        desired = torch.tensor([[0., 2., 3.], [8., 0., 1.]])
+        desired = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
     def test_stratified_min_one_hot(self):
-        d = torch.tensor([[1., 0., 2., 3.], [9., 8., 0, 1]])
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0], [9.0, 8.0, 0, 1]])
         labels = torch.tensor([0, 0, 1, 2])
         labels = torch.eye(3)[labels]
         actual = competitions.stratified_min(d, labels)
-        desired = torch.tensor([[0., 2., 3.], [8., 0., 1.]])
+        desired = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
     def test_stratified_min_simple(self):
-        d = torch.tensor([[0., 2., 3.], [8., 0, 1]])
+        d = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0, 1]])
         labels = torch.tensor([0, 1, 2])
         actual = competitions.stratified_min(d, labels)
-        desired = torch.tensor([[0., 2., 3.], [8., 0., 1.]])
+        desired = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
     def test_knnc_k1(self):
-        d = torch.tensor([[2., 3., 1.99, 3.01], [2., 3., 2.01, 3.]])
+        d = torch.tensor([[2.0, 3.0, 1.99, 3.01], [2.0, 3.0, 2.01, 3.0]])
         labels = torch.tensor([0, 1, 2, 3])
         actual = competitions.knnc(d, labels, k=torch.tensor([1]))
         desired = torch.tensor([2, 0])
@@ -194,12 +194,12 @@ class TestDistances(unittest.TestCase):
         desired = torch.empty(self.nx, self.ny)
         for i in range(self.nx):
             for j in range(self.ny):
-                desired[i][j] = torch.nn.functional.pairwise_distance(
+                desired[i][j] = (torch.nn.functional.pairwise_distance(
                     self.x[i].reshape(1, -1),
                     self.y[j].reshape(1, -1),
                     p=2,
                     keepdim=False,
-                )**2
+                )**2)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=2)
@@ -254,14 +254,14 @@ class TestDistances(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_lpnorm_pinf(self):
-        actual = distances.lpnorm_distance(self.x, self.y, p=float('inf'))
+        actual = distances.lpnorm_distance(self.x, self.y, p=float("inf"))
         desired = torch.empty(self.nx, self.ny)
         for i in range(self.nx):
             for j in range(self.ny):
                 desired[i][j] = torch.nn.functional.pairwise_distance(
                     self.x[i].reshape(1, -1),
                     self.y[j].reshape(1, -1),
-                    p=float('inf'),
+                    p=float("inf"),
                     keepdim=False,
                 )
         mismatch = np.testing.assert_array_almost_equal(actual,
@@ -275,12 +275,12 @@ class TestDistances(unittest.TestCase):
         desired = torch.empty(self.nx, self.ny)
         for i in range(self.nx):
             for j in range(self.ny):
-                desired[i][j] = torch.nn.functional.pairwise_distance(
+                desired[i][j] = (torch.nn.functional.pairwise_distance(
                     self.x[i].reshape(1, -1),
                     self.y[j].reshape(1, -1),
                     p=2,
                     keepdim=False,
-                )**2
+                )**2)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=2)
@@ -293,12 +293,12 @@ class TestDistances(unittest.TestCase):
         desired = torch.empty(self.nx, self.ny)
         for i in range(self.nx):
             for j in range(self.ny):
-                desired[i][j] = torch.nn.functional.pairwise_distance(
+                desired[i][j] = (torch.nn.functional.pairwise_distance(
                     self.x[i].reshape(1, -1),
                     self.y[j].reshape(1, -1),
                     p=2,
                     keepdim=False,
-                )**2
+                )**2)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=2)
@@ -311,8 +311,12 @@ class TestDistances(unittest.TestCase):
 class TestInitializers(unittest.TestCase):
     def setUp(self):
         self.flist = [
-            'zeros', 'ones', 'rand', 'randn', 'stratified_mean',
-            'stratified_random'
+            "zeros",
+            "ones",
+            "rand",
+            "randn",
+            "stratified_mean",
+            "stratified_random",
         ]
         self.x = torch.tensor(
             [[0, -1, -2], [10, 11, 12], [0, 0, 0], [2, 2, 2]],
@@ -340,7 +344,7 @@ class TestInitializers(unittest.TestCase):
             self.assertEqual(1, f(1))
 
     def test_unknown_deserialization(self):
-        for funcname in ['blubb', 'foobar']:
+        for funcname in ["blubb", "foobar"]:
             with self.assertRaises(NameError):
                 _ = initializers.get_initializer(funcname)
 
@@ -383,7 +387,7 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_mean_equal1(self):
         pdist = torch.tensor([1, 1])
         actual, _ = initializers.stratified_mean(self.x, self.y, pdist, False)
-        desired = torch.tensor([[5., 5., 5.], [1., 1., 1.]])
+        desired = torch.tensor([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -393,7 +397,7 @@ class TestInitializers(unittest.TestCase):
         pdist = torch.tensor([1, 1])
         actual, _ = initializers.stratified_random(self.x, self.y, pdist,
                                                    False)
-        desired = torch.tensor([[0., -1., -2.], [0., 0., 0.]])
+        desired = torch.tensor([[0.0, -1.0, -2.0], [0.0, 0.0, 0.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -402,8 +406,8 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_mean_equal2(self):
         pdist = torch.tensor([2, 2])
         actual, _ = initializers.stratified_mean(self.x, self.y, pdist, False)
-        desired = torch.tensor([[5., 5., 5.], [5., 5., 5.], [1., 1., 1.],
-                                [1., 1., 1.]])
+        desired = torch.tensor([[5.0, 5.0, 5.0], [5.0, 5.0, 5.0],
+                                [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -413,8 +417,8 @@ class TestInitializers(unittest.TestCase):
         pdist = torch.tensor([2, 2])
         actual, _ = initializers.stratified_random(self.x, self.y, pdist,
                                                    False)
-        desired = torch.tensor([[0., -1., -2.], [0., -1., -2.], [0., 0., 0.],
-                                [0., 0., 0.]])
+        desired = torch.tensor([[0.0, -1.0, -2.0], [0.0, -1.0, -2.0],
+                                [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -423,8 +427,8 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_mean_unequal(self):
         pdist = torch.tensor([1, 3])
         actual, _ = initializers.stratified_mean(self.x, self.y, pdist, False)
-        desired = torch.tensor([[5., 5., 5.], [1., 1., 1.], [1., 1., 1.],
-                                [1., 1., 1.]])
+        desired = torch.tensor([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0],
+                                [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -434,8 +438,8 @@ class TestInitializers(unittest.TestCase):
         pdist = torch.tensor([1, 3])
         actual, _ = initializers.stratified_random(self.x, self.y, pdist,
                                                    False)
-        desired = torch.tensor([[0., -1., -2.], [0., 0., 0.], [0., 0., 0.],
-                                [0., 0., 0.]])
+        desired = torch.tensor([[0.0, -1.0, -2.0], [0.0, 0.0, 0.0],
+                                [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
@@ -444,8 +448,8 @@ class TestInitializers(unittest.TestCase):
     def test_stratified_mean_unequal_one_hot(self):
         pdist = torch.tensor([1, 3])
         y = torch.eye(2)[self.y]
-        desired1 = torch.tensor([[5., 5., 5.], [1., 1., 1.], [1., 1., 1.],
-                                 [1., 1., 1.]])
+        desired1 = torch.tensor([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0],
+                                 [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]])
         actual1, actual2 = initializers.stratified_mean(self.x, y, pdist)
         desired2 = torch.tensor([[1, 0], [0, 1], [0, 1], [0, 1]])
         mismatch = np.testing.assert_array_almost_equal(actual1,
@@ -460,8 +464,8 @@ class TestInitializers(unittest.TestCase):
         pdist = torch.tensor([1, 3])
         y = torch.eye(2)[self.y]
         actual1, actual2 = initializers.stratified_random(self.x, y, pdist)
-        desired1 = torch.tensor([[0., -1., -2.], [0., 0., 0.], [0., 0., 0.],
-                                 [0., 0., 0.]])
+        desired1 = torch.tensor([[0.0, -1.0, -2.0], [0.0, 0.0, 0.0],
+                                 [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
         desired2 = torch.tensor([[1, 0], [0, 1], [0, 1], [0, 1]])
         mismatch = np.testing.assert_array_almost_equal(actual1,
                                                         desired1,

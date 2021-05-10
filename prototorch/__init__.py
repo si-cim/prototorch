@@ -1,11 +1,7 @@
 """ProtoTorch package."""
 
-# #############################################
 # Core Setup
-# #############################################
-__version__ = "0.3.0-dev0"
-
-from prototorch import datasets, functions, modules
+__version__ = "0.4.0"
 
 __all_core__ = [
     "datasets",
@@ -13,10 +9,11 @@ __all_core__ = [
     "modules",
 ]
 
-# #############################################
+from .datasets import *
+
 # Plugin Loader
-# #############################################
 import pkgutil
+
 import pkg_resources
 
 __path__ = pkgutil.extend_path(__path__, __name__)
@@ -25,7 +22,8 @@ __path__ = pkgutil.extend_path(__path__, __name__)
 def discover_plugins():
     return {
         entry_point.name: entry_point.load()
-        for entry_point in pkg_resources.iter_entry_points("prototorch.plugins")
+        for entry_point in pkg_resources.iter_entry_points(
+            "prototorch.plugins")
     }
 
 
@@ -33,12 +31,10 @@ discovered_plugins = discover_plugins()
 locals().update(discovered_plugins)
 
 # Generate combines __version__ and __all__
-version_plugins = "\n".join(
-    [
-        "- " + name + ": v" + plugin.__version__
-        for name, plugin in discovered_plugins.items()
-    ]
-)
+version_plugins = "\n".join([
+    "- " + name + ": v" + plugin.__version__
+    for name, plugin in discovered_plugins.items()
+])
 if version_plugins != "":
     version_plugins = "\nPlugins: \n" + version_plugins
 

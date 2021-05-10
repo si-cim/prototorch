@@ -3,13 +3,14 @@
 import numpy as np
 import torch
 from matplotlib import pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from torchinfo import summary
+
 from prototorch.functions.competitions import wtac
 from prototorch.functions.distances import euclidean_distance
 from prototorch.modules.losses import GLVQLoss
 from prototorch.modules.prototypes import Prototypes1D
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-from torchinfo import summary
 
 # Prepare and preprocess the data
 scaler = StandardScaler()
@@ -29,7 +30,8 @@ class Model(torch.nn.Module):
             prototypes_per_class=3,
             nclasses=3,
             prototype_initializer="stratified_random",
-            data=[x_train, y_train])
+            data=[x_train, y_train],
+        )
 
     def forward(self, x):
         protos = self.proto_layer.prototypes
@@ -61,8 +63,10 @@ for epoch in range(70):
     with torch.no_grad():
         pred = wtac(dis, plabels)
         correct = pred.eq(y_in.view_as(pred)).sum().item()
-    acc = 100. * correct / len(x_train)
-    print(f"Epoch: {epoch + 1:03d} Loss: {loss.item():05.02f} Acc: {acc:05.02f}%")
+    acc = 100.0 * correct / len(x_train)
+    print(
+        f"Epoch: {epoch + 1:03d} Loss: {loss.item():05.02f} Acc: {acc:05.02f}%"
+    )
 
     # Take a gradient descent step
     optimizer.zero_grad()
@@ -83,13 +87,15 @@ for epoch in range(70):
     ax.set_ylabel("Data dimension 2")
     cmap = "viridis"
     ax.scatter(x_train[:, 0], x_train[:, 1], c=y_train, edgecolor="k")
-    ax.scatter(protos[:, 0],
-               protos[:, 1],
-               c=plabels,
-               cmap=cmap,
-               edgecolor="k",
-               marker="D",
-               s=50)
+    ax.scatter(
+        protos[:, 0],
+        protos[:, 1],
+        c=plabels,
+        cmap=cmap,
+        edgecolor="k",
+        marker="D",
+        s=50,
+    )
 
     # Paint decision regions
     x = np.vstack((x_train, protos))

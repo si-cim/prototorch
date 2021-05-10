@@ -12,7 +12,7 @@ def stratified_min(distances, labels):
         return distances
     batch_size = distances.size()[0]
     winning_distances = torch.zeros(nclasses, batch_size)
-    inf = torch.full_like(distances.T, fill_value=float('inf'))
+    inf = torch.full_like(distances.T, fill_value=float("inf"))
     # distances_to_wpluses = torch.where(matcher, distances, inf)
     for i, cl in enumerate(clabels):
         # cdists = distances.T[labels == cl]

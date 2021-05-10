@@ -29,14 +29,19 @@ class Prototypes1D(_Prototypes):
 
     TODO Complete this doc-string.
     """
-    def __init__(self,
-                 prototypes_per_class=1,
-                 prototype_initializer="ones",
-                 prototype_distribution=None,
-                 data=None,
-                 dtype=torch.float32,
-                 one_hot_labels=False,
-                 **kwargs):
+    def __init__(
+        self,
+        prototypes_per_class=1,
+        prototype_initializer="ones",
+        prototype_distribution=None,
+        data=None,
+        dtype=torch.float32,
+        one_hot_labels=False,
+        **kwargs,
+    ):
+        warnings.warn(
+            PendingDeprecationWarning(
+                "Prototypes1D will be replaced in future versions."))
 
         # Convert tensors to python lists before processing
         if prototype_distribution is not None:

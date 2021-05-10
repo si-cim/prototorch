@@ -104,4 +104,4 @@ def get_initializer(funcname):
         return funcname
     if funcname in INITIALIZERS:
         return INITIALIZERS.get(funcname)
-    raise NameError(f'Initializer {funcname} was not found.')
+    raise NameError(f"Initializer {funcname} was not found.")
