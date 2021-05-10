@@ -5,10 +5,8 @@ python: 3.8
 cache:
   directories:
   - "./tests/artifacts"
-  # - "$HOME/.prototorch/datasets"
 install:
-- pip install . --progress-bar off
-- pip install -r requirements.txt
+- pip install .[all] --progress-bar off
 
 # Generate code coverage report
 script:
