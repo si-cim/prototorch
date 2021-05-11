@@ -52,7 +52,7 @@ class Tecator(ProtoDataset):
     """
 
     _resources = [
-        ("1MMuUK8V41IgNpnPDbg3E-QAL6wlErTk0",
+        ("1P9WIYnyxFPh6f1vqAbnKfK8oYmUgyV83",
          "ba5607c580d0f91bb27dc29d13c2f8df"),
     ]  # (google_storage_id, md5hash)
     classes = ["0 - low_fat", "1 - high_fat"]

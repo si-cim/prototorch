@@ -57,7 +57,7 @@ class TestActivations(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_sigmoid_beta1(self):
-        actual = activations.sigmoid_beta(self.x, beta=torch.tensor(1))
+        actual = activations.sigmoid_beta(self.x, beta=1.0)
         desired = torch.sigmoid(self.x)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
@@ -65,7 +65,7 @@ class TestActivations(unittest.TestCase):
         self.assertIsNone(mismatch)
 
     def test_swish_beta1(self):
-        actual = activations.swish_beta(self.x, beta=torch.tensor(1))
+        actual = activations.swish_beta(self.x, beta=1.0)
         desired = self.x * torch.sigmoid(self.x)
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,

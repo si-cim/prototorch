@@ -1,8 +1,8 @@
 """
-  _____           _     _______             _ 
- |  __ \         | |   |__   __|           | |  
+  _____           _     _______             _
+ |  __ \         | |   |__   __|           | |
  | |__) | __ ___ | |_ ___ | | ___  _ __ ___| |__
- |  ___/ '__/ _ \| __/ _ \| |/ _ \| '__/ __| '_ \ 
+ |  ___/ '__/ _ \| __/ _ \| |/ _ \| '__/ __| '_ \
  | |   | | | (_) | || (_) | | (_) | | | (__| | | |
  |_|   |_|  \___/ \__\___/|_|\___/|_|  \___|_| |_|
 
@@ -21,27 +21,28 @@ INSTALL_REQUIRES = [
     "torchvision>=0.5.0",
     "numpy>=1.9.1",
 ]
+DATASETS = [
+    "requests",
+    "tqdm",
+]
+DEV = ["bumpversion"]
 DOCS = [
     "recommonmark",
     "sphinx",
     "sphinx_rtd_theme",
     "sphinxcontrib-katex",
 ]
-DATASETS = [
-    "requests",
-    "tqdm",
-]
 EXAMPLES = [
     "sklearn",
     "matplotlib",
     "torchinfo",
 ]
-TESTS = ["pytest"]
-ALL = DOCS + DATASETS + EXAMPLES + TESTS
+TESTS = ["codecov", "pytest"]
+ALL = DATASETS + DEV + DOCS + EXAMPLES + TESTS
 
 setup(
     name="prototorch",
-    version="0.3.0-dev0",
+    version="0.4.2",
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",
@@ -71,6 +72,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Software Development :: Libraries",
