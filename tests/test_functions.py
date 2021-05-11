@@ -4,7 +4,6 @@ import unittest
 
 import numpy as np
 import torch
-
 from prototorch.functions import (activations, competitions, distances,
                                   initializers, losses)
 
@@ -139,7 +138,7 @@ class TestCompetitions(unittest.TestCase):
     def test_knnc_k1(self):
         d = torch.tensor([[2.0, 3.0, 1.99, 3.01], [2.0, 3.0, 2.01, 3.0]])
         labels = torch.tensor([0, 1, 2, 3])
-        actual = competitions.knnc(d, labels, k=torch.tensor([1]))
+        actual = competitions.knnc(d, labels, k=1)
         desired = torch.tensor([2, 0])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,

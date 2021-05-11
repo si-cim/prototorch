@@ -38,6 +38,7 @@ def wtac(distances, labels):
 
 def knnc(distances, labels, k=1):
     winning_indices = torch.topk(-distances, k=k, dim=1).indices
-    winning_labels = torch.mode(labels[winning_indices].squeeze(),
-                                dim=1).values
+    # winning_labels = torch.mode(labels[winning_indices].squeeze(),
+    #                             dim=1).values
+    winning_labels = torch.mode(labels[winning_indices], dim=1).values
     return winning_labels
