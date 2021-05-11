@@ -1,7 +1,7 @@
 """ProtoTorch package."""
 
 # Core Setup
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 __all_core__ = [
     "datasets",
