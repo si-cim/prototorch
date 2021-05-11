@@ -67,8 +67,9 @@ class LabeledComponents(Components):
                  *,
                  initialized_components=None):
         if initialized_components is not None:
-            super().__init__(initialized_components=initialized_components[0])
-            self._labels = initialized_components[1]
+            components, component_labels = initialized_components
+            super().__init__(initialized_components=components)
+            self._labels = component_labels
         else:
             self._initialize_labels(distribution)
             super().__init__(number_of_components=len(self._labels),

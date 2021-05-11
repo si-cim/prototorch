@@ -23,6 +23,7 @@ INSTALL_REQUIRES = [
 ]
 DATASETS = [
     "requests",
+    "sklearn",
     "tqdm",
 ]
 DEV = ["bumpversion"]
