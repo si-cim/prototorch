@@ -1,6 +1,7 @@
 """ProtoTroch Initializers."""
 import warnings
 from collections.abc import Iterable
+from itertools import chain
 
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -91,6 +92,15 @@ class ClassAwareInitializer(ComponentsInitializer):
         self.clabels = torch.unique(self.labels)
         self.num_classes = len(self.clabels)
 
+    def _get_samples_from_initializer(self, length, dist):
+        if not dist:
+            per_class = length // self.num_classes
+            dist = self.num_classes * [per_class]
+        samples_list = [
+            init.generate(n) for init, n in zip(self.initializers, dist)
+        ]
+        return torch.vstack(samples_list)
+
 
 class StratifiedMeanInitializer(ClassAwareInitializer):
     def __init__(self, arg):
@@ -102,10 +112,9 @@ class StratifiedMeanInitializer(ClassAwareInitializer):
             class_initializer = MeanInitializer(class_data)
             self.initializers.append(class_initializer)
 
-    def generate(self, length):
-        per_class = length // self.num_classes
-        samples_list = [init.generate(per_class) for init in self.initializers]
-        return torch.vstack(samples_list)
+    def generate(self, length, dist=[]):
+        samples = self._get_samples_from_initializer(length, dist)
+        return samples
 
 
 class StratifiedSelectionInitializer(ClassAwareInitializer):
@@ -126,10 +135,8 @@ class StratifiedSelectionInitializer(ClassAwareInitializer):
         mask = torch.bernoulli(n1) - torch.bernoulli(n2)
         return x + (self.noise * mask)
 
-    def generate(self, length):
-        per_class = length // self.num_classes
-        samples_list = [init.generate(per_class) for init in self.initializers]
-        samples = torch.vstack(samples_list)
+    def generate(self, length, dist=[]):
+        samples = self._get_samples_from_initializer(length, dist)
         if self.noise is not None:
             # samples = self.add_noise(samples)
             samples = samples + self.noise
@@ -142,10 +149,28 @@ class LabelsInitializer:
         raise NotImplementedError("Subclasses should implement this!")
 
 
-class EqualLabelInitializer(LabelsInitializer):
+class UnequalLabelsInitializer(LabelsInitializer):
+    def __init__(self, dist):
+        self.dist = dist
+
+    @property
+    def distribution(self):
+        return self.dist
+
+    def generate(self):
+        clabels = range(len(self.dist))
+        labels = list(chain(*[[i] * n for i, n in zip(clabels, self.dist)]))
+        return torch.tensor(labels)
+
+
+class EqualLabelsInitializer(LabelsInitializer):
     def __init__(self, classes, per_class):
         self.classes = classes
         self.per_class = per_class
+
+    @property
+    def distribution(self):
+        return self.classes * [self.per_class]
 
     def generate(self):
         return torch.arange(self.classes).repeat(self.per_class, 1).T.flatten()

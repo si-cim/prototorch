@@ -4,8 +4,10 @@ import warnings
 from typing import Tuple
 
 import torch
-from prototorch.components.initializers import (ComponentsInitializer,
-                                                EqualLabelInitializer,
+from prototorch.components.initializers import (ClassAwareInitializer,
+                                                ComponentsInitializer,
+                                                EqualLabelsInitializer,
+                                                UnequalLabelsInitializer,
                                                 ZeroReasoningsInitializer)
 from prototorch.functions.initializers import get_initializer
 from torch.nn.parameter import Parameter
@@ -30,12 +32,15 @@ class Components(torch.nn.Module):
         else:
             self._initialize_components(number_of_components, initializer)
 
-    def _initialize_components(self, number_of_components, initializer):
+    def _precheck_initializer(self, initializer):
         if not isinstance(initializer, ComponentsInitializer):
             emsg = f"`initializer` has to be some subtype of " \
                 f"{ComponentsInitializer}. " \
                 f"You have provided: {initializer=} instead."
             raise TypeError(emsg)
+
+    def _initialize_components(self, number_of_components, initializer):
+        self._precheck_initializer(initializer)
         self._components = Parameter(
             initializer.generate(number_of_components))
 
@@ -57,7 +62,7 @@ class LabeledComponents(Components):
     Every Component has a label assigned.
     """
     def __init__(self,
-                 labels=None,
+                 distribution=None,
                  initializer=None,
                  *,
                  initialized_components=None):
@@ -65,15 +70,27 @@ class LabeledComponents(Components):
             super().__init__(initialized_components=initialized_components[0])
             self._labels = initialized_components[1]
         else:
-            self._initialize_labels(labels)
+            self._initialize_labels(distribution)
             super().__init__(number_of_components=len(self._labels),
                              initializer=initializer)
 
-    def _initialize_labels(self, labels):
-        if type(labels) == tuple:
-            num_classes, prototypes_per_class = labels
-            labels = EqualLabelInitializer(num_classes, prototypes_per_class)
+    def _initialize_components(self, number_of_components, initializer):
+        if isinstance(initializer, ClassAwareInitializer):
+            self._precheck_initializer(initializer)
+            self._components = Parameter(
+                initializer.generate(number_of_components, self.distribution))
+        else:
+            super()._initialize_components(self, number_of_components,
+                                           initializer)
 
+    def _initialize_labels(self, distribution):
+        if type(distribution) == tuple:
+            num_classes, prototypes_per_class = distribution
+            labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
+        elif type(distribution) == list:
+            labels = UnequalLabelsInitializer(distribution)
+
+        self.distribution = labels.distribution
         self._labels = labels.generate()
 
     @property
