@@ -81,8 +81,7 @@ class LabeledComponents(Components):
             self._components = Parameter(
                 initializer.generate(number_of_components, self.distribution))
         else:
-            super()._initialize_components(self, number_of_components,
-                                           initializer)
+            super()._initialize_components(number_of_components, initializer)
 
     def _initialize_labels(self, distribution):
         if type(distribution) == tuple:
