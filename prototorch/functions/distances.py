@@ -30,7 +30,7 @@ def euclidean_distance(x, y):
     :returns: Distance Tensor of shape :math:`X \times Y`
     :rtype: `torch.tensor`
     """
-    x, y = get_flat_x_y(x, y)
+    x, y = get_flat(x, y)
     distances_raised = squared_euclidean_distance(x, y)
     distances = torch.sqrt(distances_raised)
     return distances
