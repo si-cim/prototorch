@@ -101,6 +101,10 @@ class ClassAwareInitializer(ComponentsInitializer):
         ]
         return torch.vstack(samples_list)
 
+    def __del__(self):
+        del self.data
+        del self.labels
+
 
 class StratifiedMeanInitializer(ClassAwareInitializer):
     def __init__(self, arg):
