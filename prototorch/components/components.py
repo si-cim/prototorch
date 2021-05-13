@@ -19,13 +19,13 @@ class Components(torch.nn.Module):
                  number_of_components=None,
                  initializer=None,
                  *,
-                 initialized_components=None,
-                 dtype=torch.float32):
+                 initialized_components=None):
         super().__init__()
 
         # Ignore all initialization settings if initialized_components is given.
         if initialized_components is not None:
-            self._components = Parameter(initialized_components)
+            self.register_parameter("_components",
+                                    Parameter(initialized_components))
             if number_of_components is not None or initializer is not None:
                 wmsg = "Arguments ignored while initializing Components"
                 warnings.warn(wmsg)
@@ -41,13 +41,13 @@ class Components(torch.nn.Module):
 
     def _initialize_components(self, number_of_components, initializer):
         self._precheck_initializer(initializer)
-        self._components = Parameter(
-            initializer.generate(number_of_components))
+        _components = initializer.generate(number_of_components)
+        self.register_parameter("_components", Parameter(_components))
 
     @property
     def components(self):
         """Tensor containing the component tensors."""
-        return self._components.detach().cpu()
+        return self._components.detach()
 
     def forward(self):
         return self._components
@@ -71,9 +71,10 @@ class LabeledComponents(Components):
             super().__init__(initialized_components=components)
             self._labels = component_labels
         else:
-            self._initialize_labels(distribution)
-            super().__init__(number_of_components=len(self._labels),
+            _labels = self._initialize_labels(distribution)
+            super().__init__(number_of_components=len(_labels),
                              initializer=initializer)
+            self.register_buffer('_labels', _labels)
 
     def _initialize_components(self, number_of_components, initializer):
         if isinstance(initializer, ClassAwareInitializer):
@@ -91,12 +92,12 @@ class LabeledComponents(Components):
             labels = UnequalLabelsInitializer(distribution)
 
         self.distribution = labels.distribution
-        self._labels = labels.generate()
+        return labels.generate()
 
     @property
     def component_labels(self):
         """Tensor containing the component tensors."""
-        return self._labels.detach().cpu()
+        return self._labels.detach()
 
     def forward(self):
         return super().forward(), self._labels
@@ -123,8 +124,10 @@ class ReasoningComponents(Components):
                  *,
                  initialized_components=None):
         if initialized_components is not None:
-            super().__init__(initialized_components=initialized_components[0])
-            self._reasonings = initialized_components[1]
+            components, reasonings = initialized_components
+
+            super().__init__(initialized_components=components)
+            self.register_parameter("_reasonings", reasonings)
         else:
             self._initialize_reasonings(reasonings)
             super().__init__(number_of_components=len(self._reasonings),
@@ -136,7 +139,8 @@ class ReasoningComponents(Components):
             reasonings = ZeroReasoningsInitializer(num_classes,
                                                    number_of_components)
 
-        self._reasonings = reasonings.generate()
+        _reasonings = reasonings.generate()
+        self.register_parameter("_reasonings", _reasonings)
 
     @property
     def reasonings(self):
@@ -145,7 +149,7 @@ class ReasoningComponents(Components):
         Dimension NxCx2
 
         """
-        return self._reasonings.detach().cpu()
+        return self._reasonings.detach()
 
     def forward(self):
         return super().forward(), self._reasonings
