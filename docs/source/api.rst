@@ -1,6 +1,6 @@
-.. ProtoFlow API Reference
+.. ProtoTorch API Reference
 
-ProtoFlow API Reference
+ProtoTorch API Reference
 ======================================
 
 Datasets
