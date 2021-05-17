@@ -47,7 +47,7 @@ def lvq1_loss(distances, target_labels, prototype_labels):
 
 def lvq21_loss(distances, target_labels, prototype_labels):
     """LVQ2.1 loss function with support for one-hot labels.
-    
+
     See Section 4 [Sado&Yamada]
     https://papers.nips.cc/paper/1995/file/9c3b1830513cc3b8fc4b76635d32e692-Paper.pdf
     """
