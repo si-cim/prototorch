@@ -10,6 +10,8 @@ from sklearn.datasets import load_iris
 
 
 class Iris(NumpyDataset):
-    def __init__(self):
+    def __init__(self, dims=None):
         x, y = load_iris(return_X_y=True)
+        if dims:
+            x = x[:, dims]
         super().__init__(x, y)
