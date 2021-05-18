@@ -26,7 +26,7 @@ class Iris(NumpyDataset):
           - validation size
           - test size
         * - 4
-          - 2
+          - 3
           - 150
           - 0
           - 0
