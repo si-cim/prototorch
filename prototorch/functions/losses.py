@@ -55,4 +55,5 @@ def lvq21_loss(distances, target_labels, prototype_labels):
     """
     dp, dm = _get_dp_dm(distances, target_labels, prototype_labels)
     mu = dp - dm
+
     return mu

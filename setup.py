@@ -32,6 +32,7 @@ DOCS = [
     "sphinx",
     "sphinx_rtd_theme",
     "sphinxcontrib-katex",
+    "sphinx-autodoc-typehints",
 ]
 EXAMPLES = [
     "sklearn",

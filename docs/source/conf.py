@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_rtd_theme",
     "sphinxcontrib.katex",
+    'sphinx_autodoc_typehints',
 ]
 
 # katex_prerender = True

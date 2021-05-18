@@ -40,15 +40,29 @@ import os
 
 import numpy as np
 import torch
-from torchvision.datasets.utils import download_file_from_google_drive
-
 from prototorch.datasets.abstract import ProtoDataset
+from torchvision.datasets.utils import download_file_from_google_drive
 
 
 class Tecator(ProtoDataset):
     """
-    `Tecator Dataset <http://lib.stat.cmu.edu/datasets/tecator>`__
-    for classification.
+    `Tecator Dataset <http://lib.stat.cmu.edu/datasets/tecator>`__ for classification.
+
+    The dataset contains wavelength measurements of meat.
+
+    .. list-table:: Tecator
+        :header-rows: 1
+
+        * - dimensions
+          - classes
+          - training size
+          - validation size
+          - test size
+        * - 100
+          - 2
+          - 129
+          - 43
+          - 43
     """
 
     _resources = [

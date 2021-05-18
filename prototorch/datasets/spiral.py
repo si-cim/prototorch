@@ -27,7 +27,27 @@ def make_spiral(n_samples=500, noise=0.3):
 
 
 class Spiral(torch.utils.data.TensorDataset):
-    """Spiral dataset for binary classification."""
-    def __init__(self, n_samples=500, noise=0.3):
+    """Spiral dataset for binary classification.
+
+    This datasets consists of two spirals of two different classes.
+
+    .. list-table:: Spiral
+        :header-rows: 1
+
+        * - dimensions
+          - classes
+          - training size
+          - validation size
+          - test size
+        * - 2
+          - 2
+          - n_samples
+          - 0
+          - 0
+
+    :param n_samples: number of random samples
+    :param noise: noise added to the spirals
+    """
+    def __init__(self, n_samples: int = 500, noise: float = 0.3):
         x, y = make_spiral(n_samples, noise)
         super().__init__(torch.Tensor(x), torch.LongTensor(y))
