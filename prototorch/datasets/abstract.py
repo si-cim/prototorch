@@ -14,8 +14,10 @@ import torch
 
 class NumpyDataset(torch.utils.data.TensorDataset):
     """Create a PyTorch TensorDataset from NumPy arrays."""
-    def __init__(self, *arrays):
-        tensors = [torch.Tensor(arr) for arr in arrays]
+    def __init__(self, data, targets):
+        self.data = data
+        self.targets = targets
+        tensors = [torch.Tensor(data), torch.Tensor(targets)]
         super().__init__(*tensors)
 
 
