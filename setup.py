@@ -20,10 +20,10 @@ INSTALL_REQUIRES = [
     "torch>=1.3.1",
     "torchvision>=0.5.0",
     "numpy>=1.9.1",
+    "sklearn",
 ]
 DATASETS = [
     "requests",
-    "sklearn",
     "tqdm",
 ]
 DEV = ["bumpversion"]
@@ -35,7 +35,6 @@ DOCS = [
     "sphinx-autodoc-typehints",
 ]
 EXAMPLES = [
-    "sklearn",
     "matplotlib",
     "torchinfo",
 ]
