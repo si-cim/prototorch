@@ -7,17 +7,18 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 
 
-def parse_data_arg(data):
-    if isinstance(data, Dataset):
-        data, labels = next(iter(DataLoader(data, batch_size=len(data))))
-    elif isinstance(data, DataLoader):
+def parse_data_arg(data_arg):
+    if isinstance(data_arg, Dataset):
+        data_arg = DataLoader(data_arg, batch_size=len(data_arg))
+
+    if isinstance(data_arg, DataLoader):
         data = torch.tensor([])
         labels = torch.tensor([])
-        for x, y in data:
+        for x, y in data_arg:
             data = torch.cat([data, x])
             labels = torch.cat([labels, y])
     else:
-        data, labels = data
+        data, labels = data_arg
         if not isinstance(data, torch.Tensor):
             wmsg = f"Converting data to {torch.Tensor}."
             warnings.warn(wmsg)
