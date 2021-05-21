@@ -86,7 +86,11 @@ class LabeledComponents(Components):
             super()._initialize_components(initializer)
 
     def _initialize_labels(self, distribution):
-        if type(distribution) == tuple:
+        if type(distribution) == dict:
+            labels = EqualLabelsInitializer(
+                distribution["num_classes"],
+                distribution["prototypes_per_class"])
+        elif type(distribution) == tuple:
             num_classes, prototypes_per_class = distribution
             labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
         elif type(distribution) == list:
