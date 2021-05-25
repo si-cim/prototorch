@@ -1,5 +1,12 @@
 """ProtoTorch package."""
 
+import pkgutil
+
+import pkg_resources
+
+from . import components, datasets, functions, modules, utils
+from .datasets import *
+
 # Core Setup
 __version__ = "0.4.4"
 
@@ -7,15 +14,11 @@ __all_core__ = [
     "datasets",
     "functions",
     "modules",
+    "components",
+    "utils",
 ]
 
-from .datasets import *
-
 # Plugin Loader
-import pkgutil
-
-import pkg_resources
-
 __path__ = pkgutil.extend_path(__path__, __name__)
 
 
