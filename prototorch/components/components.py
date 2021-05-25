@@ -1,34 +1,33 @@
 """ProtoTorch components modules."""
 
 import warnings
-from typing import Tuple
 
 import torch
 from prototorch.components.initializers import (ClassAwareInitializer,
                                                 ComponentsInitializer,
+                                                CustomLabelsInitializer,
                                                 EqualLabelsInitializer,
                                                 UnequalLabelsInitializer,
                                                 ZeroReasoningsInitializer)
-from prototorch.functions.initializers import get_initializer
 from torch.nn.parameter import Parameter
 
 
 class Components(torch.nn.Module):
     """Components is a set of learnable Tensors."""
     def __init__(self,
-                 ncomps=None,
+                 num_components=None,
                  initializer=None,
                  *,
                  initialized_components=None):
         super().__init__()
 
-        self.ncomps = ncomps
+        self.num_components = num_components
 
         # Ignore all initialization settings if initialized_components is given.
         if initialized_components is not None:
             self.register_parameter("_components",
                                     Parameter(initialized_components))
-            if ncomps is not None or initializer is not None:
+            if num_components is not None or initializer is not None:
                 wmsg = "Arguments ignored while initializing Components"
                 warnings.warn(wmsg)
         else:
@@ -43,7 +42,7 @@ class Components(torch.nn.Module):
 
     def _initialize_components(self, initializer):
         self._precheck_initializer(initializer)
-        _components = initializer.generate(self.ncomps)
+        _components = initializer.generate(self.num_components)
         self.register_parameter("_components", Parameter(_components))
 
     @property
@@ -80,16 +79,20 @@ class LabeledComponents(Components):
     def _initialize_components(self, initializer):
         if isinstance(initializer, ClassAwareInitializer):
             self._precheck_initializer(initializer)
-            _components = initializer.generate(self.ncomps, self.distribution)
+            _components = initializer.generate(self.num_components,
+                                               self.distribution)
             self.register_parameter("_components", Parameter(_components))
         else:
             super()._initialize_components(initializer)
 
     def _initialize_labels(self, distribution):
         if type(distribution) == dict:
-            labels = EqualLabelsInitializer(
-                distribution["num_classes"],
-                distribution["prototypes_per_class"])
+            if "num_classes" in distribution.keys():
+                labels = EqualLabelsInitializer(
+                    distribution["num_classes"],
+                    distribution["prototypes_per_class"])
+            else:
+                labels = CustomLabelsInitializer(distribution)
         elif type(distribution) == tuple:
             num_classes, prototypes_per_class = distribution
             labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
@@ -139,8 +142,8 @@ class ReasoningComponents(Components):
 
     def _initialize_reasonings(self, reasonings):
         if type(reasonings) == tuple:
-            num_classes, ncomps = reasonings
-            reasonings = ZeroReasoningsInitializer(num_classes, ncomps)
+            num_classes, num_components = reasonings
+            reasonings = ZeroReasoningsInitializer(num_classes, num_components)
 
         _reasonings = reasonings.generate()
         self.register_parameter("_reasonings", _reasonings)

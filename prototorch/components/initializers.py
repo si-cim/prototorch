@@ -103,9 +103,9 @@ class ClassAwareInitializer(ComponentsInitializer):
     def _get_samples_from_initializer(self, length, dist):
         if not dist:
             per_class = length // self.num_classes
-            dist = self.num_classes * [per_class]
+            dist = dict(zip(self.clabels, self.num_classes * [per_class]))
         samples_list = [
-            init.generate(n) for init, n in zip(self.initializers, dist)
+            init.generate(n) for init, n in zip(self.initializers, dist.values())
         ]
         out = torch.vstack(samples_list)
         with torch.no_grad():
@@ -174,10 +174,13 @@ class UnequalLabelsInitializer(LabelsInitializer):
     def distribution(self):
         return self.dist
 
-    def generate(self):
-        clabels = range(len(self.dist))
-        labels = list(chain(*[[i] * n for i, n in zip(clabels, self.dist)]))
-        return torch.tensor(labels)
+    def generate(self, clabels=None, dist=None):
+        if not clabels:
+            clabels = range(len(self.dist))
+        if not dist:
+            dist = self.dist
+        labels = list(chain(*[[i] * n for i, n in zip(clabels, dist)]))
+        return torch.LongTensor(labels)
 
 
 class EqualLabelsInitializer(LabelsInitializer):
@@ -191,6 +194,13 @@ class EqualLabelsInitializer(LabelsInitializer):
 
     def generate(self):
         return torch.arange(self.classes).repeat(self.per_class, 1).T.flatten()
+
+
+class CustomLabelsInitializer(UnequalLabelsInitializer):
+    def generate(self):
+        clabels = list(self.dist.keys())
+        dist = list(self.dist.values())
+        return super().generate(clabels, dist)
 
 
 # Reasonings
