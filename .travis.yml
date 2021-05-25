@@ -4,7 +4,9 @@ language: python
 python: 3.8
 cache:
   directories:
+  - "$HOME/.cache/pip"
   - "./tests/artifacts"
+  - "$HOME/datasets"
 install:
 - pip install .[all] --progress-bar off
 
