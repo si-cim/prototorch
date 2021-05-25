@@ -139,8 +139,8 @@ class ReasoningComponents(Components):
 
     def _initialize_reasonings(self, reasonings):
         if type(reasonings) == tuple:
-            nclasses, ncomps = reasonings
-            reasonings = ZeroReasoningsInitializer(nclasses, ncomps)
+            num_classes, ncomps = reasonings
+            reasonings = ZeroReasoningsInitializer(num_classes, ncomps)
 
         _reasonings = reasonings.generate()
         self.register_parameter("_reasonings", _reasonings)

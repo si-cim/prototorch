@@ -12,14 +12,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
-from torchvision import transforms
-
 from prototorch.functions.helper import calculate_prototype_accuracy
 from prototorch.modules.losses import GLVQLoss
 from prototorch.modules.models import GTLVQ
+from torchvision import transforms
 
 # Parameters and options
-n_epochs = 50
+num_epochs = 50
 batch_size_train = 64
 batch_size_test = 1000
 learning_rate = 0.1
@@ -141,7 +140,7 @@ optimizer = torch.optim.Adam(
 criterion = GLVQLoss(squashing="sigmoid_beta", beta=10)
 
 # Training loop
-for epoch in range(n_epochs):
+for epoch in range(num_epochs):
     for batch_idx, (x_train, y_train) in enumerate(train_loader):
         model.train()
         x_train, y_train = x_train.to(device), y_train.to(device)
@@ -161,7 +160,7 @@ for epoch in range(n_epochs):
         if batch_idx % log_interval == 0:
             acc = calculate_prototype_accuracy(distances, y_train, plabels)
             print(
-                f"Epoch: {epoch + 1:02d}/{n_epochs:02d} Epoch Progress: {100. * batch_idx / len(train_loader):02.02f} % Loss: {loss.item():02.02f} \
+                f"Epoch: {epoch + 1:02d}/{num_epochs:02d} Epoch Progress: {100. * batch_idx / len(train_loader):02.02f} % Loss: {loss.item():02.02f} \
               Train Acc: {acc.item():02.02f}")
 
     # Test

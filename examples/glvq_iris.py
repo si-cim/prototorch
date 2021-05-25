@@ -3,14 +3,13 @@
 import numpy as np
 import torch
 from matplotlib import pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-from torchinfo import summary
-
 from prototorch.functions.competitions import wtac
 from prototorch.functions.distances import euclidean_distance
 from prototorch.modules.losses import GLVQLoss
 from prototorch.modules.prototypes import Prototypes1D
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from torchinfo import summary
 
 # Prepare and preprocess the data
 scaler = StandardScaler()
@@ -28,7 +27,7 @@ class Model(torch.nn.Module):
         self.proto_layer = Prototypes1D(
             input_dim=2,
             prototypes_per_class=3,
-            nclasses=3,
+            num_classes=3,
             prototype_initializer="stratified_random",
             data=[x_train, y_train],
         )

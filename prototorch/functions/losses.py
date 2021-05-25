@@ -8,8 +8,8 @@ def _get_matcher(targets, labels):
     matcher = torch.eq(targets.unsqueeze(dim=1), labels)
     if labels.ndim == 2:
         # if the labels are one-hot vectors
-        nclasses = targets.size()[1]
-        matcher = torch.eq(torch.sum(matcher, dim=-1), nclasses)
+        num_classes = targets.size()[1]
+        matcher = torch.eq(torch.sum(matcher, dim=-1), num_classes)
     return matcher
 
 

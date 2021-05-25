@@ -5,12 +5,12 @@ import torch
 
 def stratified_min(distances, labels):
     clabels = torch.unique(labels, dim=0)
-    nclasses = clabels.size()[0]
-    if distances.size()[1] == nclasses:
+    num_classes = clabels.size()[0]
+    if distances.size()[1] == num_classes:
         # skip if only one prototype per class
         return distances
     batch_size = distances.size()[0]
-    winning_distances = torch.zeros(nclasses, batch_size)
+    winning_distances = torch.zeros(num_classes, batch_size)
     inf = torch.full_like(distances.T, fill_value=float("inf"))
     # distances_to_wpluses = torch.where(matcher, distances, inf)
     for i, cl in enumerate(clabels):
@@ -18,7 +18,7 @@ def stratified_min(distances, labels):
         matcher = torch.eq(labels.unsqueeze(dim=1), cl)
         if labels.ndim == 2:
             # if the labels are one-hot vectors
-            matcher = torch.eq(torch.sum(matcher, dim=-1), nclasses)
+            matcher = torch.eq(torch.sum(matcher, dim=-1), num_classes)
         cdists = torch.where(matcher, distances.T, inf).T
         winning_distances[i] = torch.min(cdists, dim=1,
                                          keepdim=True).values.squeeze()

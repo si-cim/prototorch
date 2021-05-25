@@ -2,13 +2,12 @@
 
 import matplotlib.pyplot as plt
 import torch
-from torch.utils.data import DataLoader
-
 from prototorch.datasets.tecator import Tecator
 from prototorch.functions.distances import sed
 from prototorch.modules import Prototypes1D
 from prototorch.modules.losses import GLVQLoss
 from prototorch.utils.colors import get_legend_handles
+from torch.utils.data import DataLoader
 
 # Prepare the dataset and dataloader
 train_data = Tecator(root="./artifacts", train=True)
@@ -23,7 +22,7 @@ class Model(torch.nn.Module):
         self.p1 = Prototypes1D(
             input_dim=100,
             prototypes_per_class=2,
-            nclasses=2,
+            num_classes=2,
             prototype_initializer="stratified_random",
             data=[x, y],
         )
