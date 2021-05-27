@@ -8,7 +8,7 @@ from . import components, datasets, functions, modules, utils
 from .datasets import *
 
 # Core Setup
-__version__ = "0.4.4"
+__version__ = "0.4.5"
 
 __all_core__ = [
     "datasets",
