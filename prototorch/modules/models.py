@@ -1,11 +1,8 @@
 import torch
-from prototorch.functions.distances import (euclidean_distance_matrix,
-                                            tangent_distance)
-from prototorch.functions.helper import _check_shapes, _int_and_mixed_shape
+from prototorch.functions.distances import euclidean_distance_matrix
 from prototorch.functions.normalization import orthogonalization
 from prototorch.modules.prototypes import Prototypes1D
 from torch import nn
-
 
 class GTLVQ(nn.Module):
     r""" Generalized Tangent Learning Vector Quantization
@@ -122,11 +119,11 @@ class GTLVQ(nn.Module):
         self.subspaces = nn.Parameter(subspaces,requires_grad=True)
 
     def init_local_subspace(self, data,num_subspaces,num_protos):
-        data = data -  torch.mean(data,dim=0)      
+        data = data -  torch.mean(data,dim=0)
         _,_,v = torch.svd(data,some=False)
         v = v[:,:num_subspaces]
         subspaces = v.unsqueeze(0).repeat_interleave(num_protos,0)
-        self.subspaces = nn.Parameter(subspaces,requires_grad=True) 
+        self.subspaces = nn.Parameter(subspaces,requires_grad=True)
 
     def global_tangent_distances(self, x):
         # Tangent Projection
@@ -144,10 +141,10 @@ class GTLVQ(nn.Module):
         protos = self.cls.prototypes.unsqueeze(0).expand(x.size(0), self.cls.prototypes.size(0), x.size(-1))
         projectors =torch.eye(self.subspaces.shape[-2],device=x.device) - torch.bmm(self.subspaces,self.subspaces.permute([0,2,1]))
         diff = (x - protos)
-        diff = diff.permute([1, 0, 2]) 
-        diff = torch.bmm(diff, projectors) 
+        diff = diff.permute([1, 0, 2])
+        diff = torch.bmm(diff, projectors)
         diff = torch.norm(diff,2,dim=-1).T
-        return diff 
+        return diff
 
     def get_parameters(self):
         return {
