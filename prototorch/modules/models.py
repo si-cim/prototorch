@@ -1,11 +1,10 @@
 import torch
-from torch import nn
-
 from prototorch.functions.distances import (euclidean_distance_matrix,
                                             tangent_distance)
 from prototorch.functions.helper import _check_shapes, _int_and_mixed_shape
 from prototorch.functions.normalization import orthogonalization
 from prototorch.modules.prototypes import Prototypes1D
+from torch import nn
 
 
 class GTLVQ(nn.Module):

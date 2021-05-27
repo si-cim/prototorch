@@ -1,13 +1,24 @@
-.. ProtoFlow API Reference
+.. ProtoTorch API Reference
 
-ProtoFlow API Reference
+ProtoTorch API Reference
 ======================================
 
 Datasets
 --------------------------------------
+
+Common Datasets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: prototorch.datasets
    :members:
-   :undoc-members:
+
+
+Abstract Datasets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Abstract Datasets are used to build your own datasets.
+
+.. autoclass:: prototorch.datasets.abstract.NumpyDataset
+   :members:
 
 Functions
 --------------------------------------

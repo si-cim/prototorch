@@ -46,6 +46,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_rtd_theme",
     "sphinxcontrib.katex",
+    'sphinx_autodoc_typehints',
 ]
 
 # katex_prerender = True
@@ -179,6 +180,9 @@ texinfo_documents = [
 intersphinx_mapping = {
     "python": ("https://docs.python.org/", None),
     "numpy": ("https://docs.scipy.org/doc/numpy/", None),
+    "torch": ('https://pytorch.org/docs/stable/', None),
+    "pytorch_lightning":
+    ("https://pytorch-lightning.readthedocs.io/en/stable/", None),
 }
 
 # -- Options for Epub output ----------------------------------------------

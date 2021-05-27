@@ -1,6 +1,11 @@
 import torch
 
 
+def get_flat(*args):
+    rv = [x.view(x.size(0), -1) for x in args]
+    return rv
+
+
 def calculate_prototype_accuracy(y_pred, y_true, plabels):
     """Computes the accuracy of a prototype based model.
     via Winner-Takes-All rule.

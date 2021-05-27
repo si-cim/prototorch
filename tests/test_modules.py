@@ -4,7 +4,6 @@ import unittest
 
 import numpy as np
 import torch
-
 from prototorch.modules import losses, prototypes
 
 
@@ -18,20 +17,20 @@ class TestPrototypes(unittest.TestCase):
 
     def test_prototypes1d_init_without_input_dim(self):
         with self.assertRaises(NameError):
-            _ = prototypes.Prototypes1D(nclasses=2)
+            _ = prototypes.Prototypes1D(num_classes=2)
 
-    def test_prototypes1d_init_without_nclasses(self):
+    def test_prototypes1d_init_without_num_classes(self):
         with self.assertRaises(NameError):
             _ = prototypes.Prototypes1D(input_dim=1)
 
-    def test_prototypes1d_init_with_nclasses_1(self):
+    def test_prototypes1d_init_with_num_classes_1(self):
         with self.assertWarns(UserWarning):
-            _ = prototypes.Prototypes1D(nclasses=1, input_dim=1)
+            _ = prototypes.Prototypes1D(num_classes=1, input_dim=1)
 
     def test_prototypes1d_init_without_pdist(self):
         p1 = prototypes.Prototypes1D(
             input_dim=6,
-            nclasses=2,
+            num_classes=2,
             prototypes_per_class=4,
             prototype_initializer="ones",
         )
@@ -60,7 +59,7 @@ class TestPrototypes(unittest.TestCase):
         with self.assertWarns(UserWarning):
             _ = prototypes.Prototypes1D(
                 input_dim=3,
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=None,
@@ -81,7 +80,7 @@ class TestPrototypes(unittest.TestCase):
 
     def test_prototypes1d_init_without_inputdim_with_data(self):
         _ = prototypes.Prototypes1D(
-            nclasses=2,
+            num_classes=2,
             prototypes_per_class=1,
             prototype_initializer="stratified_mean",
             data=[[[1.0], [0.0]], [1, 0]],
@@ -89,7 +88,7 @@ class TestPrototypes(unittest.TestCase):
 
     def test_prototypes1d_init_with_int_data(self):
         _ = prototypes.Prototypes1D(
-            nclasses=2,
+            num_classes=2,
             prototypes_per_class=1,
             prototype_initializer="stratified_mean",
             data=[[[1], [0]], [1, 0]],
@@ -98,7 +97,7 @@ class TestPrototypes(unittest.TestCase):
     def test_prototypes1d_init_one_hot_without_data(self):
         _ = prototypes.Prototypes1D(
             input_dim=1,
-            nclasses=2,
+            num_classes=2,
             prototypes_per_class=1,
             prototype_initializer="stratified_mean",
             data=None,
@@ -112,7 +111,7 @@ class TestPrototypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=([[0.0], [1.0]], [[0, 1], [1, 0]]),
@@ -126,7 +125,7 @@ class TestPrototypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=([[0.0], [1.0]], [0, 1]),
@@ -141,7 +140,7 @@ class TestPrototypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=([[0.0], [1.0]], [[0], [1]]),
@@ -151,7 +150,7 @@ class TestPrototypes(unittest.TestCase):
     def test_prototypes1d_init_with_int_dtype(self):
         with self.assertRaises(RuntimeError):
             _ = prototypes.Prototypes1D(
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=[[[1], [0]], [1, 0]],
@@ -161,7 +160,7 @@ class TestPrototypes(unittest.TestCase):
     def test_prototypes1d_inputndim_with_data(self):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(input_dim=1,
-                                        nclasses=1,
+                                        num_classes=1,
                                         prototypes_per_class=1,
                                         data=[[1.0], [1]])
 
@@ -169,20 +168,20 @@ class TestPrototypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=2,
-                nclasses=2,
+                num_classes=2,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=[[[1.0], [0.0]], [1, 0]],
             )
 
-    def test_prototypes1d_nclasses_with_data(self):
-        """Test ValueError raise if provided `nclasses` is not the same
+    def test_prototypes1d_num_classes_with_data(self):
+        """Test ValueError raise if provided `num_classes` is not the same
         as the one computed from the provided `data`.
         """
         with self.assertRaises(ValueError):
             _ = prototypes.Prototypes1D(
                 input_dim=1,
-                nclasses=1,
+                num_classes=1,
                 prototypes_per_class=1,
                 prototype_initializer="stratified_mean",
                 data=[[[1.0], [2.0]], [1, 2]],
@@ -220,7 +219,7 @@ class TestPrototypes(unittest.TestCase):
 
         p1 = prototypes.Prototypes1D(
             input_dim=99,
-            nclasses=2,
+            num_classes=2,
             prototypes_per_class=1,
             prototype_initializer=my_initializer,
         )

@@ -1,36 +1,37 @@
 """ProtoTorch components modules."""
 
 import warnings
-from typing import Tuple
 
 import torch
 from prototorch.components.initializers import (ClassAwareInitializer,
                                                 ComponentsInitializer,
+                                                CustomLabelsInitializer,
                                                 EqualLabelsInitializer,
                                                 UnequalLabelsInitializer,
                                                 ZeroReasoningsInitializer)
-from prototorch.functions.initializers import get_initializer
 from torch.nn.parameter import Parameter
 
 
 class Components(torch.nn.Module):
     """Components is a set of learnable Tensors."""
     def __init__(self,
-                 number_of_components=None,
+                 num_components=None,
                  initializer=None,
                  *,
-                 initialized_components=None,
-                 dtype=torch.float32):
+                 initialized_components=None):
         super().__init__()
+
+        self.num_components = num_components
 
         # Ignore all initialization settings if initialized_components is given.
         if initialized_components is not None:
-            self._components = Parameter(initialized_components)
-            if number_of_components is not None or initializer is not None:
+            self.register_parameter("_components",
+                                    Parameter(initialized_components))
+            if num_components is not None or initializer is not None:
                 wmsg = "Arguments ignored while initializing Components"
                 warnings.warn(wmsg)
         else:
-            self._initialize_components(number_of_components, initializer)
+            self._initialize_components(initializer)
 
     def _precheck_initializer(self, initializer):
         if not isinstance(initializer, ComponentsInitializer):
@@ -39,15 +40,15 @@ class Components(torch.nn.Module):
                 f"You have provided: {initializer=} instead."
             raise TypeError(emsg)
 
-    def _initialize_components(self, number_of_components, initializer):
+    def _initialize_components(self, initializer):
         self._precheck_initializer(initializer)
-        self._components = Parameter(
-            initializer.generate(number_of_components))
+        _components = initializer.generate(self.num_components)
+        self.register_parameter("_components", Parameter(_components))
 
     @property
     def components(self):
         """Tensor containing the component tensors."""
-        return self._components.detach().cpu()
+        return self._components.detach()
 
     def forward(self):
         return self._components
@@ -71,33 +72,40 @@ class LabeledComponents(Components):
             super().__init__(initialized_components=components)
             self._labels = component_labels
         else:
-            self._initialize_labels(distribution)
-            super().__init__(number_of_components=len(self._labels),
-                             initializer=initializer)
+            _labels = self._initialize_labels(distribution)
+            super().__init__(len(_labels), initializer=initializer)
+            self.register_buffer("_labels", _labels)
 
-    def _initialize_components(self, number_of_components, initializer):
+    def _initialize_components(self, initializer):
         if isinstance(initializer, ClassAwareInitializer):
             self._precheck_initializer(initializer)
-            self._components = Parameter(
-                initializer.generate(number_of_components, self.distribution))
+            _components = initializer.generate(self.num_components,
+                                               self.distribution)
+            self.register_parameter("_components", Parameter(_components))
         else:
-            super()._initialize_components(self, number_of_components,
-                                           initializer)
+            super()._initialize_components(initializer)
 
     def _initialize_labels(self, distribution):
-        if type(distribution) == tuple:
+        if type(distribution) == dict:
+            if "num_classes" in distribution.keys():
+                labels = EqualLabelsInitializer(
+                    distribution["num_classes"],
+                    distribution["prototypes_per_class"])
+            else:
+                labels = CustomLabelsInitializer(distribution)
+        elif type(distribution) == tuple:
             num_classes, prototypes_per_class = distribution
             labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
         elif type(distribution) == list:
             labels = UnequalLabelsInitializer(distribution)
 
         self.distribution = labels.distribution
-        self._labels = labels.generate()
+        return labels.generate()
 
     @property
     def component_labels(self):
         """Tensor containing the component tensors."""
-        return self._labels.detach().cpu()
+        return self._labels.detach()
 
     def forward(self):
         return super().forward(), self._labels
@@ -124,20 +132,21 @@ class ReasoningComponents(Components):
                  *,
                  initialized_components=None):
         if initialized_components is not None:
-            super().__init__(initialized_components=initialized_components[0])
-            self._reasonings = initialized_components[1]
+            components, reasonings = initialized_components
+
+            super().__init__(initialized_components=components)
+            self.register_parameter("_reasonings", reasonings)
         else:
             self._initialize_reasonings(reasonings)
-            super().__init__(number_of_components=len(self._reasonings),
-                             initializer=initializer)
+            super().__init__(len(self._reasonings), initializer=initializer)
 
     def _initialize_reasonings(self, reasonings):
         if type(reasonings) == tuple:
-            num_classes, number_of_components = reasonings
-            reasonings = ZeroReasoningsInitializer(num_classes,
-                                                   number_of_components)
+            num_classes, num_components = reasonings
+            reasonings = ZeroReasoningsInitializer(num_classes, num_components)
 
-        self._reasonings = reasonings.generate()
+        _reasonings = reasonings.generate()
+        self.register_parameter("_reasonings", _reasonings)
 
     @property
     def reasonings(self):
@@ -146,7 +155,7 @@ class ReasoningComponents(Components):
         Dimension NxCx2
 
         """
-        return self._reasonings.detach().cpu()
+        return self._reasonings.detach()
 
     def forward(self):
         return super().forward(), self._reasonings
