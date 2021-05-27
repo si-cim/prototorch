@@ -79,45 +79,35 @@ class GTLVQ(nn.Module):
         super(GTLVQ, self).__init__()
 
         self.num_protos = num_classes * prototypes_per_class
+        self.num_protos_class = prototypes_per_class
         self.subspace_size = feature_dim if subspace_size is None else subspace_size
         self.feature_dim = feature_dim
+        self.num_classes = num_classes
+
+        self.cls = Prototypes1D(
+            input_dim=feature_dim,
+            prototypes_per_class=prototypes_per_class,
+            nclasses=num_classes,
+            prototype_initializer="stratified_mean",
+            data=prototype_data,
+        )
 
         if subspace_data is None:
             raise ValueError("Init Data must be specified!")
 
         self.tpt = tangent_projection_type
         with torch.no_grad():
-            if self.tpt == "local" or self.tpt == "local_proj":
-                self.init_local_subspace(subspace_data)
+            if self.tpt == "local":
+                self.init_local_subspace(subspace_data, subspace_size,
+                                         self.num_protos)
             elif self.tpt == "global":
                 self.init_gobal_subspace(subspace_data, subspace_size)
             else:
                 self.subspaces = None
 
-        # Hypothesis-Margin-Classifier
-        self.cls = Prototypes1D(
-            input_dim=feature_dim,
-            prototypes_per_class=prototypes_per_class,
-            num_classes=num_classes,
-            prototype_initializer="stratified_mean",
-            data=prototype_data,
-        )
-
     def forward(self, x):
-        # Tangent Projection
-        if self.tpt == "local_proj":
-            x_conform = (x.unsqueeze(1).repeat_interleave(self.num_protos,
-                                                          1).unsqueeze(2))
-            dis, proj_x = self.local_tangent_projection(x_conform)
-
-            proj_x = proj_x.reshape(x.shape[0] * self.num_protos,
-                                    self.feature_dim)
-            return proj_x, dis
-        elif self.tpt == "local":
-            x_conform = (x.unsqueeze(1).repeat_interleave(self.num_protos,
-                                                          1).unsqueeze(2))
-            dis = tangent_distance(x_conform, self.cls.prototypes,
-                                   self.subspaces)
+        if self.tpt == "local":
+            dis = self.local_tangent_distances(x)
         elif self.tpt == "gloabl":
             dis = self.global_tangent_distances(x)
         else:
@@ -130,16 +120,14 @@ class GTLVQ(nn.Module):
         _, _, v = torch.svd(data)
         subspace = (torch.eye(v.shape[0]) - (v @ v.T)).T
         subspaces = subspace[:, :num_subspaces]
-        self.subspaces = (torch.nn.Parameter(
-            subspaces).clone().detach().requires_grad_(True))
+        self.subspaces = nn.Parameter(subspaces, requires_grad=True)
 
-    def init_local_subspace(self, data):
-        _, _, v = torch.svd(data)
-        inital_projector = (torch.eye(v.shape[0]) - (v @ v.T)).T
-        subspaces = inital_projector.unsqueeze(0).repeat_interleave(
-            self.num_protos, 0)
-        self.subspaces = (torch.nn.Parameter(
-            subspaces).clone().detach().requires_grad_(True))
+    def init_local_subspace(self, data, num_subspaces, num_protos):
+        data = data - torch.mean(data, dim=0)
+        _, _, v = torch.svd(data, some=False)
+        v = v[:, :num_subspaces]
+        subspaces = v.unsqueeze(0).repeat_interleave(num_protos, 0)
+        self.subspaces = nn.Parameter(subspaces, requires_grad=True)
 
     def global_tangent_distances(self, x):
         # Tangent Projection
@@ -150,33 +138,21 @@ class GTLVQ(nn.Module):
         # Euclidean Distance
         return euclidean_distance_matrix(x, projected_prototypes)
 
-    def local_tangent_projection(self, signals):
-        # Note: subspaces is always assumed as transposed and must be orthogonal!
-        # shape(signals): batch x proto_number x channels x dim1 x dim2 x ... x dimN
-        # shape(protos): proto_number x dim1 x dim2 x ... x dimN
-        # shape(subspaces): (optional [proto_number]) x prod(dim1 * dim2 * ... * dimN)  x prod(projected_atom_shape)
-        # subspace should be orthogonalized
-        # Origin Source Code
-        # Origin Author:
-        protos = self.cls.prototypes
-        subspaces = self.subspaces
-        signal_shape, signal_int_shape = _int_and_mixed_shape(signals)
-        _, proto_int_shape = _int_and_mixed_shape(protos)
+    def local_tangent_distances(self, x):
 
-        # check if the shapes are correct
-        _check_shapes(signal_int_shape, proto_int_shape)
-
-        # Tangent Data Projections
-        projected_protos = torch.bmm(protos.unsqueeze(1), subspaces).squeeze(1)
-        data = signals.squeeze(2).permute([1, 0, 2])
-        projected_data = torch.bmm(data, subspaces)
-        projected_data = projected_data.permute([1, 0, 2]).unsqueeze(1)
-        diff = projected_data - projected_protos
-        projected_diff = torch.reshape(
-            diff, (signal_shape[1], signal_shape[0], signal_shape[2]) +
-            signal_shape[3:])
-        diss = torch.norm(projected_diff, 2, dim=-1)
-        return diss.permute([1, 0, 2]).squeeze(-1), projected_data.squeeze(1)
+        # Tangent Distance
+        x = x.unsqueeze(1).expand(x.size(0), self.cls.prototypes.size(0),
+                                  x.size(-1))
+        protos = self.cls.prototypes.unsqueeze(0).expand(
+            x.size(0), self.cls.prototypes.size(0), x.size(-1))
+        projectors = torch.eye(
+            self.subspaces.shape[-2], device=x.device) - torch.bmm(
+                self.subspaces, self.subspaces.permute([0, 2, 1]))
+        diff = (x - protos)
+        diff = diff.permute([1, 0, 2])
+        diff = torch.bmm(diff, projectors)
+        diff = torch.norm(diff, 2, dim=-1).T
+        return diff
 
     def get_parameters(self):
         return {
