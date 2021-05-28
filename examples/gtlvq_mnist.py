@@ -24,7 +24,7 @@ batch_size_test = 1000
 learning_rate = 0.1
 momentum = 0.5
 log_interval = 10
-cuda = "cuda:1"
+cuda = "cuda:0"
 random_seed = 1
 device = torch.device(cuda if torch.cuda.is_available() else "cpu")
 
@@ -147,7 +147,7 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
 
         distances = model(x_train)
-        plabels = model.gtlvq.cls.prototype_labels.to(device)
+        plabels = model.gtlvq.cls.component_labels.to(device)
 
         # Compute loss.
         loss = criterion([distances, plabels], y_train)

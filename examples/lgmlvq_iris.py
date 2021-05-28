@@ -3,14 +3,12 @@
 import numpy as np
 import torch
 from matplotlib import pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.metrics import accuracy_score
-
+from prototorch.components import LabeledComponents, StratifiedMeanInitializer
 from prototorch.functions.competitions import stratified_min
 from prototorch.functions.distances import lomega_distance
-from prototorch.functions.init import eye_
 from prototorch.modules.losses import GLVQLoss
-from prototorch.modules.prototypes import Prototypes1D
+from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score
 
 # Prepare training data
 x_train, y_train = load_iris(True)
@@ -22,19 +20,19 @@ class Model(torch.nn.Module):
     def __init__(self):
         """Local-GMLVQ model."""
         super().__init__()
-        self.p1 = Prototypes1D(
-            input_dim=2,
-            prototype_distribution=[1, 2, 2],
-            prototype_initializer="stratified_random",
-            data=[x_train, y_train],
+
+        prototype_initializer = StratifiedMeanInitializer([x_train, y_train])
+        prototype_distribution = [1, 2, 2]
+        self.proto_layer = LabeledComponents(
+            prototype_distribution,
+            prototype_initializer,
         )
-        omegas = torch.zeros(5, 2, 2)
+
+        omegas = torch.eye(2, 2).repeat(5, 1, 1)
         self.omegas = torch.nn.Parameter(omegas)
-        eye_(self.omegas)
 
     def forward(self, x):
-        protos = self.p1.prototypes
-        plabels = self.p1.prototype_labels
+        protos, plabels = self.proto_layer()
         omegas = self.omegas
         dis = lomega_distance(x, protos, omegas)
         return dis, plabels
@@ -69,7 +67,7 @@ for epoch in range(100):
     optimizer.step()
 
     # Get the prototypes form the model
-    protos = model.p1.prototypes.data.numpy()
+    protos = model.proto_layer.components.numpy()
 
     # Visualize the data and the prototypes
     ax = fig.gca()

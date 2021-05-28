@@ -2,9 +2,9 @@
 
 import matplotlib.pyplot as plt
 import torch
+from prototorch.components import LabeledComponents, StratifiedMeanInitializer
 from prototorch.datasets.tecator import Tecator
 from prototorch.functions.distances import sed
-from prototorch.modules import Prototypes1D
 from prototorch.modules.losses import GLVQLoss
 from prototorch.utils.colors import get_legend_handles
 from torch.utils.data import DataLoader
@@ -18,22 +18,22 @@ class Model(torch.nn.Module):
     def __init__(self, **kwargs):
         """GMLVQ model as a siamese network."""
         super().__init__()
-        x, y = train_data.data, train_data.targets
-        self.p1 = Prototypes1D(
-            input_dim=100,
-            prototypes_per_class=2,
-            num_classes=2,
-            prototype_initializer="stratified_random",
-            data=[x, y],
+        prototype_initializer = StratifiedMeanInitializer(train_loader)
+        prototype_distribution = {"num_classes": 2, "prototypes_per_class": 2}
+
+        self.proto_layer = LabeledComponents(
+            prototype_distribution,
+            prototype_initializer,
         )
+
         self.omega = torch.nn.Linear(in_features=100,
                                      out_features=100,
                                      bias=False)
         torch.nn.init.eye_(self.omega.weight)
 
     def forward(self, x):
-        protos = self.p1.prototypes
-        plabels = self.p1.prototype_labels
+        protos = self.proto_layer.components
+        plabels = self.proto_layer.component_labels
 
         # Process `x` and `protos` through `omega`
         x_map = self.omega(x)
@@ -85,8 +85,8 @@ im = ax.imshow(omega.dot(omega.T), cmap="viridis")
 plt.show()
 
 # Get the prototypes form the model
-protos = model.p1.prototypes.data.numpy()
-plabels = model.p1.prototype_labels
+protos = model.proto_layer.components.numpy()
+plabels = model.proto_layer.component_labels.numpy()
 
 # Visualize the prototypes
 title = "Tecator Prototypes"
