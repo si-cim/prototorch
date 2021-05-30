@@ -13,21 +13,30 @@ def parse_data_arg(data_arg):
 
     if isinstance(data_arg, DataLoader):
         data = torch.tensor([])
-        labels = torch.tensor([])
+        targets = torch.tensor([])
         for x, y in data_arg:
             data = torch.cat([data, x])
-            labels = torch.cat([labels, y])
+            targets = torch.cat([targets, y])
     else:
-        data, labels = data_arg
+        data, targets = data_arg
         if not isinstance(data, torch.Tensor):
             wmsg = f"Converting data to {torch.Tensor}."
             warnings.warn(wmsg)
             data = torch.Tensor(data)
-        if not isinstance(labels, torch.Tensor):
-            wmsg = f"Converting labels to {torch.Tensor}."
+        if not isinstance(targets, torch.Tensor):
+            wmsg = f"Converting targets to {torch.Tensor}."
             warnings.warn(wmsg)
-            labels = torch.Tensor(labels)
-    return data, labels
+            targets = torch.Tensor(targets)
+    return data, targets
+
+
+def get_subinitializers(data, targets, clabels, subinit_type):
+    initializers = dict()
+    for clabel in clabels:
+        class_data = data[targets == clabel]
+        class_initializer = subinit_type(class_data)
+        initializers[clabel] = (class_initializer)
+    return initializers
 
 
 # Components
@@ -91,43 +100,37 @@ class MeanInitializer(DataAwareInitializer):
 class ClassAwareInitializer(ComponentsInitializer):
     def __init__(self, data, transform=torch.nn.Identity()):
         super().__init__()
-        data, labels = parse_data_arg(data)
+        data, targets = parse_data_arg(data)
         self.data = data
-        self.labels = labels
+        self.targets = targets
 
         self.transform = transform
 
-        self.clabels = torch.unique(self.labels)
+        self.clabels = torch.unique(self.targets).int().tolist()
         self.num_classes = len(self.clabels)
 
     def _get_samples_from_initializer(self, length, dist):
         if not dist:
             per_class = length // self.num_classes
-            dist = self.num_classes * [per_class]
-        if type(dist) == dict:
-            dist = dist.values()
-        samples_list = [
-            init.generate(n) for init, n in zip(self.initializers, dist)
-        ]
-        out = torch.vstack(samples_list)
+            dist = dict(zip(self.clabels, self.num_classes * [per_class]))
+        if isinstance(dist, list):
+            dist = dict(zip(self.clabels, dist))
+        samples = [self.initializers[k].generate(n) for k, n in dist.items()]
+        out = torch.vstack(samples)
         with torch.no_grad():
             out = self.transform(out)
         return out
 
     def __del__(self):
         del self.data
-        del self.labels
+        del self.targets
 
 
 class StratifiedMeanInitializer(ClassAwareInitializer):
     def __init__(self, data, **kwargs):
         super().__init__(data, **kwargs)
-
-        self.initializers = []
-        for clabel in self.clabels:
-            class_data = self.data[self.labels == clabel]
-            class_initializer = MeanInitializer(class_data)
-            self.initializers.append(class_initializer)
+        self.initializers = get_subinitializers(self.data, self.targets,
+                                                self.clabels, MeanInitializer)
 
     def generate(self, length, dist=[]):
         samples = self._get_samples_from_initializer(length, dist)
@@ -138,12 +141,9 @@ class StratifiedSelectionInitializer(ClassAwareInitializer):
     def __init__(self, data, noise=None, **kwargs):
         super().__init__(data, **kwargs)
         self.noise = noise
-
-        self.initializers = []
-        for clabel in self.clabels:
-            class_data = self.data[self.labels == clabel]
-            class_initializer = SelectionInitializer(class_data)
-            self.initializers.append(class_initializer)
+        self.initializers = get_subinitializers(self.data, self.targets,
+                                                self.clabels,
+                                                SelectionInitializer)
 
     def add_noise_v1(self, x):
         return x + self.noise
@@ -181,8 +181,8 @@ class UnequalLabelsInitializer(LabelsInitializer):
             clabels = range(len(self.dist))
         if not dist:
             dist = self.dist
-        labels = list(chain(*[[i] * n for i, n in zip(clabels, dist)]))
-        return torch.LongTensor(labels)
+        targets = list(chain(*[[i] * n for i, n in zip(clabels, dist)]))
+        return torch.LongTensor(targets)
 
 
 class EqualLabelsInitializer(LabelsInitializer):

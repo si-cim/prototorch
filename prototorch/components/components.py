@@ -12,6 +12,26 @@ from prototorch.components.initializers import (ClassAwareInitializer,
 from torch.nn.parameter import Parameter
 
 
+def get_labels_object(distribution):
+    if isinstance(distribution, dict):
+        if "num_classes" in distribution.keys():
+            labels = EqualLabelsInitializer(
+                distribution["num_classes"],
+                distribution["prototypes_per_class"])
+        else:
+            labels = CustomLabelsInitializer(distribution)
+    elif isinstance(distribution, tuple):
+        num_classes, prototypes_per_class = distribution
+        labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
+    elif isinstance(distribution, list):
+        labels = UnequalLabelsInitializer(distribution)
+    else:
+        msg = f"`distribution` not understood." \
+            f"You have provided: {distribution=}."
+        raise ValueError(msg)
+    return labels
+
+
 class Components(torch.nn.Module):
     """Components is a set of learnable Tensors."""
     def __init__(self,
@@ -25,13 +45,15 @@ class Components(torch.nn.Module):
 
         # Ignore all initialization settings if initialized_components is given.
         if initialized_components is not None:
-            self.register_parameter("_components",
-                                    Parameter(initialized_components))
+            self._register_components(initialized_components)
             if num_components is not None or initializer is not None:
                 wmsg = "Arguments ignored while initializing Components"
                 warnings.warn(wmsg)
         else:
             self._initialize_components(initializer)
+
+    def _register_components(self, components):
+        self.register_parameter("_components", Parameter(components))
 
     def _precheck_initializer(self, initializer):
         if not isinstance(initializer, ComponentsInitializer):
@@ -43,7 +65,13 @@ class Components(torch.nn.Module):
     def _initialize_components(self, initializer):
         self._precheck_initializer(initializer)
         _components = initializer.generate(self.num_components)
-        self.register_parameter("_components", Parameter(_components))
+        self._register_components(_components)
+
+    def increase_components(self, initializer, num=1):
+        self._precheck_initializer(initializer)
+        _new = initializer.generate(num)
+        _components = torch.cat([self._components, _new])
+        self._register_components(_components)
 
     @property
     def components(self):
@@ -72,35 +100,48 @@ class LabeledComponents(Components):
             super().__init__(initialized_components=components)
             self._labels = component_labels
         else:
-            _labels = self._initialize_labels(distribution)
+            labels = get_labels_object(distribution)
+            self.distribution = labels.distribution
+            _labels = labels.generate()
             super().__init__(len(_labels), initializer=initializer)
-            self.register_buffer("_labels", _labels)
+            self._register_labels(_labels)
+
+    def _register_labels(self, labels):
+        self.register_buffer("_labels", labels)
+
+    def _update_distribution(self, distribution):
+        self.distribution = [
+            old + new for old, new in zip(self.distribution, distribution)
+        ]
 
     def _initialize_components(self, initializer):
         if isinstance(initializer, ClassAwareInitializer):
             self._precheck_initializer(initializer)
             _components = initializer.generate(self.num_components,
                                                self.distribution)
-            self.register_parameter("_components", Parameter(_components))
+            self._register_components(_components)
         else:
             super()._initialize_components(initializer)
 
-    def _initialize_labels(self, distribution):
-        if type(distribution) == dict:
-            if "num_classes" in distribution.keys():
-                labels = EqualLabelsInitializer(
-                    distribution["num_classes"],
-                    distribution["prototypes_per_class"])
-            else:
-                labels = CustomLabelsInitializer(distribution)
-        elif type(distribution) == tuple:
-            num_classes, prototypes_per_class = distribution
-            labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
-        elif type(distribution) == list:
-            labels = UnequalLabelsInitializer(distribution)
+    def increase_components(self, initializer, distribution=[1]):
+        self._precheck_initializer(initializer)
 
-        self.distribution = labels.distribution
-        return labels.generate()
+        # Labels
+        labels = get_labels_object(distribution)
+        new_labels = labels.generate()
+        _labels = torch.cat([self._labels, new_labels])
+        self._register_labels(_labels)
+
+        # Components
+        if isinstance(initializer, ClassAwareInitializer):
+            _new = initializer.generate(len(new_labels), labels.distribution)
+        else:
+            _new = initializer.generate(len(new_labels))
+        _components = torch.cat([self._components, _new])
+        self._register_components(_components)
+
+        # Housekeeping
+        self._update_distribution(labels.distribution)
 
     @property
     def component_labels(self):
@@ -141,7 +182,7 @@ class ReasoningComponents(Components):
             super().__init__(len(self._reasonings), initializer=initializer)
 
     def _initialize_reasonings(self, reasonings):
-        if type(reasonings) == tuple:
+        if isinstance(reasonings, tuple):
             num_classes, num_components = reasonings
             reasonings = ZeroReasoningsInitializer(num_classes, num_components)
 
