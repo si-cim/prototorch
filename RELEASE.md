@@ -2,17 +2,15 @@
 
 ## Release 0.5.0
 
-- Breaking: Removed deprecated `prototorch.modules.Prototypes1D`
-  - Use `prototorch.components.LabeledComponents` instead
+- Breaking: Removed deprecated `prototorch.modules.Prototypes1D`.
+  - Use `prototorch.components.LabeledComponents` instead.
 
 ## Release 0.2.0
 
-### Includes
 - Fixes in example scripts.
 
 ## Release 0.1.1-dev0
 
-### Includes
 - Minor bugfixes.
 - 100% line coverage.
 
