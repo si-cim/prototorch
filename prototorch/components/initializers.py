@@ -71,15 +71,15 @@ class ZerosInitializer(DimensionAwareInitializer):
 
 
 class UniformInitializer(DimensionAwareInitializer):
-    def __init__(self, dims, min=0.0, max=1.0):
+    def __init__(self, dims, minimum=0.0, maximum=1.0):
         super().__init__(dims)
 
-        self.min = min
-        self.max = max
+        self.minimum = minimum
+        self.maximum = maximum
 
     def generate(self, length):
         gen_dims = (length, ) + self.components_dims
-        return torch.ones(gen_dims).uniform_(self.min, self.max)
+        return torch.ones(gen_dims).uniform_(self.minimum, self.maximum)
 
 
 class DataAwareInitializer(ComponentsInitializer):
