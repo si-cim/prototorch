@@ -20,8 +20,8 @@ class GLVQLoss(torch.nn.Module):
 
 
 class NeuralGasEnergy(torch.nn.Module):
-    def __init__(self, lm):
-        super().__init__()
+    def __init__(self, lm, **kwargs):
+        super().__init__(**kwargs)
         self.lm = lm
 
     def forward(self, d):
@@ -40,8 +40,8 @@ class NeuralGasEnergy(torch.nn.Module):
 
 
 class GrowingNeuralGasEnergy(NeuralGasEnergy):
-    def __init__(self, topology_layer):
-        super().__init__()
+    def __init__(self, topology_layer, **kwargs):
+        super().__init__(**kwargs)
         self.topology_layer = topology_layer
 
     @staticmethod
