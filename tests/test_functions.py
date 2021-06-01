@@ -125,11 +125,63 @@ class TestCompetitions(unittest.TestCase):
                                                         decimal=5)
         self.assertIsNone(mismatch)
 
-    def test_stratified_min_simple(self):
+    def test_stratified_min_trivial(self):
         d = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0, 1]])
         labels = torch.tensor([0, 1, 2])
         actual = competitions.stratified_min(d, labels)
         desired = torch.tensor([[0.0, 2.0, 3.0], [8.0, 0.0, 1.0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_max(self):
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0, 9.0], [9.0, 8.0, 0, 1, 7.0]])
+        labels = torch.tensor([0, 0, 3, 2, 0])
+        actual = competitions.stratified_max(d, labels)
+        desired = torch.tensor([[9.0, 3.0, 2.0], [9.0, 1.0, 0.0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_max_one_hot(self):
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0, 9.0], [9.0, 8.0, 0, 1, 7.0]])
+        labels = torch.tensor([0, 0, 2, 1, 0])
+        labels = torch.nn.functional.one_hot(labels, num_classes=3)
+        actual = competitions.stratified_max(d, labels)
+        desired = torch.tensor([[9.0, 3.0, 2.0], [9.0, 1.0, 0.0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_sum(self):
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0], [9.0, 8.0, 0, 1]])
+        labels = torch.LongTensor([0, 0, 1, 2])
+        actual = competitions.stratified_sum(d, labels)
+        desired = torch.tensor([[1.0, 2.0, 3.0], [17.0, 0.0, 1.0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_sum_one_hot(self):
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0], [9.0, 8.0, 0, 1]])
+        labels = torch.tensor([0, 0, 1, 2])
+        labels = torch.eye(3)[labels]
+        actual = competitions.stratified_sum(d, labels)
+        desired = torch.tensor([[1.0, 2.0, 3.0], [17.0, 0.0, 1.0]])
+        mismatch = np.testing.assert_array_almost_equal(actual,
+                                                        desired,
+                                                        decimal=5)
+        self.assertIsNone(mismatch)
+
+    def test_stratified_prod(self):
+        d = torch.tensor([[1.0, 0.0, 2.0, 3.0, 9.0], [9.0, 8.0, 0, 1, 7.0]])
+        labels = torch.tensor([0, 0, 3, 2, 0])
+        actual = competitions.stratified_prod(d, labels)
+        desired = torch.tensor([[0.0, 3.0, 2.0], [504.0, 1.0, 0.0]])
         mismatch = np.testing.assert_array_almost_equal(actual,
                                                         desired,
                                                         decimal=5)
