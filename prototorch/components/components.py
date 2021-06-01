@@ -140,7 +140,7 @@ class LabeledComponents(Components):
         else:
             super()._initialize_components(initializer, num_components)
 
-    def add_components(self, initializer, distribution=[1]):
+    def add_components(self, initializer, distribution):
         self._precheck_initializer(initializer)
 
         # Labels
