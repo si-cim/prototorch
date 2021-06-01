@@ -5,17 +5,14 @@ import torch
 ACTIVATIONS = dict()
 
 
-# def register_activation(scriptf):
-#     ACTIVATIONS[scriptf.name] = scriptf
-#     return scriptf
-def register_activation(function):
+def register_activation(fn):
     """Add the activation function to the registry."""
-    ACTIVATIONS[function.__name__] = function
-    return function
+    name = fn.__name__
+    ACTIVATIONS[name] = fn
+    return fn
 
 
 @register_activation
-# @torch.jit.script
 def identity(x, beta=0.0):
     """Identity activation function.
 
@@ -29,7 +26,6 @@ def identity(x, beta=0.0):
 
 
 @register_activation
-# @torch.jit.script
 def sigmoid_beta(x, beta=10.0):
     r"""Sigmoid activation function with scaling.
 
@@ -44,7 +40,6 @@ def sigmoid_beta(x, beta=10.0):
 
 
 @register_activation
-# @torch.jit.script
 def swish_beta(x, beta=10.0):
     r"""Swish activation function with scaling.
 
