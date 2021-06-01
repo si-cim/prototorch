@@ -1,7 +1,6 @@
 """ProtoTorch losses."""
 
 import torch
-
 from prototorch.functions.activations import get_activation
 from prototorch.functions.losses import glvq_loss
 
@@ -38,3 +37,22 @@ class NeuralGasEnergy(torch.nn.Module):
     @staticmethod
     def _nghood_fn(rankings, lm):
         return torch.exp(-rankings / lm)
+
+
+class GrowingNeuralGasEnergy(NeuralGasEnergy):
+    def __init__(self, topology_layer):
+        super().__init__()
+        self.topology_layer = topology_layer
+
+    @staticmethod
+    def _nghood_fn(rankings, topology):
+        winner = rankings[:, 0]
+
+        weights = torch.zeros_like(rankings, dtype=torch.float)
+        weights[torch.arange(rankings.shape[0]), winner] = 1.0
+
+        neighbours = topology.get_neighbours(winner)
+
+        weights[neighbours] = 0.1
+
+        return weights
