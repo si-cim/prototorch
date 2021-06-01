@@ -6,7 +6,7 @@ import torch
 
 def make_spiral(num_samples=500, noise=0.3):
     """Generates the Spiral Dataset.
-    
+
     For use in Prototorch use `prototorch.datasets.Spiral` instead.
     """
     def get_samples(n, delta_t):
