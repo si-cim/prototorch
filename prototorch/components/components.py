@@ -32,7 +32,7 @@ def get_labels_object(distribution):
     return labels
 
 
-def _precheck_initializer(self, initializer):
+def _precheck_initializer(initializer):
     if not isinstance(initializer, ComponentsInitializer):
         emsg = f"`initializer` has to be some subtype of " \
             f"{ComponentsInitializer}. " \
