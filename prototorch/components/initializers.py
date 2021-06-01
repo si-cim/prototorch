@@ -155,7 +155,7 @@ class StratifiedSelectionInitializer(ClassAwareInitializer):
         mask = torch.bernoulli(n1) - torch.bernoulli(n2)
         return x + (self.noise * mask)
 
-    def generate(self, length, dist=[]):
+    def generate(self, length, dist):
         samples = self._get_samples_from_initializer(length, dist)
         if self.noise is not None:
             samples = self.add_noise_v1(samples)
