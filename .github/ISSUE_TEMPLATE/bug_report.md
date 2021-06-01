@@ -23,9 +23,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. Ubuntu 20.10]
- - Prototorch Version: [e.g. v0.4.0]
- - Python Version: [e.g. 3.9.5]
+- OS: [e.g. Ubuntu 20.10]
+- Prototorch Version: [e.g. v0.4.0]
+- Python Version: [e.g. 3.9.5]
 
 **Additional context**
 Add any other context about the problem here.
