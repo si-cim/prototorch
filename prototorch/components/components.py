@@ -100,7 +100,7 @@ class Components(torch.nn.Module):
         return self._components
 
     def extra_repr(self):
-        return f"components.shape: {tuple(self._components.shape)}"
+        return f"(components): (shape: {tuple(self._components.shape)})"
 
 
 class LabeledComponents(Components):
