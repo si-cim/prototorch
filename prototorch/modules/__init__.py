@@ -1,3 +1,5 @@
 """ProtoTorch modules."""
 
-from .utils import LambdaLayer
+from .competitions import *
+from .pooling import *
+from .wrappers import LambdaLayer, LossLayer
