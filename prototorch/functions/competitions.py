@@ -108,13 +108,13 @@ def wtac(distances: torch.Tensor,
 
 
 def wtac_thresh(distances: torch.Tensor,
-                theta_boundary: torch.Tensor,
-                labels: torch.LongTensor) -> (torch.LongTensor):
+                labels: torch.LongTensor,
+                theta_boundary: torch.Tensor) -> (torch.LongTensor):
     winning_indices = torch.min(distances, dim=1).indices
     winning_labels = labels[winning_indices].squeeze()
     """ Used for OneClassClassifier.
     Calculates if distance is in between the Voronoi-cell of prototype or not. Voronoi-cell is defined by >theta_boundary<. (like a radius) """
-    in_boundary = (theta_boundary - distances)[winning_indices].squeeze()
+    in_boundary = (theta_boundary - distances.T).T[winning_indices].squeeze()
     winning_labels = torch.where(in_boundary > 0., winning_labels, -1) # '-1' -> 'garbage class'
     return winning_labels
 

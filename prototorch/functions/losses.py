@@ -35,35 +35,38 @@ def glvq_loss(distances, target_labels, prototype_labels):
     return mu
 
 
-def _get_dop_in_diopf(distances, theta, matcher, not_matcher):
-    diff_to_thresh = distances - theta
-    d_inner_pn = torch.where(diff_to_thresh < 0, diff_to_thresh, 0)
-    d_inner_p = torch.where(matcher, d_inner_pn, 0)
-    d_inner_n = torch.where(not_matcher, d_inner_pn, 0)
-    d_outer_pn = torch.where(diff_to_thresh >= 0, diff_to_thresh, 0)
-    d_outer_p = torch.where(matcher, d_outer_pn, 0)
-    d_outer_p_free = torch.where(torch.min(d_inner_p, dim=1) < 0, 0., d_outer_p)
+def _get_dop_in_diopf(diff_to_thresh, matcher, not_matcher):
+    zero = torch.tensor(0).type(torch.float)
+    d_inner_pn = torch.where(diff_to_thresh.float() < zero, diff_to_thresh.float(), zero)
+    d_inner_p = torch.where(matcher, d_inner_pn, zero)
+    d_inner_n = torch.where(not_matcher, d_inner_pn, zero)
+    d_outer_pn = torch.where(diff_to_thresh >= zero, diff_to_thresh, zero)
+    d_outer_p = torch.where(matcher, d_outer_pn, zero)
+    _zeros = torch.full(d_outer_p.shape, 0).type(torch.float)
+    d_outer_p_free = torch.where(torch.min(d_inner_p, dim=1).values < zero, _zeros.T, d_outer_p.T).T
     d_op_in = torch.add(d_outer_p_free, d_inner_n)
     d_iopf = torch.add(d_outer_p_free, d_inner_p)
     return d_op_in, d_iopf
     
     
-def OneClassClassifier_loss(distances, target_labels, prototype_labels, theta_boundary):
+def one_class_classifier_loss(distances, target_labels, prototype_labels, theta_boundary):
     """ OneClassClassifier loss function """
+    zero = torch.tensor(0).type(torch.float)
     matcher = _get_matcher(target_labels, prototype_labels)
     not_matcher = torch.bitwise_not(matcher)
-    """ Optimizing False Positives and Negatives """
-    dop_in, d_iopf = _get_dop_dim(distances, theta_boundary, matcher, not_matcher)
-    muf = d_op_im * torch.pow(-1., torch.LongTensor(not_matcher))
-    """ Optimizing Margin (theta_boundary) """
-    d_unmatching = torch.where(not_matcher, distances, 0)
-    dp_max = torch.max(d_iopf, dim=-1, keepdim=True)
-    dn_min = torch.min(d_unmatching, dim=-1, keepdim=True)
-    mut = diff_to_thresh - (dp_max + dn_min)/2
-    """ Minimizing distances to True Positives (similar to penalty term) """
+    # Optimizing False Positives and Negatives
+    diff_to_thresh = torch.subtract(distances.T, theta_boundary).T
+    d_op_in, d_iopf = _get_dop_in_diopf(diff_to_thresh, matcher, not_matcher)
+    muf = d_op_in * torch.pow(-1., torch.LongTensor(not_matcher.type(torch.long)))
+    # Optimizing Margin (theta_boundary)
+    d_unmatching = torch.where(not_matcher, distances, zero)
+    dp_max = torch.max(d_iopf, dim=-1, keepdim=True).values
+    dn_min = torch.min(d_unmatching, dim=-1, keepdim=True).values
+    mut = diff_to_thresh - torch.divide(torch.add(dp_max, dn_min),2)
+    # Minimizing distances to True Positives (similar to penalty term)
     #d_matching_zero = torch.where(matcher, distances, 0)
     #mud = torch.min(d_matching_zero, dim=-1, keepdims=True)
-    mud = torch.min(d_iopf, dim=-1, keepdims=True)
+    mud = torch.min(d_iopf, dim=-1, keepdims=True).values
     print(muf, mut, mud)
     return muf + mut + mud
 
