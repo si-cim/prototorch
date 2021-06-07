@@ -13,12 +13,12 @@ def _get_matcher(targets, labels):
     return matcher
 
 
-def _get_dp_dm(distances, targets, plabels, with_indices=False):
+def _get_dp_dm(distances, targets, plabels, with_indices=False, fill_value=float("inf")):
     """Returns the d+ and d- values for a batch of distances."""
     matcher = _get_matcher(targets, plabels)
     not_matcher = torch.bitwise_not(matcher)
 
-    inf = torch.full_like(distances, fill_value=float("inf"))
+    inf = torch.full_like(distances, fill_value=fill_value)
     d_matching = torch.where(matcher, distances, inf)
     d_unmatching = torch.where(not_matcher, distances, inf)
     dp = torch.min(d_matching, dim=-1, keepdim=True)
@@ -32,6 +32,19 @@ def glvq_loss(distances, target_labels, prototype_labels):
     """GLVQ loss function with support for one-hot labels."""
     dp, dm = _get_dp_dm(distances, target_labels, prototype_labels)
     mu = (dp - dm) / (dp + dm)
+    return mu
+
+
+def one_class_classifier_triplet_loss(distances, target_labels, prototype_labels, theta_boundary):
+    """ triplet loss for OneClassClassifier """
+    zero = torch.tensor(0).type(torch.float)
+    diff_to_thresh = torch.subtract(distances, theta_boundary)
+    dp, dm = _get_dp_dm(diff_to_thresh, target_labels, prototype_labels, fill_value=0)
+    #mu = (dp - dm) # noch mal schauen
+    dap = (dp - dm) / (dp + dm)
+    dan = (dp - dm) / (dp + dm)
+    mu = mus - mun
+    mu = torch.where(mu > 0, mu, zero)  # + margin
     return mu
 
 
@@ -54,21 +67,28 @@ def one_class_classifier_loss(distances, target_labels, prototype_labels, theta_
     zero = torch.tensor(0).type(torch.float)
     matcher = _get_matcher(target_labels, prototype_labels)
     not_matcher = torch.bitwise_not(matcher)
+
     # Optimizing False Positives and Negatives
-    diff_to_thresh = torch.subtract(distances.T, theta_boundary).T
+    diff_to_thresh = torch.subtract(distances, theta_boundary)
     d_op_in, d_iopf = _get_dop_in_diopf(diff_to_thresh, matcher, not_matcher)
     muf = d_op_in * torch.pow(-1., torch.LongTensor(not_matcher.type(torch.long)))
+    #muf = torch.min(muf, dim=-1, keepdims=True).values
+    muf = torch.sum(muf, dim=-1, keepdims=True)
+
     # Optimizing Margin (theta_boundary)
     d_unmatching = torch.where(not_matcher, distances, zero)
     dp_max = torch.max(d_iopf, dim=-1, keepdim=True).values
     dn_min = torch.min(d_unmatching, dim=-1, keepdim=True).values
     mut = diff_to_thresh - torch.divide(torch.add(dp_max, dn_min),2)
+    mut = torch.min(mut, dim=-1, keepdims=True).values
+    #mut = torch.sum(mut, dim=-1, keepdims=True) # führt dazu, das sich die Prototypen übereinander legen, auch ein Weglassen von 'mut'
+
     # Minimizing distances to True Positives (similar to penalty term)
-    #d_matching_zero = torch.where(matcher, distances, 0)
-    #mud = torch.min(d_matching_zero, dim=-1, keepdims=True)
-    mud = torch.min(d_iopf, dim=-1, keepdims=True).values
-    print(muf, mut, mud)
-    return muf + mut + mud
+    d_matching_zero = torch.where(matcher, distances, zero)
+    mud = torch.min(d_matching_zero, dim=-1, keepdims=True).values
+    #mud = torch.min(d_iopf, dim=-1, keepdims=True).values
+    #mud = torch.mean(d_iopf, dim=-1, keepdims=True)
+    return muf + mud
 
 
 def lvq1_loss(distances, target_labels, prototype_labels):
