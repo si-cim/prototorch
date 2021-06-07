@@ -1,4 +1,5 @@
-"""ProtoTroch Initializers."""
+"""ProtoTroch Component and Label Initializers."""
+
 import warnings
 from collections.abc import Iterable
 from itertools import chain
