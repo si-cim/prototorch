@@ -110,7 +110,8 @@ def _get_class_probabilities(probabilities, targets, prototype_labels):
     return whole, correct, wrong
 
 
-def log_likelihood_ratio_loss(probabilities, targets, prototype_labels):
+def nllr_loss(probabilities, targets, prototype_labels):
+    """Compute the Negative Log-Likelihood Ratio loss."""
     _, correct, wrong = _get_class_probabilities(probabilities, targets,
                                                  prototype_labels)
 
@@ -119,7 +120,8 @@ def log_likelihood_ratio_loss(probabilities, targets, prototype_labels):
     return -1.0 * log_likelihood
 
 
-def robust_soft_loss(probabilities, targets, prototype_labels):
+def rslvq_loss(probabilities, targets, prototype_labels):
+    """Compute the Robust Soft Learning Vector Quantization (RSLVQ) loss."""
     whole, correct, _ = _get_class_probabilities(probabilities, targets,
                                                  prototype_labels)
 
