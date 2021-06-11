@@ -5,7 +5,6 @@ import warnings
 import torch
 from prototorch.components.initializers import (ClassAwareInitializer,
                                                 ComponentsInitializer,
-                                                CustomLabelsInitializer,
                                                 EqualLabelsInitializer,
                                                 UnequalLabelsInitializer,
                                                 ZeroReasoningsInitializer)
@@ -21,7 +20,9 @@ def get_labels_object(distribution):
                 distribution["num_classes"],
                 distribution["prototypes_per_class"])
         else:
-            labels = CustomLabelsInitializer(distribution)
+            clabels = list(distribution.keys())
+            dist = list(distribution.values())
+            labels = UnequalLabelsInitializer(dist, clabels)
     elif isinstance(distribution, tuple):
         num_classes, prototypes_per_class = distribution
         labels = EqualLabelsInitializer(num_classes, prototypes_per_class)
@@ -156,7 +157,7 @@ class LabeledComponents(Components):
 
         # Components
         if isinstance(initializer, ClassAwareInitializer):
-            _new = initializer.generate(len(new_labels), labels.distribution)
+            _new = initializer.generate(len(new_labels), distribution)
         else:
             _new = initializer.generate(len(new_labels))
         _components = torch.cat([self._components, _new])

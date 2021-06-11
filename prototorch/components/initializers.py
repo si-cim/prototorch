@@ -174,19 +174,17 @@ class LabelsInitializer:
 
 
 class UnequalLabelsInitializer(LabelsInitializer):
-    def __init__(self, dist):
+    def __init__(self, dist, clabels=None):
         self.dist = dist
+        self.clabels = clabels or range(len(self.dist))
 
     @property
     def distribution(self):
         return self.dist
 
-    def generate(self, clabels=None, dist=None):
-        if not clabels:
-            clabels = range(len(self.dist))
-        if not dist:
-            dist = self.dist
-        targets = list(chain(*[[i] * n for i, n in zip(clabels, dist)]))
+    def generate(self):
+        targets = list(
+            chain(*[[i] * n for i, n in zip(self.clabels, self.dist)]))
         return torch.LongTensor(targets)
 
 
@@ -201,13 +199,6 @@ class EqualLabelsInitializer(LabelsInitializer):
 
     def generate(self):
         return torch.arange(self.classes).repeat(self.per_class, 1).T.flatten()
-
-
-class CustomLabelsInitializer(UnequalLabelsInitializer):
-    def generate(self):
-        clabels = list(self.dist.keys())
-        dist = list(self.dist.values())
-        return super().generate(clabels, dist)
 
 
 # Reasonings
