@@ -2,6 +2,7 @@
 import warnings
 from collections.abc import Iterable
 from itertools import chain
+from typing import List
 
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -179,7 +180,7 @@ class UnequalLabelsInitializer(LabelsInitializer):
         self.clabels = clabels or range(len(self.dist))
 
     @property
-    def distribution(self):
+    def distribution(self) -> List:
         return self.dist
 
     def generate(self):
@@ -194,7 +195,7 @@ class EqualLabelsInitializer(LabelsInitializer):
         self.per_class = per_class
 
     @property
-    def distribution(self):
+    def distribution(self) -> List:
         return self.classes * [self.per_class]
 
     def generate(self):

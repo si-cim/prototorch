@@ -1,4 +1,4 @@
-"""ProtoTorch components modules."""
+"""ProtoTorch Components."""
 
 import warnings
 
@@ -13,7 +13,7 @@ from torch.nn.parameter import Parameter
 from .initializers import parse_data_arg
 
 
-def get_labels_object(distribution):
+def get_labels_initializer(distribution):
     if isinstance(distribution, dict):
         if "num_classes" in distribution.keys():
             labels = EqualLabelsInitializer(
@@ -119,10 +119,11 @@ class LabeledComponents(Components):
             components, component_labels = parse_data_arg(
                 initialized_components)
             super().__init__(initialized_components=components)
+            # self._labels = component_labels
             self._labels = component_labels
         else:
-            labels = get_labels_object(distribution)
-            self.initial_distribution = labels.distribution
+            labels_initializer = get_labels_initializer(distribution)
+            self.initial_distribution = labels_initializer.distribution
             _labels = labels.generate()
             super().__init__(len(_labels), initializer=initializer)
             self._register_labels(_labels)
@@ -150,8 +151,8 @@ class LabeledComponents(Components):
         _precheck_initializer(initializer)
 
         # Labels
-        labels = get_labels_object(distribution)
-        new_labels = labels.generate()
+        labels_initializer = get_labels_initializer(distribution)
+        new_labels = labels_initializer.generate()
         _labels = torch.cat([self._labels, new_labels])
         self._register_labels(_labels)
 
@@ -196,20 +197,24 @@ class ReasoningComponents(Components):
 
     """
     def __init__(self,
-                 reasonings=None,
+                 distribution=None,
                  initializer=None,
+                 reasoning_initializer=None,
                  *,
                  initialized_components=None):
         if initialized_components is not None:
             components, reasonings = initialized_components
-
             super().__init__(initialized_components=components)
             self.register_parameter("_reasonings", reasonings)
         else:
-            self._initialize_reasonings(reasonings)
-            super().__init__(len(self._reasonings), initializer=initializer)
+            labels_initializer = get_labels_initializer(distribution)
+            self.initial_distribution = labels_initializer.distribution
+            super().__init__(len(self.initial_distribution),
+                             initializer=initializer)
+            reasonings = reasoning_initializer.generate()
+            self._register_reasonings(reasonings)
 
-    def _initialize_reasonings(self, reasonings):
+    def _initialize_reasonings(self, reasoning_initializer):
         if isinstance(reasonings, tuple):
             num_classes, num_components = reasonings
             reasonings = ZeroReasoningsInitializer(num_classes, num_components)

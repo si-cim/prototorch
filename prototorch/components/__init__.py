@@ -1,2 +1,3 @@
-from prototorch.components.components import *
-from prototorch.components.initializers import *
+from .components import *
+from .initializers import *
+from .labels import *
