@@ -1,24 +1,16 @@
-"""ProtoTorch abstract dataset classes.
+"""ProtoTorch abstract dataset classes
 
-Based on `torchvision.VisionDataset` and `torchvision.MNIST`
+Based on `torchvision.VisionDataset` and `torchvision.MNIST`.
 
 For the original code, see:
 https://github.com/pytorch/vision/blob/master/torchvision/datasets/vision.py
 https://github.com/pytorch/vision/blob/master/torchvision/datasets/mnist.py
+
 """
 
 import os
 
 import torch
-
-
-class NumpyDataset(torch.utils.data.TensorDataset):
-    """Create a PyTorch TensorDataset from NumPy arrays."""
-    def __init__(self, data, targets):
-        self.data = torch.Tensor(data)
-        self.targets = torch.LongTensor(targets)
-        tensors = [self.data, self.targets]
-        super().__init__(*tensors)
 
 
 class Dataset(torch.utils.data.Dataset):
@@ -44,7 +36,7 @@ class ProtoDataset(Dataset):
     training_file = "training.pt"
     test_file = "test.pt"
 
-    def __init__(self, root, train=True, download=True, verbose=True):
+    def __init__(self, root="", train=True, download=True, verbose=True):
         super().__init__(root)
         self.train = train  # training set or test set
         self.verbose = verbose
@@ -96,3 +88,12 @@ class ProtoDataset(Dataset):
 
     def _download(self):
         raise NotImplementedError
+
+
+class NumpyDataset(torch.utils.data.TensorDataset):
+    """Create a PyTorch TensorDataset from NumPy arrays."""
+    def __init__(self, data, targets):
+        self.data = torch.Tensor(data)
+        self.targets = torch.LongTensor(targets)
+        tensors = [self.data, self.targets]
+        super().__init__(*tensors)

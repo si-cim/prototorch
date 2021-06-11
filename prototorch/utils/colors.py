@@ -1,4 +1,4 @@
-"""ProtoFlow color utilities."""
+"""ProtoFlow color utilities"""
 
 
 def hex_to_rgb(hex_values):
