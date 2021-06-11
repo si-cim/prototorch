@@ -118,7 +118,7 @@ class LabeledComponents(Components):
             components, component_labels = parse_data_arg(
                 initialized_components)
             super().__init__(initialized_components=components)
-            self._labels = component_labels
+            self._register_labels(component_labels)
         else:
             labels = get_labels_object(distribution)
             self.initial_distribution = labels.distribution
