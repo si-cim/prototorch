@@ -1,4 +1,4 @@
-"""ProtoTorch Wrappers."""
+"""ProtoTorch wrappers."""
 
 import torch
 
