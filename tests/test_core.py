@@ -157,6 +157,40 @@ def test_components_zeros_init():
     assert torch.allclose(c.components, torch.zeros(3, 2))
 
 
+def test_labeled_components_dict_init():
+    c = pt.components.LabeledComponents({0: 3}, pt.initializers.OCI(2))
+    assert torch.allclose(c.components, torch.ones(3, 2))
+    assert torch.allclose(c.labels, torch.zeros(3, dtype=torch.long))
+
+
+def test_labeled_components_list_init():
+    c = pt.components.LabeledComponents([3], pt.initializers.OCI(2))
+    assert torch.allclose(c.components, torch.ones(3, 2))
+    assert torch.allclose(c.labels, torch.zeros(3, dtype=torch.long))
+
+
+def test_labeled_components_tuple_init():
+    c = pt.components.LabeledComponents({0: 1, 1: 2}, pt.initializers.OCI(2))
+    assert torch.allclose(c.components, torch.ones(3, 2))
+    assert torch.allclose(c.labels, torch.LongTensor([0, 1, 1]))
+
+
+# Labels
+def test_standalone_labels_dict_init():
+    l = pt.components.Labels({0: 3})
+    assert torch.allclose(l.labels, torch.zeros(3, dtype=torch.long))
+
+
+def test_standalone_labels_list_init():
+    l = pt.components.Labels([3])
+    assert torch.allclose(l.labels, torch.zeros(3, dtype=torch.long))
+
+
+def test_standalone_labels_tuple_init():
+    l = pt.components.Labels({0: 1, 1: 2})
+    assert torch.allclose(l.labels, torch.LongTensor([0, 1, 1]))
+
+
 # Losses
 def test_glvq_loss_int_labels():
     d = torch.stack([torch.ones(100), torch.zeros(100)], dim=1)
