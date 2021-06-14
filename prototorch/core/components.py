@@ -116,7 +116,7 @@ class AbstractLabels(torch.nn.Module):
 
     @property
     def num_labels(self):
-        return len(self.labels)
+        return len(self._labels)
 
     @property
     def unique_labels(self):
@@ -192,6 +192,13 @@ class LabeledComponents(AbstractComponents):
     def labels(self):
         """Tensor containing the component labels."""
         return self._labels
+
+    @property
+    def distribution(self):
+        unique, counts = torch.unique(self._labels,
+                                      sorted=True,
+                                      return_counts=True)
+        return dict(zip(unique.tolist(), counts.tolist()))
 
     def _register_labels(self, labels):
         self.register_buffer("_labels", labels)
