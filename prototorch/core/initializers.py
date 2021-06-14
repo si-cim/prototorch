@@ -179,7 +179,7 @@ class AbstractClassAwareCompInitializer(AbstractDataAwareCompInitializer):
         self.num_classes = len(self.clabels)
 
     @abstractmethod
-    def generate(self, distribution: Union[dict, list, tuple] = []):
+    def generate(self, distribution: Union[dict, list, tuple]):
         ...
         return self.generate_end_hook(...)
 
@@ -190,7 +190,7 @@ class AbstractClassAwareCompInitializer(AbstractDataAwareCompInitializer):
 
 class ClassAwareCompInitializer(AbstractClassAwareCompInitializer):
     """'Generate' components from provided data and requested distribution."""
-    def generate(self, distribution: Union[dict, list, tuple] = []):
+    def generate(self, distribution: Union[dict, list, tuple]):
         """Ignore `distribution` and simply return transformed `self.data`."""
         components = self.generate_end_hook(self.data)
         return components
@@ -249,7 +249,7 @@ class LiteralLabelsInitializer(AbstractLabelsInitializer):
     def __init__(self, labels):
         self.labels = labels
 
-    def generate(self, distribution: Union[dict, list, tuple] = []):
+    def generate(self, distribution: Union[dict, list, tuple]):
         """Ignore `distribution` and simply return `self.labels`.
 
         Convert to long tensor, if necessary.
@@ -267,7 +267,7 @@ class DataAwareLabelsInitializer(AbstractLabelsInitializer):
     def __init__(self, data):
         self.data, self.targets = parse_data_arg(data)
 
-    def generate(self, distribution: Union[dict, list, tuple] = []):
+    def generate(self, distribution: Union[dict, list, tuple]):
         """Ignore `num_components` and simply return `self.targets`."""
         return self.targets
 
@@ -326,7 +326,7 @@ class LiteralReasoningsInitializer(AbstractReasoningsInitializer):
         super().__init__(**kwargs)
         self.reasonings = reasonings
 
-    def generate(self, distribution: Union[dict, list, tuple] = []):
+    def generate(self, distribution: Union[dict, list, tuple]):
         """Ignore `distributuion` and simply return self.reasonings."""
         reasonings = self.reasonings
         if not isinstance(reasonings, torch.Tensor):
