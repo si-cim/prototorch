@@ -8,10 +8,10 @@ from torch.nn.parameter import Parameter
 
 from ..utils import parse_distribution
 from .initializers import (
+    AbstractClassAwareCompInitializer,
     AbstractComponentsInitializer,
     AbstractLabelsInitializer,
     AbstractReasoningsInitializer,
-    ClassAwareCompInitializer,
     LabelsInitializer,
 )
 
@@ -50,7 +50,7 @@ def removeind(ins, attr, indices):
 
 def get_cikwargs(init, distribution):
     """Return appropriate key-word arguments for a component initializer."""
-    if isinstance(init, ClassAwareCompInitializer):
+    if isinstance(init, AbstractClassAwareCompInitializer):
         cikwargs = dict(distribution=distribution)
     else:
         distribution = parse_distribution(distribution)
@@ -69,7 +69,7 @@ class AbstractComponents(torch.nn.Module):
     @property
     def components(self):
         """Detached Tensor containing the components."""
-        return self._components.detach()
+        return self._components.detach().cpu()
 
     def _register_components(self, components):
         self.register_parameter("_components", Parameter(components))
@@ -259,7 +259,7 @@ class ReasoningComponents(AbstractComponents):
         Dimension NxCx2
 
         """
-        return self._reasonings.detach()
+        return self._reasonings.detach().cpu()
 
     def _register_reasonings(self, reasonings):
         self.register_parameter("_reasonings", Parameter(reasonings))
