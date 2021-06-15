@@ -43,6 +43,45 @@ def _precheck_initializer(initializer):
         raise TypeError(emsg)
 
 
+class LinearMapping(torch.nn.Module):
+    """LinearMapping is a learnable Mapping Matrix."""
+    def __init__(self,
+                 mapping_shape=None,
+                 initializer=None,
+                 *,
+                 initialized_linearmapping=None):
+        super().__init__()
+
+        # Ignore all initialization settings if initialized_components is given.
+        if initialized_linearmapping is not None:
+            self._register_mapping(initialized_linearmapping)
+            if num_components is not None or initializer is not None:
+                wmsg = "Arguments ignored while initializing Components"
+                warnings.warn(wmsg)
+        else:
+            self._initialize_mapping(mapping_shape, initializer)
+
+    @property
+    def mapping_shape(self):
+        return self._omega.shape
+
+    def _register_mapping(self, components):
+        self.register_parameter("_omega", Parameter(components))
+
+    def _initialize_mapping(self, mapping_shape, initializer):
+        _precheck_initializer(initializer)
+        _mapping = initializer.generate(mapping_shape)
+        self._register_mapping(_mapping)
+
+    @property
+    def mapping(self):
+        """Tensor containing the component tensors."""
+        return self._omega.detach()
+
+    def forward(self):
+        return self._omega
+
+
 class Components(torch.nn.Module):
     """Components is a set of learnable Tensors."""
     def __init__(self,

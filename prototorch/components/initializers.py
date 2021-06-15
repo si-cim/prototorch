@@ -167,6 +167,14 @@ class StratifiedSelectionInitializer(ClassAwareInitializer):
         return samples
 
 
+# Omega matrix
+class PcaInitializer(DataAwareInitializer):
+    def generate(self, shape):
+        (input_dim, latent_dim) = shape
+        (_, eigVal, eigVec) = torch.pca_lowrank(self.data, q=latent_dim)
+        return eigVec
+
+
 # Labels
 class LabelsInitializer:
     def generate(self):
@@ -222,3 +230,4 @@ SMI = StratifiedMeanInitializer
 Random = RandomInitializer = UniformInitializer
 Zeros = ZerosInitializer
 Ones = OnesInitializer
+PCA = PcaInitializer
