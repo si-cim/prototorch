@@ -2,6 +2,18 @@
 
 import torch
 
+from .distances import euclidean_distance
+
+
+def gaussian(x, variance=1.0):
+    return torch.exp(-(x * x) / (2 * variance))
+
+
+def euclidean_similarity(x, y, variance=1.0):
+    distances = euclidean_distance(x, y)
+    similarities = gaussian(distances, variance)
+    return similarities
+
 
 def cosine_similarity(x, y):
     """Compute the cosine similarity between :math:`x` and :math:`y`.

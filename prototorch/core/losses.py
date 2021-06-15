@@ -98,6 +98,13 @@ def rslvq_loss(probabilities, targets, prototype_labels):
     return -1.0 * log_likelihood
 
 
+def margin_loss(y_pred, y_true, margin=0.3):
+    """Compute the margin loss."""
+    dp = torch.sum(y_true * y_pred, dim=-1)
+    dm = torch.max(y_pred - y_true, dim=-1).values
+    return torch.nn.functional.relu(dm - dp + margin)
+
+
 class GLVQLoss(torch.nn.Module):
     def __init__(self, margin=0.0, squashing="identity", beta=10, **kwargs):
         super().__init__(**kwargs)
@@ -110,6 +117,19 @@ class GLVQLoss(torch.nn.Module):
         mu = glvq_loss(distances, targets, prototype_labels=plabels)
         batch_loss = self.squashing(mu + self.margin, beta=self.beta)
         return torch.sum(batch_loss, dim=0)
+
+
+class MarginLoss(torch.nn.modules.loss._Loss):
+    def __init__(self,
+                 margin=0.3,
+                 size_average=None,
+                 reduce=None,
+                 reduction="mean"):
+        super().__init__(size_average, reduce, reduction)
+        self.margin = margin
+
+    def forward(self, y_pred, y_true):
+        return margin_loss(y_pred, y_true, self.margin)
 
 
 class NeuralGasEnergy(torch.nn.Module):
