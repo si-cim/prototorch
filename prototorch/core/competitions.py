@@ -28,6 +28,24 @@ def knnc(distances: torch.Tensor,
     return winning_labels
 
 
+def cbcc(detections: torch.Tensor, reasonings: torch.Tensor):
+    """Classification-By-Components Competition.
+
+    Returns probability distributions over the classes.
+
+    `detections` must be of shape [batch_size, num_components].
+    `reasonings` must be of shape [num_components, num_classes, 2].
+
+    """
+    A, B = reasonings.permute(2, 1, 0).clamp(0, 1)
+    pk = A
+    nk = (1 - A) * B
+    numerator = (detections @ (pk - nk).T) + nk.sum(1)
+    probs = numerator / (pk + nk).sum(1)
+    # probs = probs.squeeze(0)
+    return probs
+
+
 class WTAC(torch.nn.Module):
     """Winner-Takes-All-Competition Layer.
 
@@ -63,3 +81,13 @@ class KNNC(torch.nn.Module):
 
     def extra_repr(self):
         return f"k: {self.k}"
+
+
+class CBCC(torch.nn.Module):
+    """Classification-By-Components Competition.
+
+    Thin wrapper over the `cbcc` function.
+
+    """
+    def forward(self, detections, reasonings):
+        return cbcc(detections, reasonings)
