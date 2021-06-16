@@ -26,7 +26,10 @@ DATASETS = [
     "requests",
     "tqdm",
 ]
-DEV = ["bumpversion"]
+DEV = [
+    "bumpversion",
+    "pre-commit",
+]
 DOCS = [
     "recommonmark",
     "sphinx",
