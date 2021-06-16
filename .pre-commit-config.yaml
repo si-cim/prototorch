@@ -45,3 +45,9 @@ repos:
     rev: v2.19.4
     hooks:
     -   id: pyupgrade
+
+-   repo: https://github.com/jorisroovers/gitlint
+    rev: "v0.15.1"
+    hooks:
+    -   id: gitlint
+        args: [--contrib=CT1, --ignore=B6, --msg-filename]
