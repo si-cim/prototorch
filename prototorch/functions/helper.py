@@ -89,6 +89,6 @@ def _check_shapes(signal_int_shape, proto_int_shape):
 
 def _int_and_mixed_shape(tensor):
     shape = mixed_shape(tensor)
-    int_shape = tuple([i if isinstance(i, int) else None for i in shape])
+    int_shape = tuple(i if isinstance(i, int) else None for i in shape)
 
     return shape, int_shape

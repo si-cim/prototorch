@@ -181,7 +181,7 @@ class LabeledComponents(Components):
 
 
 class ReasoningComponents(Components):
-    """ReasoningComponents generate a set of components and a set of reasoning matrices.
+    r"""ReasoningComponents generate a set of components and a set of reasoning matrices.
 
     Every Component has a reasoning matrix assigned.
 

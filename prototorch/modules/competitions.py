@@ -10,7 +10,6 @@ class WTAC(torch.nn.Module):
     Thin wrapper over the `wtac` function.
 
     """
-
     def forward(self, distances, labels):
         return wtac(distances, labels)
 
@@ -21,7 +20,6 @@ class LTAC(torch.nn.Module):
     Thin wrapper over the `wtac` function.
 
     """
-
     def forward(self, probs, labels):
         return wtac(-1.0 * probs, labels)
 
@@ -32,7 +30,6 @@ class KNNC(torch.nn.Module):
     Thin wrapper over the `knnc` function.
 
     """
-
     def __init__(self, k=1, **kwargs):
         super().__init__(**kwargs)
         self.k = k
