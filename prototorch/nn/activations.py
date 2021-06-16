@@ -57,6 +57,10 @@ def get_activation(funcname):
     """Deserialize the activation function."""
     if callable(funcname):
         return funcname
-    if funcname in ACTIVATIONS:
+    elif funcname in ACTIVATIONS:
         return ACTIVATIONS.get(funcname)
-    raise NameError(f"Activation {funcname} was not found.")
+    else:
+        emsg = f"Unable to find matching function for `{funcname}` " \
+            f"in `prototorch.nn.activations`. "
+        helpmsg = f"Possible values are {list(ACTIVATIONS.keys())}."
+        raise NameError(emsg + helpmsg)
