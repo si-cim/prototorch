@@ -1,8 +1,9 @@
 import torch
+from torch import nn
+
 from prototorch.components import LabeledComponents, StratifiedMeanInitializer
 from prototorch.functions.distances import euclidean_distance_matrix
 from prototorch.functions.normalization import orthogonalization
-from torch import nn
 
 
 class GTLVQ(nn.Module):

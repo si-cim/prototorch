@@ -1,7 +1,8 @@
 """ProtoTorch components test suite."""
 
-import prototorch as pt
 import torch
+
+import prototorch as pt
 
 
 def test_labcomps_zeros_init():

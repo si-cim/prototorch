@@ -4,6 +4,7 @@ import unittest
 
 import numpy as np
 import torch
+
 from prototorch.functions import (activations, competitions, distances,
                                   initializers, losses, pooling)
 

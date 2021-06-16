@@ -1,6 +1,7 @@
 """ProtoTorch losses."""
 
 import torch
+
 from prototorch.functions.activations import get_activation
 from prototorch.functions.losses import glvq_loss
 

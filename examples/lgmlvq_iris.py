@@ -3,12 +3,13 @@
 import numpy as np
 import torch
 from matplotlib import pyplot as plt
-from prototorch.components import LabeledComponents, StratifiedMeanInitializer
-from prototorch.functions.competitions import stratified_min
-from prototorch.functions.distances import lomega_distance
-from prototorch.modules.losses import GLVQLoss
 from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
+
+from prototorch.components import LabeledComponents, StratifiedMeanInitializer
+from prototorch.functions.distances import lomega_distance
+from prototorch.functions.pooling import stratified_min_pooling
+from prototorch.modules.losses import GLVQLoss
 
 # Prepare training data
 x_train, y_train = load_iris(True)
@@ -55,7 +56,8 @@ for epoch in range(100):
     # Compute loss
     dis, plabels = model(x_in)
     loss = criterion([dis, plabels], y_in)
-    y_pred = np.argmin(stratified_min(dis, plabels).detach().numpy(), axis=1)
+    y_pred = np.argmin(stratified_min_pooling(dis, plabels).detach().numpy(),
+                       axis=1)
     acc = accuracy_score(y_train, y_pred)
     log_string = f"Epoch: {epoch + 1:03d} Loss: {loss.item():05.02f} "
     log_string += f"Acc: {acc * 100:05.02f}%"
@@ -96,7 +98,8 @@ for epoch in range(100):
     mesh_input = np.c_[xx.ravel(), yy.ravel()]
 
     d, plabels = model(torch.Tensor(mesh_input))
-    y_pred = np.argmin(stratified_min(d, plabels).detach().numpy(), axis=1)
+    y_pred = np.argmin(stratified_min_pooling(d, plabels).detach().numpy(),
+                       axis=1)
     y_pred = y_pred.reshape(xx.shape)
 
     # Plot voronoi regions

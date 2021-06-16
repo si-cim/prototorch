@@ -1,6 +1,7 @@
 """ProtoTorch package."""
 
 import pkgutil
+from typing import List
 
 import pkg_resources
 
@@ -19,7 +20,7 @@ __all_core__ = [
 ]
 
 # Plugin Loader
-__path__ = pkgutil.extend_path(__path__, __name__)
+__path__: List[str] = pkgutil.extend_path(__path__, __name__)
 
 
 def discover_plugins():

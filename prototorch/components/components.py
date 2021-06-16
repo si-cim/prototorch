@@ -3,12 +3,13 @@
 import warnings
 
 import torch
+from torch.nn.parameter import Parameter
+
 from prototorch.components.initializers import (ClassAwareInitializer,
                                                 ComponentsInitializer,
                                                 EqualLabelsInitializer,
                                                 UnequalLabelsInitializer,
                                                 ZeroReasoningsInitializer)
-from torch.nn.parameter import Parameter
 
 from .initializers import parse_data_arg
 

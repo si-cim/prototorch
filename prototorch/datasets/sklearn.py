@@ -8,10 +8,10 @@ URL:
 import warnings
 from typing import Sequence, Union
 
-from prototorch.datasets.abstract import NumpyDataset
-
 from sklearn.datasets import (load_iris, make_blobs, make_circles,
                               make_classification, make_moons)
+
+from prototorch.datasets.abstract import NumpyDataset
 
 
 class Iris(NumpyDataset):
