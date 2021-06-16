@@ -26,6 +26,7 @@ repos:
     rev: 'v0.902'
     hooks:
     -   id: mypy
+        files: prototorch
         additional_dependencies: [types-pkg_resources]
 
 -   repo: https://github.com/pre-commit/mirrors-yapf
