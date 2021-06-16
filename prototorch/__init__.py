@@ -14,9 +14,10 @@ from .core import (
     components,
     distances,
     initializers,
-    similarities,
     losses,
     pooling,
+    similarities,
+    transforms,
 )
 
 # Core Setup
@@ -33,6 +34,7 @@ __all_core__ = [
     "nn",
     "pooling",
     "similarities",
+    "transforms",
     "utils",
 ]
 

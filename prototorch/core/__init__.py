@@ -7,3 +7,4 @@ from .initializers import *
 from .losses import *
 from .pooling import *
 from .similarities import *
+from .transforms import *
