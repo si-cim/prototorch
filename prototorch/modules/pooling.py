@@ -1,6 +1,7 @@
 """ProtoTorch Pooling Modules."""
 
 import torch
+
 from prototorch.functions.pooling import (stratified_max_pooling,
                                           stratified_min_pooling,
                                           stratified_prod_pooling,

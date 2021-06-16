@@ -1,6 +1,7 @@
 """ProtoTorch Competition Modules."""
 
 import torch
+
 from prototorch.functions.competitions import knnc, wtac
 
 

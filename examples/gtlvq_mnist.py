@@ -12,10 +12,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
+from torchvision import transforms
+
 from prototorch.functions.helper import calculate_prototype_accuracy
 from prototorch.modules.losses import GLVQLoss
 from prototorch.modules.models import GTLVQ
-from torchvision import transforms
 
 # Parameters and options
 num_epochs = 50

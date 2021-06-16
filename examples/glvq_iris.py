@@ -3,13 +3,14 @@
 import numpy as np
 import torch
 from matplotlib import pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from torchinfo import summary
+
 from prototorch.components import LabeledComponents, StratifiedMeanInitializer
 from prototorch.functions.competitions import wtac
 from prototorch.functions.distances import euclidean_distance
 from prototorch.modules.losses import GLVQLoss
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-from torchinfo import summary
 
 # Prepare and preprocess the data
 scaler = StandardScaler()

@@ -40,8 +40,9 @@ import os
 
 import numpy as np
 import torch
-from prototorch.datasets.abstract import ProtoDataset
 from torchvision.datasets.utils import download_file_from_google_drive
+
+from prototorch.datasets.abstract import ProtoDataset
 
 
 class Tecator(ProtoDataset):

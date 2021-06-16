@@ -2,12 +2,13 @@
 
 import matplotlib.pyplot as plt
 import torch
+from torch.utils.data import DataLoader
+
 from prototorch.components import LabeledComponents, StratifiedMeanInitializer
 from prototorch.datasets.tecator import Tecator
 from prototorch.functions.distances import sed
 from prototorch.modules.losses import GLVQLoss
 from prototorch.utils.colors import get_legend_handles
-from torch.utils.data import DataLoader
 
 # Prepare the dataset and dataloader
 train_data = Tecator(root="./artifacts", train=True)
