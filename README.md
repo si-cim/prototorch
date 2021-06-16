@@ -48,6 +48,17 @@ pip install -e .[all]
 The documentation is available at <https://www.prototorch.ml/en/latest/>. Should
 that link not work try <https://prototorch.readthedocs.io/en/latest/>.
 
+## Contribution
+
+This repository contains definition for [git hooks](https://githooks.com).
+[Pre-commit](https://pre-commit.com) gets installed as development dependency with prototorch.
+Please install the hooks them by running
+```bash
+pre-commit install
+pre-commit install --hook-type commit-msg
+```
+before creating the first commit.
+
 ## Bibtex
 
 If you would like to cite the package, please use this:
