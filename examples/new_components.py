@@ -1,39 +1,35 @@
 """This example script shows the usage of the new components architecture.
 
 Serialization/deserialization also works as expected.
+
 """
 
-# DATASET
 import torch
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
 
-scaler = StandardScaler()
-x_train, y_train = load_iris(return_X_y=True)
-x_train = x_train[:, [0, 2]]
-scaler.fit(x_train)
-x_train = scaler.transform(x_train)
+import prototorch as pt
 
-x_train = torch.Tensor(x_train)
-y_train = torch.Tensor(y_train)
-num_classes = len(torch.unique(y_train))
+ds = pt.datasets.Iris()
 
-# CREATE NEW COMPONENTS
-from prototorch.components import *
-from prototorch.components.initializers import *
-
-unsupervised = Components(6, SelectionInitializer(x_train))
+unsupervised = pt.components.Components(
+    6,
+    initializer=pt.initializers.ZCI(2),
+)
 print(unsupervised())
 
-prototypes = LabeledComponents(
-    (3, 2), StratifiedSelectionInitializer(x_train, y_train))
+prototypes = pt.components.LabeledComponents(
+    (3, 2),
+    components_initializer=pt.initializers.SSCI(ds),
+)
 print(prototypes())
 
-components = ReasoningComponents(
-    (3, 6), StratifiedSelectionInitializer(x_train, y_train))
-print(components())
+components = pt.components.ReasoningComponents(
+    (3, 2),
+    components_initializer=pt.initializers.SSCI(ds),
+    reasonings_initializer=pt.initializers.PPRI(),
+)
+print(prototypes())
 
-# TEST SERIALIZATION
+# Test Serialization
 import io
 
 save = io.BytesIO()
@@ -41,25 +37,20 @@ torch.save(unsupervised, save)
 save.seek(0)
 serialized_unsupervised = torch.load(save)
 
-assert torch.all(unsupervised.components == serialized_unsupervised.components
-                 ), "Serialization of Components failed."
+assert torch.all(unsupervised.components == serialized_unsupervised.components)
 
 save = io.BytesIO()
 torch.save(prototypes, save)
 save.seek(0)
 serialized_prototypes = torch.load(save)
 
-assert torch.all(prototypes.components == serialized_prototypes.components
-                 ), "Serialization of Components failed."
-assert torch.all(prototypes.component_labels == serialized_prototypes.
-                 component_labels), "Serialization of Components failed."
+assert torch.all(prototypes.components == serialized_prototypes.components)
+assert torch.all(prototypes.labels == serialized_prototypes.labels)
 
 save = io.BytesIO()
 torch.save(components, save)
 save.seek(0)
 serialized_components = torch.load(save)
 
-assert torch.all(components.components == serialized_components.components
-                 ), "Serialization of Components failed."
-assert torch.all(components.reasonings == serialized_components.reasonings
-                 ), "Serialization of Components failed."
+assert torch.all(components.components == serialized_components.components)
+assert torch.all(components.reasonings == serialized_components.reasonings)
