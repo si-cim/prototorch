@@ -296,7 +296,7 @@ class OneHotLabelsInitializer(LabelsInitializer):
 # Reasonings
 class AbstractReasoningsInitializer(ABC):
     """Abstract class for all reasonings initializers."""
-    def __init__(self, components_first=True):
+    def __init__(self, components_first: bool = True):
         self.components_first = components_first
 
     def compute_shape(self, distribution):
@@ -375,7 +375,7 @@ class PurePositiveReasoningsInitializer(AbstractReasoningsInitializer):
         num_components, num_classes, _ = self.compute_shape(distribution)
         A = OneHotLabelsInitializer().generate(distribution)
         B = torch.zeros(num_components, num_classes)
-        reasonings = torch.stack([A, B]).permute(2, 1, 0)
+        reasonings = torch.stack([A, B], dim=-1)
         reasonings = self.generate_end_hook(reasonings)
         return reasonings
 

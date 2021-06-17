@@ -13,6 +13,7 @@ from .initializers import (
     AbstractLabelsInitializer,
     AbstractReasoningsInitializer,
     LabelsInitializer,
+    PurePositiveReasoningsInitializer,
     RandomReasoningsInitializer,
 )
 
@@ -308,10 +309,13 @@ class ReasoningComponents(AbstractComponents):
     three element probability distribution.
 
     """
-    def __init__(self, distribution: Union[dict, list, tuple],
-                 components_initializer: AbstractComponentsInitializer,
-                 reasonings_initializer: AbstractReasoningsInitializer,
-                 **kwargs):
+    def __init__(
+            self,
+            distribution: Union[dict, list, tuple],
+            components_initializer: AbstractComponentsInitializer,
+            reasonings_initializer:
+        AbstractReasoningsInitializer = PurePositiveReasoningsInitializer(),
+            **kwargs):
         super().__init__(**kwargs)
         self.add_components(distribution, components_initializer,
                             reasonings_initializer)
