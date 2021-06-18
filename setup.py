@@ -61,8 +61,9 @@ setup(
     license="MIT",
     install_requires=INSTALL_REQUIRES,
     extras_require={
-        "docs": DOCS,
         "datasets": DATASETS,
+        "dev": DEV,
+        "docs": DOCS,
         "examples": EXAMPLES,
         "tests": TESTS,
         "all": ALL,

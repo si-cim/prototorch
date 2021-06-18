@@ -1,21 +1,41 @@
-"""ProtoTorch package."""
+"""ProtoTorch package"""
 
 import pkgutil
 from typing import List
 
 import pkg_resources
 
-from . import components, datasets, functions, modules, utils
-from .datasets import *
+from . import (
+    datasets,
+    nn,
+    utils,
+)
+from .core import (
+    competitions,
+    components,
+    distances,
+    initializers,
+    losses,
+    pooling,
+    similarities,
+    transforms,
+)
 
 # Core Setup
 __version__ = "0.5.0"
 
 __all_core__ = [
-    "datasets",
-    "functions",
-    "modules",
+    "competitions",
     "components",
+    "core",
+    "datasets",
+    "distances",
+    "initializers",
+    "losses",
+    "nn",
+    "pooling",
+    "similarities",
+    "transforms",
     "utils",
 ]
 

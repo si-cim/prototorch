@@ -51,13 +51,19 @@ that link not work try <https://prototorch.readthedocs.io/en/latest/>.
 ## Contribution
 
 This repository contains definition for [git hooks](https://githooks.com).
-[Pre-commit](https://pre-commit.com) gets installed as development dependency with prototorch.
-Please install the hooks by running
+[Pre-commit](https://pre-commit.com) is automatically installed as development
+dependency with prototorch or you can install it manually with `pip install
+pre-commit`.
+
+Please install the hooks by running:
 ```bash
 pre-commit install
 pre-commit install --hook-type commit-msg
 ```
 before creating the first commit.
+
+The commit will fail if the commit message does not follow the specification
+provided [here](https://www.conventionalcommits.org/en/v1.0.0/#specification).
 
 ## Bibtex
 
