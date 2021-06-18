@@ -2,7 +2,7 @@
 
 ![ProtoTorch Logo](https://prototorch.readthedocs.io/en/latest/_static/horizontal-lockup.png)
 
-[![Build Status](https://travis-ci.org/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
+[![Build Status](https://api.travis-ci.com/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
 ![tests](https://github.com/si-cim/prototorch/workflows/tests/badge.svg)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/si-cim/prototorch?color=yellow&label=version)](https://github.com/si-cim/prototorch/releases)
 [![PyPI](https://img.shields.io/pypi/v/prototorch)](https://pypi.org/project/prototorch/)
