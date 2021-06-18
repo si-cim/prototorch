@@ -129,14 +129,6 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python
 
-# ProtoFlow
-core
-checkpoint
-logs/
-saved_weights/
-scratch*
-
-
 # Created by https://www.gitignore.io/api/visualstudiocode
 # Edit at https://www.gitignore.io/?templates=visualstudiocode
 
@@ -154,5 +146,13 @@ scratch*
 # End of https://www.gitignore.io/api/visualstudiocode
 .vscode/
 
+# Vim
+*~
+*.swp
+*.swo
+
+# Artifacts created by ProtoTorch
 reports
 artifacts
+examples/_*.py
+examples/_*.ipynb

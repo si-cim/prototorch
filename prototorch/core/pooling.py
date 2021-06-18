@@ -1,4 +1,4 @@
-"""ProtoTorch pooling functions."""
+"""ProtoTorch pooling"""
 
 from typing import Callable
 
@@ -78,3 +78,27 @@ def stratified_prod_pooling(values: torch.Tensor,
         fn=lambda x: torch.prod(x, dim=1, keepdim=True).squeeze(),
         fill_value=1.0)
     return winning_values
+
+
+class StratifiedSumPooling(torch.nn.Module):
+    """Thin wrapper over the `stratified_sum_pooling` function."""
+    def forward(self, values, labels):
+        return stratified_sum_pooling(values, labels)
+
+
+class StratifiedProdPooling(torch.nn.Module):
+    """Thin wrapper over the `stratified_prod_pooling` function."""
+    def forward(self, values, labels):
+        return stratified_prod_pooling(values, labels)
+
+
+class StratifiedMinPooling(torch.nn.Module):
+    """Thin wrapper over the `stratified_min_pooling` function."""
+    def forward(self, values, labels):
+        return stratified_min_pooling(values, labels)
+
+
+class StratifiedMaxPooling(torch.nn.Module):
+    """Thin wrapper over the `stratified_max_pooling` function."""
+    def forward(self, values, labels):
+        return stratified_max_pooling(values, labels)
