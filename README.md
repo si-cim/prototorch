@@ -2,13 +2,12 @@
 
 ![ProtoTorch Logo](https://prototorch.readthedocs.io/en/latest/_static/horizontal-lockup.png)
 
-[![Build Status](https://api.travis-ci.com/si-cim/prototorch.svg?branch=master)](https://travis-ci.org/si-cim/prototorch)
+[![Build Status](https://api.travis-ci.com/si-cim/prototorch.svg?branch=master)](https://travis-ci.com/github/si-cim/prototorch)
 ![tests](https://github.com/si-cim/prototorch/workflows/tests/badge.svg)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/si-cim/prototorch?color=yellow&label=version)](https://github.com/si-cim/prototorch/releases)
 [![PyPI](https://img.shields.io/pypi/v/prototorch)](https://pypi.org/project/prototorch/)
 [![codecov](https://codecov.io/gh/si-cim/prototorch/branch/master/graph/badge.svg)](https://codecov.io/gh/si-cim/prototorch)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/76273904bf9343f0a8b29cd8aca242e7)](https://www.codacy.com/gh/si-cim/prototorch?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=si-cim/prototorch&amp;utm_campaign=Badge_Grade)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/prototorch?color=blue)
 [![GitHub license](https://img.shields.io/github/license/si-cim/prototorch)](https://github.com/si-cim/prototorch/blob/master/LICENSE)
 
 *Tensorflow users, see:* [ProtoFlow](https://github.com/si-cim/protoflow)
