@@ -1,54 +1,53 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
-    hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
-    -   id: check-ast
-    -   id: check-case-conflict
 
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-yaml
+  - id: check-added-large-files
+  - id: check-ast
+  - id: check-case-conflict
 
 - repo: https://github.com/myint/autoflake
   rev: v1.4
   hooks:
-  -   id: autoflake
+  - id: autoflake
 
 - repo: http://github.com/PyCQA/isort
   rev: 5.8.0
   hooks:
-  -   id: isort
+  - id: isort
 
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.902
-    hooks:
-    -   id: mypy
-        files: prototorch
-        additional_dependencies: [types-pkg_resources]
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v0.902
+  hooks:
+  - id: mypy
+    files: prototorch
+    additional_dependencies: [types-pkg_resources]
 
--   repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.31.0
-    hooks:
-    -   id: yapf
+- repo: https://github.com/pre-commit/mirrors-yapf
+  rev: v0.31.0
+  hooks:
+  - id: yapf
 
--   repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.9.0
-    hooks:
-    -   id: python-use-type-annotations
-    -   id: python-no-log-warn
-    -   id: python-check-blanket-noqa
+- repo: https://github.com/pre-commit/pygrep-hooks
+  rev: v1.9.0
+  hooks:
+  - id: python-use-type-annotations
+  - id: python-no-log-warn
+  - id: python-check-blanket-noqa
 
+- repo: https://github.com/asottile/pyupgrade
+  rev: v2.19.4
+  hooks:
+  - id: pyupgrade
 
--   repo: https://github.com/asottile/pyupgrade
-    rev: v2.19.4
-    hooks:
-    -   id: pyupgrade
-
--   repo: https://github.com/si-cim/gitlint
-    rev: v0.15.2-unofficial
-    hooks:
-    -   id: gitlint
-        args: [--contrib=CT1, --ignore=B6, --msg-filename]
+- repo: https://github.com/si-cim/gitlint
+  rev: v0.15.2-unofficial
+  hooks:
+  - id: gitlint
+    args: [--contrib=CT1, --ignore=B6, --msg-filename]
