@@ -303,16 +303,17 @@ class OneHotLabelsInitializer(LabelsInitializer):
 
 
 # Reasonings
+def compute_distribution_shape(distribution):
+    distribution = parse_distribution(distribution)
+    num_components = sum(distribution.values())
+    num_classes = len(distribution.keys())
+    return (num_components, num_classes, 2)
+
+
 class AbstractReasoningsInitializer(ABC):
     """Abstract class for all reasonings initializers."""
     def __init__(self, components_first: bool = True):
         self.components_first = components_first
-
-    def compute_shape(self, distribution):
-        distribution = parse_distribution(distribution)
-        num_components = sum(distribution.values())
-        num_classes = len(distribution.keys())
-        return (num_components, num_classes, 2)
 
     def generate_end_hook(self, reasonings):
         if not self.components_first:
@@ -349,7 +350,7 @@ class LiteralReasoningsInitializer(AbstractReasoningsInitializer):
 class ZerosReasoningsInitializer(AbstractReasoningsInitializer):
     """Reasonings are all initialized with zeros."""
     def generate(self, distribution: Union[dict, list, tuple]):
-        shape = self.compute_shape(distribution)
+        shape = compute_distribution_shape(distribution)
         reasonings = torch.zeros(*shape)
         reasonings = self.generate_end_hook(reasonings)
         return reasonings
@@ -358,7 +359,7 @@ class ZerosReasoningsInitializer(AbstractReasoningsInitializer):
 class OnesReasoningsInitializer(AbstractReasoningsInitializer):
     """Reasonings are all initialized with ones."""
     def generate(self, distribution: Union[dict, list, tuple]):
-        shape = self.compute_shape(distribution)
+        shape = compute_distribution_shape(distribution)
         reasonings = torch.ones(*shape)
         reasonings = self.generate_end_hook(reasonings)
         return reasonings
@@ -372,7 +373,7 @@ class RandomReasoningsInitializer(AbstractReasoningsInitializer):
         self.maximum = maximum
 
     def generate(self, distribution: Union[dict, list, tuple]):
-        shape = self.compute_shape(distribution)
+        shape = compute_distribution_shape(distribution)
         reasonings = torch.ones(*shape).uniform_(self.minimum, self.maximum)
         reasonings = self.generate_end_hook(reasonings)
         return reasonings
@@ -381,7 +382,8 @@ class RandomReasoningsInitializer(AbstractReasoningsInitializer):
 class PurePositiveReasoningsInitializer(AbstractReasoningsInitializer):
     """Each component reasons positively for exactly one class."""
     def generate(self, distribution: Union[dict, list, tuple]):
-        num_components, num_classes, _ = self.compute_shape(distribution)
+        num_components, num_classes, _ = compute_distribution_shape(
+            distribution)
         A = OneHotLabelsInitializer().generate(distribution)
         B = torch.zeros(num_components, num_classes)
         reasonings = torch.stack([A, B], dim=-1)

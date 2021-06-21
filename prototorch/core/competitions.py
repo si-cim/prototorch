@@ -48,7 +48,7 @@ class WTAC(torch.nn.Module):
     Thin wrapper over the `wtac` function.
 
     """
-    def forward(self, distances, labels):
+    def forward(self, distances, labels):  # pylint: disable=no-self-use
         return wtac(distances, labels)
 
 
@@ -58,7 +58,7 @@ class LTAC(torch.nn.Module):
     Thin wrapper over the `wtac` function.
 
     """
-    def forward(self, probs, labels):
+    def forward(self, probs, labels):  # pylint: disable=no-self-use
         return wtac(-1.0 * probs, labels)
 
 
@@ -85,5 +85,5 @@ class CBCC(torch.nn.Module):
     Thin wrapper over the `cbcc` function.
 
     """
-    def forward(self, detections, reasonings):
+    def forward(self, detections, reasonings):  # pylint: disable=no-self-use
         return cbcc(detections, reasonings)
