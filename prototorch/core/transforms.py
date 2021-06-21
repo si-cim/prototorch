@@ -36,7 +36,7 @@ class LinearTransform(torch.nn.Module):
         self._register_weights(weights)
 
     def forward(self, x):
-        return x @ self.weights.T
+        return x @ self.weights
 
 
 # Aliases
