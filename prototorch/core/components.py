@@ -253,8 +253,10 @@ class Reasonings(torch.nn.Module):
         self,
         distribution: Union[dict, list, tuple],
         initializer:
-        AbstractReasoningsInitializer = RandomReasoningsInitializer()):
+        AbstractReasoningsInitializer = RandomReasoningsInitializer(),
+    ):
         super().__init__()
+        self.add_reasonings(distribution, initializer)
 
     @property
     def num_classes(self):
