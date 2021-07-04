@@ -1,6 +1,6 @@
 """ProtoTorch datasets"""
 
-from .abstract import NumpyDataset
+from .abstract import CSVDataset, NumpyDataset
 from .sklearn import (
     Blobs,
     Circles,
