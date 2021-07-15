@@ -10,3 +10,4 @@ from .sklearn import (
 )
 from .spiral import Spiral
 from .tecator import Tecator
+from .xor import XOR
