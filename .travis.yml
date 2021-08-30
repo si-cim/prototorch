@@ -1,7 +1,9 @@
 dist: bionic
 sudo: false
 language: python
-python: 3.9
+python:
+  - 3.9
+  - 3.8
 cache:
   directories:
   - "$HOME/.cache/pip"

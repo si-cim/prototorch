@@ -1,8 +1,12 @@
 """ProtoFlow utilities"""
 
 import warnings
-from collections.abc import Iterable
-from typing import Union
+from typing import (
+    Dict,
+    Iterable,
+    List,
+    Union,
+)
 
 import numpy as np
 import torch
@@ -24,7 +28,7 @@ def mesh2d(x=None, border: float = 1.0, resolution: int = 100):
     return mesh, xx, yy
 
 
-def distribution_from_list(list_dist: list[int],
+def distribution_from_list(list_dist: List[int],
                            clabels: Iterable[int] = None):
     clabels = clabels or list(range(len(list_dist)))
     distribution = dict(zip(clabels, list_dist))
@@ -32,7 +36,7 @@ def distribution_from_list(list_dist: list[int],
 
 
 def parse_distribution(user_distribution,
-                       clabels: Iterable[int] = None) -> dict[int, int]:
+                       clabels: Iterable[int] = None) -> Dict[int, int]:
     """Parse user-provided distribution.
 
     Return a dictionary with integer keys that represent the class labels and
