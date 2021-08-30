@@ -22,7 +22,7 @@ from .core import (
 )
 
 # Core Setup
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 
 __all_core__ = [
     "competitions",
