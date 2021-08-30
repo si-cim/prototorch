@@ -41,9 +41,6 @@ def euclidean_distance_v2(x, y):
     # batch diagonal. See:
     # https://pytorch.org/docs/stable/generated/torch.diagonal.html
     distances = torch.diagonal(pairwise_distances, dim1=-2, dim2=-1)
-    # print(f"{diff.shape=}")  # (nx, ny, ndim)
-    # print(f"{pairwise_distances.shape=}")  # (nx, ny, ny)
-    # print(f"{distances.shape=}")  # (nx, ny)
     return distances
 
 
