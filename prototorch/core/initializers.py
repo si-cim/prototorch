@@ -11,7 +11,7 @@ from typing import (
 
 import torch
 
-from ..utils import parse_data_arg, parse_distribution
+from prototorch.utils import parse_data_arg, parse_distribution
 
 
 # Components

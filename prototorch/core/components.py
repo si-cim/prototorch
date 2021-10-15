@@ -6,7 +6,8 @@ from typing import Union
 import torch
 from torch.nn.parameter import Parameter
 
-from ..utils import parse_distribution
+from prototorch.utils import parse_distribution
+
 from .initializers import (
     AbstractClassAwareCompInitializer,
     AbstractComponentsInitializer,

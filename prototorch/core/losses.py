@@ -2,7 +2,7 @@
 
 import torch
 
-from ..nn.activations import get_activation
+from prototorch.nn.activations import get_activation
 
 
 # Helpers
