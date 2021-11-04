@@ -9,6 +9,7 @@ pipeline {
 
       }
       steps {
+        sh 'whoami'
         sh 'pip install .[all] --user --progress-bar off'
       }
     }
