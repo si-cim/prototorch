@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh 'whoami'
+        sh 'pip install pip --upgrade --progress-bar off'
         sh 'pip install .[all] --progress-bar off'
       }
     }
