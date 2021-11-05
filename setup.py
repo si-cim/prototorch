@@ -43,7 +43,10 @@ EXAMPLES = [
     "matplotlib",
     "torchinfo",
 ]
-TESTS = ["codecov", "pytest"]
+TESTS = [
+    "pytest-cov",
+    "pytest",
+]
 ALL = DATASETS + DEV + DOCS + EXAMPLES + TESTS
 
 setup(

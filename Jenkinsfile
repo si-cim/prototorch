@@ -1,19 +1,37 @@
 pipeline {
   agent none
   stages {
-    stage('Tests') {
-      agent {
-        docker {
-          image 'python:3.9'
-          args '--user 0:0'
+    parallel {
+      stage('3.6'){
+        agent{
+          dockerfile {
+            filename 'python36.Dockerfile'
+            dir '.ci'
+          }
         }
-
+        steps {
+            sh 'pip install pip --upgrade --progress-bar off'
+            sh 'pip install .[all] --progress-bar off'
+            sh '~/.local/bin/pytest -v --junitxml=reports/result.xml --cov=prototorch/ --cov-report=xml:reports/coverage.xml'
+            cobertura coberturaReportFile: 'reports/coverage.xml'
+            junit 'reports/**/*.xml'
+        }
       }
-      steps {
-        sh 'pip install pip --upgrade --progress-bar off'
-        sh 'pip install .[all] --progress-bar off'
+      stage('3.10'){
+        agent{
+          dockerfile {
+            filename 'python310.Dockerfile'
+            dir '.ci'
+          }
+        }
+        steps {
+          sh 'pip install pip --upgrade --progress-bar off'
+          sh 'pip install .[all] --progress-bar off'
+          sh '~/.local/bin/pytest -v --junitxml=reports/result.xml --cov=prototorch/ --cov-report=xml:reports/coverage.xml'
+          cobertura coberturaReportFile: 'reports/coverage.xml'
+          junit 'reports/**/*.xml'
+      }
       }
     }
-
   }
 }
