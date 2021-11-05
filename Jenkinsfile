@@ -8,7 +8,7 @@ pipeline {
             dockerfile {
               filename 'python36.Dockerfile'
               dir '.ci'
-              args '-v $HOME/.cache/pip:/home/jenkins/.cache/pip'
+              args '-v pip-cache:/home/jenkins/.cache/pip'
             }
           }
           steps {
@@ -24,7 +24,7 @@ pipeline {
             dockerfile {
               filename 'python310.Dockerfile'
               dir '.ci'
-              args '-v $HOME/.cache/pip:/home/jenkins/.cache/pip'
+              args '-v pip-cache:/home/jenkins/.cache/pip'
             }
           }
           steps {
