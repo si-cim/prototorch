@@ -9,6 +9,7 @@ def make_spiral(num_samples=500, noise=0.3):
 
     For use in Prototorch use `prototorch.datasets.Spiral` instead.
     """
+
     def get_samples(n, delta_t):
         points = []
         for i in range(n):
@@ -52,6 +53,7 @@ class Spiral(torch.utils.data.TensorDataset):
     :param num_samples: number of random samples
     :param noise: noise added to the spirals
     """
+
     def __init__(self, num_samples: int = 500, noise: float = 0.3):
         x, y = make_spiral(num_samples, noise)
         super().__init__(torch.Tensor(x), torch.LongTensor(y))

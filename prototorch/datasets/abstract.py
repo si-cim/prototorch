@@ -93,6 +93,7 @@ class ProtoDataset(Dataset):
 
 class NumpyDataset(torch.utils.data.TensorDataset):
     """Create a PyTorch TensorDataset from NumPy arrays."""
+
     def __init__(self, data, targets):
         self.data = torch.Tensor(data)
         self.targets = torch.LongTensor(targets)
@@ -102,6 +103,7 @@ class NumpyDataset(torch.utils.data.TensorDataset):
 
 class CSVDataset(NumpyDataset):
     """Create a Dataset from a CSV file."""
+
     def __init__(self, filepath, target_col=-1, delimiter=',', skip_header=0):
         raw = np.genfromtxt(
             filepath,

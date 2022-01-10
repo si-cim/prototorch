@@ -12,6 +12,7 @@ from prototorch.datasets.abstract import Dataset, ProtoDataset
 
 
 class TestAbstract(unittest.TestCase):
+
     def setUp(self):
         self.ds = Dataset("./artifacts")
 
@@ -28,6 +29,7 @@ class TestAbstract(unittest.TestCase):
 
 
 class TestProtoDataset(unittest.TestCase):
+
     def test_download(self):
         with self.assertRaises(NotImplementedError):
             _ = ProtoDataset("./artifacts", download=True)
@@ -38,6 +40,7 @@ class TestProtoDataset(unittest.TestCase):
 
 
 class TestNumpyDataset(unittest.TestCase):
+
     def test_list_init(self):
         ds = pt.datasets.NumpyDataset([1], [1])
         self.assertEqual(len(ds), 1)
@@ -50,6 +53,7 @@ class TestNumpyDataset(unittest.TestCase):
 
 
 class TestCSVDataset(unittest.TestCase):
+
     def setUp(self):
         data = np.random.rand(100, 4)
         targets = np.random.randint(2, size=(100, 1))
@@ -67,12 +71,14 @@ class TestCSVDataset(unittest.TestCase):
 
 
 class TestSpiral(unittest.TestCase):
+
     def test_init(self):
         ds = pt.datasets.Spiral(num_samples=10)
         self.assertEqual(len(ds), 10)
 
 
 class TestIris(unittest.TestCase):
+
     def setUp(self):
         self.ds = pt.datasets.Iris()
 
@@ -88,24 +94,28 @@ class TestIris(unittest.TestCase):
 
 
 class TestBlobs(unittest.TestCase):
+
     def test_size(self):
         ds = pt.datasets.Blobs(num_samples=10)
         self.assertEqual(len(ds), 10)
 
 
 class TestRandom(unittest.TestCase):
+
     def test_size(self):
         ds = pt.datasets.Random(num_samples=10)
         self.assertEqual(len(ds), 10)
 
 
 class TestCircles(unittest.TestCase):
+
     def test_size(self):
         ds = pt.datasets.Circles(num_samples=10)
         self.assertEqual(len(ds), 10)
 
 
 class TestMoons(unittest.TestCase):
+
     def test_size(self):
         ds = pt.datasets.Moons(num_samples=10)
         self.assertEqual(len(ds), 10)

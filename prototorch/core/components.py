@@ -64,6 +64,7 @@ def get_cikwargs(init, distribution):
 
 class AbstractComponents(torch.nn.Module):
     """Abstract class for all components modules."""
+
     @property
     def num_components(self):
         """Current number of components."""
@@ -86,6 +87,7 @@ class AbstractComponents(torch.nn.Module):
 
 class Components(AbstractComponents):
     """A set of adaptable Tensors."""
+
     def __init__(self, num_components: int,
                  initializer: AbstractComponentsInitializer):
         super().__init__()
@@ -113,6 +115,7 @@ class Components(AbstractComponents):
 
 class AbstractLabels(torch.nn.Module):
     """Abstract class for all labels modules."""
+
     @property
     def labels(self):
         return self._labels.cpu()
@@ -153,6 +156,7 @@ class AbstractLabels(torch.nn.Module):
 
 class Labels(AbstractLabels):
     """A set of standalone labels."""
+
     def __init__(self,
                  distribution: Union[dict, list, tuple],
                  initializer: AbstractLabelsInitializer = LabelsInitializer()):
@@ -183,6 +187,7 @@ class Labels(AbstractLabels):
 
 class LabeledComponents(AbstractComponents):
     """A set of adaptable components and corresponding unadaptable labels."""
+
     def __init__(
         self,
         distribution: Union[dict, list, tuple],
@@ -250,6 +255,7 @@ class Reasonings(torch.nn.Module):
     The `reasonings` tensor is of shape [num_components, num_classes, 2].
 
     """
+
     def __init__(
         self,
         distribution: Union[dict, list, tuple],
@@ -309,6 +315,7 @@ class ReasoningComponents(AbstractComponents):
     three element probability distribution.
 
     """
+
     def __init__(
         self,
         distribution: Union[dict, list, tuple],

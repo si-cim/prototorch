@@ -13,6 +13,7 @@ def make_xor(num_samples=500):
 
 class XOR(torch.utils.data.TensorDataset):
     """Exclusive-or (XOR) dataset for binary classification."""
+
     def __init__(self, num_samples: int = 500):
         x, y = make_xor(num_samples)
         super().__init__(x, y)
