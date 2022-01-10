@@ -4,6 +4,18 @@ import pkgutil
 
 import pkg_resources
 
+from . import datasets  # noqa: F401
+from . import nn  # noqa: F401
+from . import utils  # noqa: F401
+from .core import competitions  # noqa: F401
+from .core import components  # noqa: F401
+from .core import distances  # noqa: F401
+from .core import initializers  # noqa: F401
+from .core import losses  # noqa: F401
+from .core import pooling  # noqa: F401
+from .core import similarities  # noqa: F401
+from .core import transforms  # noqa: F401
+
 # Core Setup
 __version__ = "0.7.1"
 
