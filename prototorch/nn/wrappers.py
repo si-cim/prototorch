@@ -4,6 +4,7 @@ import torch
 
 
 class LambdaLayer(torch.nn.Module):
+
     def __init__(self, fn, name=None):
         super().__init__()
         self.fn = fn
@@ -17,6 +18,7 @@ class LambdaLayer(torch.nn.Module):
 
 
 class LossLayer(torch.nn.modules.loss._Loss):
+
     def __init__(self,
                  fn,
                  name=None,

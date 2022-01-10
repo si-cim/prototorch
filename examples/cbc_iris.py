@@ -7,6 +7,7 @@ import prototorch as pt
 
 
 class CBC(torch.nn.Module):
+
     def __init__(self, data, **kwargs):
         super().__init__(**kwargs)
         self.components_layer = pt.components.ReasoningComponents(
@@ -23,6 +24,7 @@ class CBC(torch.nn.Module):
 
 
 class VisCBC2D():
+
     def __init__(self, model, data):
         self.model = model
         self.x_train, self.y_train = pt.utils.parse_data_arg(data)

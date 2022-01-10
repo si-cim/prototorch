@@ -29,7 +29,7 @@ DATASETS = [
     "tqdm",
 ]
 DEV = [
-    "bumpversion",
+    "bump2version",
     "pre-commit",
 ]
 DOCS = [
@@ -43,7 +43,10 @@ EXAMPLES = [
     "matplotlib",
     "torchinfo",
 ]
-TESTS = ["codecov", "pytest"]
+TESTS = [
+    "flake8",
+    "pytest",
+]
 ALL = DATASETS + DEV + DOCS + EXAMPLES + TESTS
 
 setup(
@@ -59,7 +62,7 @@ setup(
     url=PROJECT_URL,
     download_url=DOWNLOAD_URL,
     license="MIT",
-    python_requires=">=3.6",
+    python_requires=">=3.7,<3.10",
     install_requires=INSTALL_REQUIRES,
     extras_require={
         "datasets": DATASETS,
@@ -82,7 +85,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

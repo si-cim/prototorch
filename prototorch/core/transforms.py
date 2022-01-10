@@ -10,6 +10,7 @@ from .initializers import (
 
 
 class LinearTransform(torch.nn.Module):
+
     def __init__(
         self,
         in_dim: int,

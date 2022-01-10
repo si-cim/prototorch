@@ -404,6 +404,7 @@ def test_glvq_loss_one_hot_unequal():
 
 # Activations
 class TestActivations(unittest.TestCase):
+
     def setUp(self):
         self.flist = ["identity", "sigmoid_beta", "swish_beta"]
         self.x = torch.randn(1024, 1)
@@ -418,6 +419,7 @@ class TestActivations(unittest.TestCase):
             self.assertTrue(iscallable)
 
     def test_callable_deserialization(self):
+
         def dummy(x, **kwargs):
             return x
 
@@ -462,6 +464,7 @@ class TestActivations(unittest.TestCase):
 
 # Competitions
 class TestCompetitions(unittest.TestCase):
+
     def setUp(self):
         pass
 
@@ -515,6 +518,7 @@ class TestCompetitions(unittest.TestCase):
 
 # Pooling
 class TestPooling(unittest.TestCase):
+
     def setUp(self):
         pass
 
@@ -615,6 +619,7 @@ class TestPooling(unittest.TestCase):
 
 # Distances
 class TestDistances(unittest.TestCase):
+
     def setUp(self):
         self.nx, self.mx = 32, 2048
         self.ny, self.my = 8, 2048

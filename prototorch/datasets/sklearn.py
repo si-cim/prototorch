@@ -8,8 +8,13 @@ URL:
 import warnings
 from typing import Sequence, Union
 
-from sklearn.datasets import (load_iris, make_blobs, make_circles,
-                              make_classification, make_moons)
+from sklearn.datasets import (
+    load_iris,
+    make_blobs,
+    make_circles,
+    make_classification,
+    make_moons,
+)
 
 from prototorch.datasets.abstract import NumpyDataset
 
@@ -35,6 +40,7 @@ class Iris(NumpyDataset):
 
     :param dims: select a subset of dimensions
     """
+
     def __init__(self, dims: Sequence[int] = None):
         x, y = load_iris(return_X_y=True)
         if dims:
@@ -49,6 +55,7 @@ class Blobs(NumpyDataset):
     https://scikit-learn.org/stable/datasets/sample_generators.html#sample-generators.
 
     """
+
     def __init__(self,
                  num_samples: int = 300,
                  num_features: int = 2,
@@ -69,6 +76,7 @@ class Random(NumpyDataset):
 
     Note: n_classes * n_clusters_per_class <= 2**n_informative must satisfy.
     """
+
     def __init__(self,
                  num_samples: int = 300,
                  num_features: int = 2,
@@ -104,6 +112,7 @@ class Circles(NumpyDataset):
     https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_circles.html
 
     """
+
     def __init__(self,
                  num_samples: int = 300,
                  noise: float = 0.3,
@@ -126,6 +135,7 @@ class Moons(NumpyDataset):
     https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_moons.html
 
     """
+
     def __init__(self,
                  num_samples: int = 300,
                  noise: float = 0.3,

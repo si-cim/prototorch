@@ -2,7 +2,7 @@
 
 import torch
 
-from ..nn.activations import get_activation
+from prototorch.nn.activations import get_activation
 
 
 # Helpers
@@ -106,6 +106,7 @@ def margin_loss(y_pred, y_true, margin=0.3):
 
 
 class GLVQLoss(torch.nn.Module):
+
     def __init__(self, margin=0.0, transfer_fn="identity", beta=10, **kwargs):
         super().__init__(**kwargs)
         self.margin = margin
@@ -119,6 +120,7 @@ class GLVQLoss(torch.nn.Module):
 
 
 class MarginLoss(torch.nn.modules.loss._Loss):
+
     def __init__(self,
                  margin=0.3,
                  size_average=None,
@@ -132,6 +134,7 @@ class MarginLoss(torch.nn.modules.loss._Loss):
 
 
 class NeuralGasEnergy(torch.nn.Module):
+
     def __init__(self, lm, **kwargs):
         super().__init__(**kwargs)
         self.lm = lm
@@ -152,6 +155,7 @@ class NeuralGasEnergy(torch.nn.Module):
 
 
 class GrowingNeuralGasEnergy(NeuralGasEnergy):
+
     def __init__(self, topology_layer, **kwargs):
         super().__init__(**kwargs)
         self.topology_layer = topology_layer

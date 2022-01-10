@@ -1,25 +1,20 @@
 """ProtoTorch package"""
 
 import pkgutil
-from typing import List
 
 import pkg_resources
 
-from . import (
-    datasets,
-    nn,
-    utils,
-)
-from .core import (
-    competitions,
-    components,
-    distances,
-    initializers,
-    losses,
-    pooling,
-    similarities,
-    transforms,
-)
+from . import datasets  # noqa: F401
+from . import nn  # noqa: F401
+from . import utils  # noqa: F401
+from .core import competitions  # noqa: F401
+from .core import components  # noqa: F401
+from .core import distances  # noqa: F401
+from .core import initializers  # noqa: F401
+from .core import losses  # noqa: F401
+from .core import pooling  # noqa: F401
+from .core import similarities  # noqa: F401
+from .core import transforms  # noqa: F401
 
 # Core Setup
 __version__ = "0.7.1"
@@ -40,7 +35,7 @@ __all_core__ = [
 ]
 
 # Plugin Loader
-__path__: List[str] = pkgutil.extend_path(__path__, __name__)
+__path__ = pkgutil.extend_path(__path__, __name__)
 
 
 def discover_plugins():
