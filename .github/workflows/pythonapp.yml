@@ -23,6 +23,7 @@ jobs:
         pip install .[all]
     - uses: pre-commit/action@v2.0.3
   compatibility:
+    needs: style
     strategy:
       fail-fast: false
       matrix:
