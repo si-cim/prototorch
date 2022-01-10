@@ -16,7 +16,7 @@ jobs:
       matrix:
         python-version: ["3.7", "3.8", "3.9"]
         os: [ubuntu-latest, windows-latest]
-        exlude:
+        exclude:
         - os: windows-latest
           python-version: "3.7"
         - os: windows-latest
