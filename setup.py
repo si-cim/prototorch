@@ -29,7 +29,7 @@ DATASETS = [
     "tqdm",
 ]
 DEV = [
-    "bumpversion",
+    "bump2version",
     "pre-commit",
 ]
 DOCS = [
