@@ -1,4 +1,4 @@
-"""ProtoFlow utilities"""
+"""ProtoTorch utilities"""
 
 import warnings
 from typing import (
