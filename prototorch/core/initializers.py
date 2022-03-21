@@ -218,7 +218,7 @@ class AbstractStratifiedCompInitializer(AbstractClassAwareCompInitializer):
         for k, v in distribution.items():
             stratified_data = self.data[self.targets == k]
             if len(stratified_data) == 0:
-              raise ValueError(f"No data available for class {k}.")
+                raise ValueError(f"No data available for class {k}.")
             initializer = self.subinit_type(
                 stratified_data,
                 noise=self.noise,
@@ -460,9 +460,17 @@ class AbstractDataAwareLTInitializer(AbstractLinearTransformInitializer):
 
 class PCALinearTransformInitializer(AbstractDataAwareLTInitializer):
     """Initialize a matrix with Eigenvectors from the data."""
+
     def generate(self, in_dim: int, out_dim: int):
         _, _, weights = torch.pca_lowrank(self.data, q=out_dim)
         return self.generate_end_hook(weights)
+
+
+class LiteralLinearTransformInitializer(AbstractDataAwareLTInitializer):
+    """'Generate' the provided weights."""
+
+    def generate(self, in_dim: int, out_dim: int):
+        return self.generate_end_hook(self.data)
 
 
 # Aliases - Components
@@ -497,3 +505,4 @@ Eye = EyeTransformInitializer
 OLTI = OnesLinearTransformInitializer
 ZLTI = ZerosLinearTransformInitializer
 PCALTI = PCALinearTransformInitializer
+LLTI = LiteralLinearTransformInitializer

@@ -23,6 +23,7 @@ INSTALL_REQUIRES = [
     "torchvision>=0.7.1",
     "numpy>=1.9.1",
     "sklearn",
+    "matplotlib",
 ]
 DATASETS = [
     "requests",
@@ -40,7 +41,6 @@ DOCS = [
     "sphinx-autodoc-typehints",
 ]
 EXAMPLES = [
-    "matplotlib",
     "torchinfo",
 ]
 TESTS = ["codecov", "pytest"]
