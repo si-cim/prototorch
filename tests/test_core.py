@@ -245,20 +245,20 @@ def test_random_reasonings_init_channels_not_first():
 
 # Transform initializers
 def test_eye_transform_init_square():
-    t = pt.initializers.EyeTransformInitializer()
+    t = pt.initializers.EyeLinearTransformInitializer()
     I = t.generate(3, 3)
     assert torch.allclose(I, torch.eye(3))
 
 
 def test_eye_transform_init_narrow():
-    t = pt.initializers.EyeTransformInitializer()
+    t = pt.initializers.EyeLinearTransformInitializer()
     actual = t.generate(3, 2)
     desired = torch.Tensor([[1, 0], [0, 1], [0, 0]])
     assert torch.allclose(actual, desired)
 
 
 def test_eye_transform_init_wide():
-    t = pt.initializers.EyeTransformInitializer()
+    t = pt.initializers.EyeLinearTransformInitializer()
     actual = t.generate(2, 3)
     desired = torch.Tensor([[1, 0, 0], [0, 1, 0]])
     assert torch.allclose(actual, desired)

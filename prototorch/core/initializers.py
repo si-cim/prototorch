@@ -32,6 +32,12 @@ class LiteralCompInitializer(AbstractComponentsInitializer):
 
     def generate(self, num_components: int = 0):
         """Ignore `num_components` and simply return `self.components`."""
+        provided_num_components = len(self.components)
+        if provided_num_components != num_components:
+            wmsg = f"The number of components ({provided_num_components}) " \
+                f"provided to {self.__class__.__name__} " \
+                f"does not match the expected number ({num_components})."
+            warnings.warn(wmsg)
         if not isinstance(self.components, torch.Tensor):
             wmsg = f"Converting components to {torch.Tensor}..."
             warnings.warn(wmsg)
@@ -231,6 +237,8 @@ class AbstractStratifiedCompInitializer(AbstractClassAwareCompInitializer):
         components = torch.tensor([])
         for k, v in distribution.items():
             stratified_data = self.data[self.targets == k]
+            if len(stratified_data) == 0:
+                raise ValueError(f"No data available for class {k}.")
             initializer = self.subinit_type(
                 stratified_data,
                 noise=self.noise,
@@ -457,7 +465,15 @@ class OnesLinearTransformInitializer(AbstractLinearTransformInitializer):
         return self.generate_end_hook(weights)
 
 
-class EyeTransformInitializer(AbstractLinearTransformInitializer):
+class RandomLinearTransformInitializer(AbstractLinearTransformInitializer):
+    """Initialize a matrix with random values."""
+
+    def generate(self, in_dim: int, out_dim: int):
+        weights = torch.rand(in_dim, out_dim)
+        return self.generate_end_hook(weights)
+
+
+class EyeLinearTransformInitializer(AbstractLinearTransformInitializer):
     """Initialize a matrix with the largest possible identity matrix."""
 
     def generate(self, in_dim: int, out_dim: int):
@@ -496,6 +512,13 @@ class PCALinearTransformInitializer(AbstractDataAwareLTInitializer):
         return self.generate_end_hook(weights)
 
 
+class LiteralLinearTransformInitializer(AbstractDataAwareLTInitializer):
+    """'Generate' the provided weights."""
+
+    def generate(self, in_dim: int, out_dim: int):
+        return self.generate_end_hook(self.data)
+
+
 # Aliases - Components
 CACI = ClassAwareCompInitializer
 DACI = DataAwareCompInitializer
@@ -524,7 +547,9 @@ RRI = RandomReasoningsInitializer
 ZRI = ZerosReasoningsInitializer
 
 # Aliases - Transforms
-Eye = EyeTransformInitializer
+ELTI = Eye = EyeLinearTransformInitializer
 OLTI = OnesLinearTransformInitializer
+RLTI = RandomLinearTransformInitializer
 ZLTI = ZerosLinearTransformInitializer
 PCALTI = PCALinearTransformInitializer
+LLTI = LiteralLinearTransformInitializer

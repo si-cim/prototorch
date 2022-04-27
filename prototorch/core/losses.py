@@ -107,14 +107,24 @@ def margin_loss(y_pred, y_true, margin=0.3):
 
 class GLVQLoss(torch.nn.Module):
 
-    def __init__(self, margin=0.0, transfer_fn="identity", beta=10, **kwargs):
+    def __init__(self,
+                 margin=0.0,
+                 transfer_fn="identity",
+                 beta=10,
+                 add_dp=False,
+                 **kwargs):
         super().__init__(**kwargs)
         self.margin = margin
         self.transfer_fn = get_activation(transfer_fn)
         self.beta = torch.tensor(beta)
+        self.add_dp = add_dp
 
     def forward(self, outputs, targets, plabels):
-        mu = glvq_loss(outputs, targets, prototype_labels=plabels)
+        # mu = glvq_loss(outputs, targets, plabels)
+        dp, dm = _get_dp_dm(outputs, targets, plabels)
+        mu = (dp - dm) / (dp + dm)
+        if self.add_dp:
+            mu = mu + dp
         batch_loss = self.transfer_fn(mu + self.margin, beta=self.beta)
         return batch_loss.sum()
 
