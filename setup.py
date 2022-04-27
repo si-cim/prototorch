@@ -20,7 +20,7 @@ with open("README.md", "r") as fh:
 
 INSTALL_REQUIRES = [
     "torch>=1.3.1",
-    "torchvision>=0.7.2",
+    "torchvision>=0.7.3",
     "numpy>=1.9.1",
     "sklearn",
     "matplotlib",
@@ -51,7 +51,7 @@ ALL = DATASETS + DEV + DOCS + EXAMPLES + TESTS
 
 setup(
     name="prototorch",
-    version="0.7.2",
+    version="0.7.3",
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",
