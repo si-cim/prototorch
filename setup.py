@@ -62,7 +62,7 @@ setup(
     url=PROJECT_URL,
     download_url=DOWNLOAD_URL,
     license="MIT",
-    python_requires=">=3.7,<3.10",
+    python_requires=">=3.7",
     install_requires=INSTALL_REQUIRES,
     extras_require={
         "datasets": DATASETS,
@@ -88,6 +88,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     packages=find_packages(),
     zip_safe=False,
