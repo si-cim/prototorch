@@ -36,6 +36,7 @@ Description:
     are determined by analytic chemistry.
 """
 
+import logging
 import os
 
 import numpy as np
@@ -81,13 +82,11 @@ class Tecator(ProtoDataset):
         if self._check_exists():
             return
 
-        if self.verbose:
-            print("Making directories...")
+        logging.debug("Making directories...")
         os.makedirs(self.raw_folder, exist_ok=True)
         os.makedirs(self.processed_folder, exist_ok=True)
 
-        if self.verbose:
-            print("Downloading...")
+        logging.debug("Downloading...")
         for fileid, md5 in self._resources:
             filename = "tecator.npz"
             download_file_from_google_drive(fileid,
@@ -95,8 +94,7 @@ class Tecator(ProtoDataset):
                                             filename=filename,
                                             md5=md5)
 
-        if self.verbose:
-            print("Processing...")
+        logging.debug("Processing...")
         with np.load(os.path.join(self.raw_folder, "tecator.npz"),
                      allow_pickle=False) as f:
             x_train, y_train = f["x_train"], f["y_train"]
@@ -117,5 +115,4 @@ class Tecator(ProtoDataset):
                   "wb") as f:
             torch.save(test_set, f)
 
-        if self.verbose:
-            print("Done!")
+        logging.debug("Done!")

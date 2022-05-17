@@ -5,8 +5,10 @@ URL:
 
 """
 
+from __future__ import annotations
+
 import warnings
-from typing import Sequence, Union
+from typing import Sequence
 
 from sklearn.datasets import (
     load_iris,
@@ -41,9 +43,9 @@ class Iris(NumpyDataset):
     :param dims: select a subset of dimensions
     """
 
-    def __init__(self, dims: Sequence[int] = None):
+    def __init__(self, dims: Sequence[int] | None = None):
         x, y = load_iris(return_X_y=True)
-        if dims:
+        if dims is not None:
             x = x[:, dims]
         super().__init__(x, y)
 
@@ -56,15 +58,19 @@ class Blobs(NumpyDataset):
 
     """
 
-    def __init__(self,
-                 num_samples: int = 300,
-                 num_features: int = 2,
-                 seed: Union[None, int] = 0):
-        x, y = make_blobs(num_samples,
-                          num_features,
-                          centers=None,
-                          random_state=seed,
-                          shuffle=False)
+    def __init__(
+        self,
+        num_samples: int = 300,
+        num_features: int = 2,
+        seed: None | int = 0,
+    ):
+        x, y = make_blobs(
+            num_samples,
+            num_features,
+            centers=None,
+            random_state=seed,
+            shuffle=False,
+        )
         super().__init__(x, y)
 
 
@@ -77,29 +83,33 @@ class Random(NumpyDataset):
     Note: n_classes * n_clusters_per_class <= 2**n_informative must satisfy.
     """
 
-    def __init__(self,
-                 num_samples: int = 300,
-                 num_features: int = 2,
-                 num_classes: int = 2,
-                 num_clusters: int = 2,
-                 num_informative: Union[None, int] = None,
-                 separation: float = 1.0,
-                 seed: Union[None, int] = 0):
+    def __init__(
+        self,
+        num_samples: int = 300,
+        num_features: int = 2,
+        num_classes: int = 2,
+        num_clusters: int = 2,
+        num_informative: None | int = None,
+        separation: float = 1.0,
+        seed: None | int = 0,
+    ):
         if not num_informative:
             import math
             num_informative = math.ceil(math.log2(num_classes * num_clusters))
             if num_features < num_informative:
                 warnings.warn("Generating more features than requested.")
                 num_features = num_informative
-        x, y = make_classification(num_samples,
-                                   num_features,
-                                   n_informative=num_informative,
-                                   n_redundant=0,
-                                   n_classes=num_classes,
-                                   n_clusters_per_class=num_clusters,
-                                   class_sep=separation,
-                                   random_state=seed,
-                                   shuffle=False)
+        x, y = make_classification(
+            num_samples,
+            num_features,
+            n_informative=num_informative,
+            n_redundant=0,
+            n_classes=num_classes,
+            n_clusters_per_class=num_clusters,
+            class_sep=separation,
+            random_state=seed,
+            shuffle=False,
+        )
         super().__init__(x, y)
 
 
@@ -113,16 +123,20 @@ class Circles(NumpyDataset):
 
     """
 
-    def __init__(self,
-                 num_samples: int = 300,
-                 noise: float = 0.3,
-                 factor: float = 0.8,
-                 seed: Union[None, int] = 0):
-        x, y = make_circles(num_samples,
-                            noise=noise,
-                            factor=factor,
-                            random_state=seed,
-                            shuffle=False)
+    def __init__(
+        self,
+        num_samples: int = 300,
+        noise: float = 0.3,
+        factor: float = 0.8,
+        seed: None | int = 0,
+    ):
+        x, y = make_circles(
+            num_samples,
+            noise=noise,
+            factor=factor,
+            random_state=seed,
+            shuffle=False,
+        )
         super().__init__(x, y)
 
 
@@ -136,12 +150,16 @@ class Moons(NumpyDataset):
 
     """
 
-    def __init__(self,
-                 num_samples: int = 300,
-                 noise: float = 0.3,
-                 seed: Union[None, int] = 0):
-        x, y = make_moons(num_samples,
-                          noise=noise,
-                          random_state=seed,
-                          shuffle=False)
+    def __init__(
+        self,
+        num_samples: int = 300,
+        noise: float = 0.3,
+        seed: None | int = 0,
+    ):
+        x, y = make_moons(
+            num_samples,
+            noise=noise,
+            random_state=seed,
+            shuffle=False,
+        )
         super().__init__(x, y)
