@@ -38,7 +38,7 @@ def cbcc(detections: torch.Tensor, reasonings: torch.Tensor):
     pk = A
     nk = (1 - A) * B
     numerator = (detections @ (pk - nk).T) + nk.sum(1)
-    probs = numerator / (pk + nk).sum(1)
+    probs = numerator / ((pk + nk).sum(1) + 1e-8)
     return probs
 
 
