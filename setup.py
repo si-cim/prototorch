@@ -22,7 +22,7 @@ INSTALL_REQUIRES = [
     "torch>=1.3.1",
     "torchvision>=0.7.4",
     "numpy>=1.9.1",
-    "sklearn",
+    "scikit-learn",
     "matplotlib",
 ]
 DATASETS = [
