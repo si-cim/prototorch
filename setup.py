@@ -15,13 +15,13 @@ from setuptools import find_packages, setup
 PROJECT_URL = "https://github.com/si-cim/prototorch"
 DOWNLOAD_URL = "https://github.com/si-cim/prototorch.git"
 
-with open("README.md") as fh:
+with open("README.md", encoding="utf-8") as fh:
     long_description = fh.read()
 
 INSTALL_REQUIRES = [
-    "torch>=1.3.1",
-    "torchvision>=0.7.5",
-    "numpy>=1.9.1",
+    "torch>=2.0.0",
+    "torchvision",
+    "numpy",
     "scikit-learn",
     "matplotlib",
 ]
@@ -62,7 +62,7 @@ setup(
     url=PROJECT_URL,
     download_url=DOWNLOAD_URL,
     license="MIT",
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=INSTALL_REQUIRES,
     extras_require={
         "datasets": DATASETS,
@@ -85,10 +85,10 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
     packages=find_packages(),
     zip_safe=False,
