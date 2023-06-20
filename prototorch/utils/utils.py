@@ -5,6 +5,7 @@ from typing import (
     Dict,
     Iterable,
     List,
+    Optional,
     Union,
 )
 
@@ -18,7 +19,7 @@ def generate_mesh(
     maxima: torch.TensorType,
     border: float = 1.0,
     resolution: int = 100,
-    device: torch.device = None,
+    device: Optional[torch.device] = None,
 ):
     # Apply Border
     ptp = maxima - minima
@@ -55,14 +56,15 @@ def mesh2d(x=None, border: float = 1.0, resolution: int = 100):
 
 
 def distribution_from_list(list_dist: List[int],
-                           clabels: Iterable[int] = None):
+                           clabels: Optional[Iterable[int]] = None):
     clabels = clabels or list(range(len(list_dist)))
     distribution = dict(zip(clabels, list_dist))
     return distribution
 
 
-def parse_distribution(user_distribution,
-                       clabels: Iterable[int] = None) -> Dict[int, int]:
+def parse_distribution(
+        user_distribution,
+        clabels: Optional[Iterable[int]] = None) -> Dict[int, int]:
     """Parse user-provided distribution.
 
     Return a dictionary with integer keys that represent the class labels and

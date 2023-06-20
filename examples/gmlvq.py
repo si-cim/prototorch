@@ -1,4 +1,4 @@
-"""ProtoTorch CBC example using 2D Iris data."""
+"""ProtoTorch GMLVQ example using Iris data."""
 
 import torch
 
