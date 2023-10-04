@@ -51,7 +51,7 @@ ALL = DATASETS + DEV + DOCS + EXAMPLES + TESTS
 
 setup(
     name="prototorch",
-    version="0.7.5",
+    version="0.7.6",
     description="Highly extensible, GPU-supported "
     "Learning Vector Quantization (LVQ) toolbox "
     "built using PyTorch and its nn API.",

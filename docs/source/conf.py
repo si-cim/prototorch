@@ -23,7 +23,7 @@ author = "Jensun Ravichandran"
 
 # The full version, including alpha/beta/rc tags
 #
-release = "0.7.5"
+release = "0.7.6"
 
 # -- General configuration ---------------------------------------------------
 
